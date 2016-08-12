@@ -31,6 +31,7 @@ public class MainActivity extends Activity implements UncaughtExceptionHandler
 
     private EditText edt_content;
     private Button btn_speak;
+    BdTextToSpeech bdTextToSpeech;
 
     private void initView()
     {
@@ -44,7 +45,7 @@ public class MainActivity extends Activity implements UncaughtExceptionHandler
                 String content = edt_content.getText().toString();
                 // mSpeechSynthesizer.speak(content);
                 // Log.i(TAG, ">>>say: " + edt_content.getText().toString());
-                BdTextToSpeech bdTextToSpeech = BdTextToLocalSpeech
+                bdTextToSpeech = BdTextToLocalSpeech
                         .getInstance(MainActivity.this);
                 bdTextToSpeech.speak(content);
             }

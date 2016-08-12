@@ -4,14 +4,16 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
-  <uses-permission android:name="android.permission.INTERNET" />
-<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-<uses-permission android:name="android.permission.WRITE_SETTINGS" />
-<uses-permission android:name="android.permission.READ_PHONE_STATE" />
-<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -22,8 +24,22 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        <meta-data
+            android:name="com.wnc.srtlearn.APP_ID"
+            android:value="8483663" />
+        <meta-data
+            android:name="com.wnc.srtlearn.API_KEY"
+            android:value="9YM9iZpG45u67k4GFLpr1VNG" />
+        <meta-data
+            android:name="com.wnc.srtlearn.SECRET_KEY"
+            android:value="3b517268f52cb6ae123f3eb4ee305d38" />
+
+        <service
+            android:name="com.baidu.speech.VoiceRecognitionService"
+            android:exported="false" />
+
         <activity
-            android:name="com.wnc.srtlearn.MainActivity"
+            android:name="com.wnc.srtlearn.ApiActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -16,15 +16,11 @@ public class BdTextToNetSpeech implements SpeechSynthesizerListener,
         BdTextToSpeech
 {
     private static final String TAG = "BdTextToSpeech";
-
     private static Context context;
     private SpeechSynthesizer mSpeechSynthesizer;
     private String mSampleDirPath;
     private static final String SAMPLE_DIR_NAME = "baiduTTS";
     private static final String LICENSE_FILE_NAME = "temp_license_2016-08-12";
-    private static final String APP_ID = "8483663";// 请更换为自己创建的应用
-    private static final String API_KEY = "9YM9iZpG45u67k4GFLpr1VNG";// 请更换为自己创建的应用
-    private static final String SECRET_KEY = "3b517268f52cb6ae123f3eb4ee305d38";// 请更换为自己创建的应用
 
     private static BdTextToNetSpeech ourInstance;
 

@@ -35,9 +35,6 @@ public class BdTextToLocalSpeech implements SpeechSynthesizerListener,
     private static final String ENGLISH_SPEECH_FEMALE_MODEL_NAME = "bd_etts_speech_female_en.dat";
     private static final String ENGLISH_SPEECH_MALE_MODEL_NAME = "bd_etts_speech_male_en.dat";
     private static final String ENGLISH_TEXT_MODEL_NAME = "bd_etts_text_en.dat";
-    private static final String APP_ID = "8483663";
-    private static final String API_KEY = "9YM9iZpG45u67k4GFLpr1VNG";
-    private static final String SECRET_KEY = "3b517268f52cb6ae123f3eb4ee305d38";
     private static BdTextToLocalSpeech ourInstance;
 
     public static synchronized BdTextToLocalSpeech getInstance(Context context)
