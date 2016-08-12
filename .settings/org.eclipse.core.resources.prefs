@@ -1,3 +1,5 @@
 eclipse.preferences.version=1
-encoding//src/com/wnc/srtlearn/BdTextToLocalSpeech.java=UTF-8
-encoding//src/com/wnc/srtlearn/BdTextToNetSpeech.java=UTF-8
+encoding//src/com/wnc/srtlearn/RecActivity.java=UTF-8
+encoding//src/com/wnc/srtlearn/tts/BdTextToLocalSpeech.java=UTF-8
+encoding//src/com/wnc/srtlearn/tts/BdTextToOnlineSpeech.java=UTF-8
+encoding//src/com/wnc/srtlearn/tts/Config.java=UTF-8

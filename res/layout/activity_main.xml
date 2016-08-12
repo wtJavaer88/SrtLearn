@@ -15,9 +15,22 @@
         android:minLines="5"
         android:text="Hi 我是百度语音合成，请输入要合成的语音内容" />
 
+    <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+	>
     <Button
-        android:id="@+id/btn_speak"
+        android:id="@+id/btn_speakonline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="在线合成播放" />
+    <Button
+        android:id="@+id/btn_speaklocal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="语音合成并播放" />
+        android:layout_gravity="center"
+        android:text="离线合成播放" />
+    </LinearLayout>
 </LinearLayout>

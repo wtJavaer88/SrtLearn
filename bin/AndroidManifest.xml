@@ -14,10 +14,20 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- 蓝牙录音 -->
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <!-- 某些手机启动SCO音频连接需要此权限 -->
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
+    <!-- 蓝牙录音检测耳机状态 -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
 
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="17" />
+        android:targetSdkVersion="18" />
 
     <application
         android:allowBackup="true"
@@ -25,33 +35,8 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         
-        <meta-data
-            android:name="com.wnc.srtlearn.APP_ID"
-            android:value="8483663" />
-        <meta-data
-            android:name="com.wnc.srtlearn.API_KEY"
-            android:value="9YM9iZpG45u67k4GFLpr1VNG" />
-        <meta-data
-            android:name="com.wnc.srtlearn.SECRET_KEY"
-            android:value="3b517268f52cb6ae123f3eb4ee305d38" />
-		  <activity
-                android:name="com.baidu.voicerecognition.android.ui.BaiduASRDigitalDialog"
-                android:configChanges="orientation|keyboardHidden|screenLayout"
-                android:theme="@android:style/Theme.Dialog"
-                android:exported="false"
-                android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="com.baidu.action.RECOGNIZE_SPEECH" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        
-        <service
-            android:name="com.baidu.speech.VoiceRecognitionService"
-            android:exported="false" />
-		
         <activity
-            android:name="com.wnc.srtlearn.ApiActivity"
+            android:name="com.wnc.srtlearn.RecActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -59,6 +44,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+         <activity android:name="com.wnc.srtlearn.TTSActivity"/>
     </application>
 
 </manifest>
