@@ -1,79 +1,84 @@
 package com.wnc.srtlearn;
 
-import java.lang.Thread.UncaughtExceptionHandler;
-
-import com.wnc.srtlearn.tts.BdTextToLocalSpeech;
-import com.wnc.srtlearn.tts.BdTextToOnlineSpeech;
-import com.wnc.srtlearn.tts.BdTextToSpeech;
-
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.EditText;
 
-public class TTSActivity extends Activity implements UncaughtExceptionHandler
+import com.baidu.voicerecognition.android.ui.BaiduASRDigitalDialog;
+import com.wnc.srtlearn.tts.CallBack;
+import com.wnc.srtlearn.tts.Config;
+import com.wnc.srtlearn.tts.RecDialogUtil;
+
+public class TTSActivity extends Activity implements CallBack
 {
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        // 设置未捕获异常UncaughtExceptionHandler的处理方法
-        Thread.setDefaultUncaughtExceptionHandler(this);
+	// 鐧惧害鑷畾涔夊璇濇
+	private BaiduASRDigitalDialog mDialog = null;
 
-        initView();
-    }
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_rec);
 
-    @Override
-    protected void onDestroy()
-    {
-        super.onDestroy();
-    }
+		((Button) findViewById(R.id.recbtn)).setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				Config.setCurrentLanguageIndex(1);
+				speak_Baidu();
+			}
+		});
+		((Button) findViewById(R.id.recbtn2)).setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				Config.setCurrentLanguageIndex(2);
+				speak_Baidu();
+			}
+		});
+		((Button) findViewById(R.id.sayBtn)).setOnClickListener(new OnClickListener()
+		{
 
-    private EditText edt_content;
-    private Button btn_speak;
-    BdTextToSpeech bdTextToSpeech;
+			@Override
+			public void onClick(View v)
+			{
+				startActivity(new Intent(getApplicationContext(), ReadActivity.class));
+			}
+		});
 
-    private void initView()
-    {
-        edt_content = (EditText) findViewById(R.id.edt_content);
-        ((Button) findViewById(R.id.btn_speakonline))
-                .setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        String content = edt_content.getText().toString();
-                        bdTextToSpeech = BdTextToOnlineSpeech
-                                .getInstance(TTSActivity.this);
-                        bdTextToSpeech.speak(content);
-                    }
-                });
-        ((Button) findViewById(R.id.btn_speaklocal))
-                .setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        String content = edt_content.getText().toString();
-                        bdTextToSpeech = BdTextToLocalSpeech
-                                .getInstance(TTSActivity.this);
-                        bdTextToSpeech.speak(content);
-                    }
-                });
-    }
+	}
 
-    @Override
-    public void uncaughtException(Thread thread, Throwable ex)
-    {
-        Log.i("AAA", "uncaughtException   " + ex);
-        for (StackTraceElement o : ex.getStackTrace())
-        {
-            System.out.println(o.toString());
-        }
-    }
+	// 鐧惧害璇煶璇嗗埆
+	public void speak_Baidu()
+	{
+		if (mDialog != null)
+		{
+			mDialog.dismiss();
+		}
+		mDialog = RecDialogUtil.getDialog(this, this);
+		mDialog.show();
+	}
+
+	@Override
+	protected void onDestroy()
+	{
+		if (mDialog != null)
+		{
+			mDialog.dismiss();
+		}
+		super.onDestroy();
+	}
+
+	@Override
+	public void listenComplete(String content)
+	{
+
+	}
 
 }

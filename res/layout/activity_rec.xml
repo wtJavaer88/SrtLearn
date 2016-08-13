@@ -8,10 +8,15 @@
 	>
 
     <Button
-        android:id="@+id/mybtn"
+        android:id="@+id/recbtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="百度语音识别" />
+        android:text="百度语音识别-中文" />
+    <Button
+        android:id="@+id/recbtn2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="百度语音识别-英文" />
     
     <Button
         android:id="@+id/sayBtn"
