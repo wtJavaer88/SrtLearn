@@ -36,6 +36,7 @@ $RECYCLE.BIN/
 *.dex
 *.cache
 *.apk
+*.class
 
 bin/class/
 bin/dexedLibs/
