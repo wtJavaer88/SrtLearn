@@ -2,9 +2,9 @@ package com.wnc.srtlearn.tts;
 
 public interface BdTextToSpeech
 {
-    public static final String APP_ID = "8483663";// Çë¸ü»»Îª×Ô¼º´´½¨µÄÓ¦ÓÃ
-    public static final String API_KEY = "9YM9iZpG45u67k4GFLpr1VNG";// Çë¸ü»»Îª×Ô¼º´´½¨µÄÓ¦ÓÃ
-    public static final String SECRET_KEY = "3b517268f52cb6ae123f3eb4ee305d38";// Çë¸ü»»Îª×Ô¼º´´½¨µÄÓ¦ÓÃ
+    public static final String APP_ID = "8483663";// è¯·æ›´æ¢ä¸ºè‡ªå·±åˆ›å»ºçš„åº”ç”¨
+    public static final String API_KEY = "9YM9iZpG45u67k4GFLpr1VNG";// è¯·æ›´æ¢ä¸ºè‡ªå·±åˆ›å»ºçš„åº”ç”¨
+    public static final String SECRET_KEY = "3b517268f52cb6ae123f3eb4ee305d38";// è¯·æ›´æ¢ä¸ºè‡ªå·±åˆ›å»ºçš„åº”ç”¨
 
     public int speak(String content);
 }

@@ -16,5 +16,10 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
-
+	
+     <style name="MymoneyTheme" parent="android:Theme">
+        <item name="android:windowBackground">@drawable/mymoney_repeat_bg</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:textSize">@dimen/dimen_14_dip</item>
+    </style>
 </resources>

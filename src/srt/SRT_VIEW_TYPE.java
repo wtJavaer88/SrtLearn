@@ -1,0 +1,6 @@
+package srt;
+
+public enum SRT_VIEW_TYPE
+{
+    VIEW_FIRST, VIEW_LAST, VIEW_CURRENT, VIEW_LEFT, VIEW_RIGHT
+}
