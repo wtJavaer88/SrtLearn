@@ -34,7 +34,7 @@ public class GalleryUtil
             final char ch = dialog.charAt(i);
             if (TextFormatUtil.isChineseChar(ch))
             {
-                list.add(new GalleryModel(R.drawable.one_select, "" + ch));
+                list.add(new GalleryModel(R.drawable.bihua_select, "" + ch));
             }
         }
         final PictureAdapter adapter = new PictureAdapter(activity, list);
@@ -78,7 +78,7 @@ public class GalleryUtil
             final char ch = dialog.charAt(i);
             if (TextFormatUtil.isChineseChar(ch))
             {
-                list.add(new GalleryModel(R.drawable.one_select, "" + ch + "("
+                list.add(new GalleryModel(R.drawable.py_select, "" + ch + "("
                         + PinYinUtil.getSinglePinYin(ch) + ")"));
                 pys.add(PinYinUtil.getSinglePinYin(ch));
                 indexs.put(newIndex, i);
@@ -98,7 +98,6 @@ public class GalleryUtil
                 adapter.setSelectItem(position);
                 if (listener != null)
                 {
-                    System.out.println(indexs);
                     if (position > -1 && position < indexs.size())
                     {
                         listener.afterGalleryChoose(indexs.get(position) + ":"
@@ -136,7 +135,7 @@ public class GalleryUtil
             final char ch = dialog.charAt(i);
             if (TextFormatUtil.isChineseChar(ch))
             {
-                list.add(new GalleryModel(R.drawable.one_select, "" + ch + "("
+                list.add(new GalleryModel(R.drawable.py_select, "" + ch + "("
                         + pinyinArr[i] + ")"));
                 indexs.put(newIndex, i);
                 newIndex++;
@@ -155,7 +154,6 @@ public class GalleryUtil
                 adapter.setSelectItem(position);
                 if (listener != null)
                 {
-                    System.out.println(indexs);
                     if (position > -1 && position < indexs.size())
                     {
                         listener.afterGalleryChoose(indexs.get(position) + ":"

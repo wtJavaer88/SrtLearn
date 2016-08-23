@@ -601,19 +601,21 @@ public final class R {
     }
     public static final class drawable {
         public static final int bg_text_color=0x7f020000;
-        public static final int gallery_item=0x7f020001;
-        public static final int ic_launcher=0x7f020002;
-        public static final int main_add_expense_quickly_new=0x7f020003;
-        public static final int main_add_expense_quickly_new_normal=0x7f020004;
-        public static final int main_add_expense_quickly_new_selected=0x7f020005;
-        public static final int mymoney_bg=0x7f020006;
-        public static final int mymoney_repeat_bg=0x7f020007;
-        public static final int one_select=0x7f020008;
-        public static final int star2=0x7f020009;
-        public static final int star_dark2=0x7f02000a;
-        public static final int tian=0x7f02000b;
-        public static final int wheel_bg=0x7f02000c;
-        public static final int wheel_val=0x7f02000d;
+        public static final int bihua_select=0x7f020001;
+        public static final int gallery_item=0x7f020002;
+        public static final int ic_launcher=0x7f020003;
+        public static final int main_add_expense_quickly_new=0x7f020004;
+        public static final int main_add_expense_quickly_new_normal=0x7f020005;
+        public static final int main_add_expense_quickly_new_selected=0x7f020006;
+        public static final int mymoney_bg=0x7f020007;
+        public static final int mymoney_repeat_bg=0x7f020008;
+        public static final int py=0x7f020009;
+        public static final int py_select=0x7f02000a;
+        public static final int star2=0x7f02000b;
+        public static final int star_dark2=0x7f02000c;
+        public static final int tian=0x7f02000d;
+        public static final int wheel_bg=0x7f02000e;
+        public static final int wheel_val=0x7f02000f;
     }
     public static final class id {
         public static final int add_tag_dialg_content=0x7f0b001b;

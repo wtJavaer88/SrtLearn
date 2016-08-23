@@ -38,11 +38,7 @@ $RECYCLE.BIN/
 *.apk
 *.class
 
-bin/class/
-bin/dexedLibs/
-bin/res/
-bin/resources.ap_
-bin/classes.dex
+bin/
 
 # Files that might appear on external disk
 .Spotlight-V100
