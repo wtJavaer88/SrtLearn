@@ -1,9 +1,7 @@
 package srt;
 
-import srt.picker.Picker;
-import srt.picker.PickerFactory;
-
 import com.wnc.basic.BasicFileUtil;
+import common.srt.picker.Picker;
 
 public class SrtFileDataHelper
 {
@@ -12,7 +10,7 @@ public class SrtFileDataHelper
 
     public static void dataEntity(final String curFile)
     {
-        picker = PickerFactory.getPicker(curFile);
+        picker = common.srt.picker.PickerFactory.getPicker(curFile);
         DataHolder.appendData(curFile, picker.getSrtInfos(0, countsPerPage));
         // 新进程去跑分页数据
         new Thread(new Runnable()

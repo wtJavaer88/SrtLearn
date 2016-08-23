@@ -33,6 +33,7 @@ public final class R {
         public static final int grey=0x7f050007;
         public static final int memo_line_et_linecolor=0x7f050017;
         public static final int red=0x7f050000;
+        public static final int textColor=0x7f050018;
         public static final int transaction_blance_amount=0x7f05000f;
         public static final int transaction_income_amount=0x7f05000e;
         public static final int transaction_normal_amount=0x7f050010;
@@ -599,40 +600,52 @@ public final class R {
         public static final int report_activity_go_trans_list_btn_width=0x7f0601f8;
     }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
-        public static final int main_add_expense_quickly_new=0x7f020001;
-        public static final int main_add_expense_quickly_new_normal=0x7f020002;
-        public static final int main_add_expense_quickly_new_selected=0x7f020003;
-        public static final int mymoney_bg=0x7f020004;
-        public static final int mymoney_repeat_bg=0x7f020005;
-        public static final int star2=0x7f020006;
-        public static final int star_dark2=0x7f020007;
-        public static final int wheel_bg=0x7f020008;
-        public static final int wheel_val=0x7f020009;
+        public static final int bg_text_color=0x7f020000;
+        public static final int gallery_item=0x7f020001;
+        public static final int ic_launcher=0x7f020002;
+        public static final int main_add_expense_quickly_new=0x7f020003;
+        public static final int main_add_expense_quickly_new_normal=0x7f020004;
+        public static final int main_add_expense_quickly_new_selected=0x7f020005;
+        public static final int mymoney_bg=0x7f020006;
+        public static final int mymoney_repeat_bg=0x7f020007;
+        public static final int one_select=0x7f020008;
+        public static final int star2=0x7f020009;
+        public static final int star_dark2=0x7f02000a;
+        public static final int tian=0x7f02000b;
+        public static final int wheel_bg=0x7f02000c;
+        public static final int wheel_val=0x7f02000d;
     }
     public static final class id {
-        public static final int add_tag_dialg_content=0x7f0b0013;
-        public static final int add_tag_dialg_no=0x7f0b0014;
-        public static final int add_tag_dialg_ok=0x7f0b0015;
-        public static final int add_tag_dialg_title=0x7f0b0012;
-        public static final int btnChoose=0x7f0b0007;
-        public static final int btnFirst=0x7f0b0009;
-        public static final int btnLast=0x7f0b000a;
-        public static final int btnPlay=0x7f0b000c;
-        public static final int btnSetting=0x7f0b0006;
-        public static final int btnSkip=0x7f0b000b;
-        public static final int btn_speaklocal=0x7f0b0002;
-        public static final int btn_speakonline=0x7f0b0001;
-        public static final int chs_tv=0x7f0b0011;
-        public static final int edt_content=0x7f0b0000;
-        public static final int eng_tv=0x7f0b0010;
-        public static final int file_tv=0x7f0b0008;
-        public static final int progress_tv=0x7f0b000f;
-        public static final int recbtn=0x7f0b0003;
-        public static final int recbtn2=0x7f0b0004;
-        public static final int sayBtn=0x7f0b0005;
-        public static final int starBtn=0x7f0b000d;
-        public static final int timeline_tv=0x7f0b000e;
+        public static final int add_tag_dialg_content=0x7f0b001b;
+        public static final int add_tag_dialg_no=0x7f0b001c;
+        public static final int add_tag_dialg_ok=0x7f0b001d;
+        public static final int add_tag_dialg_title=0x7f0b001a;
+        public static final int btnChoose=0x7f0b000d;
+        public static final int btnFirst=0x7f0b000f;
+        public static final int btnLast=0x7f0b0010;
+        public static final int btnPlay=0x7f0b0012;
+        public static final int btnSetting=0x7f0b000c;
+        public static final int btnSkip=0x7f0b0011;
+        public static final int btn_speaklocal=0x7f0b0005;
+        public static final int btn_speakonline=0x7f0b0004;
+        public static final int button1=0x7f0b0000;
+        public static final int chs_tv=0x7f0b0017;
+        public static final int editText1=0x7f0b0001;
+        public static final int edt_content=0x7f0b0003;
+        public static final int eng_tv=0x7f0b0016;
+        public static final int file_tv=0x7f0b000e;
+        public static final int gallery=0x7f0b0002;
+        public static final int imageview=0x7f0b0018;
+        public static final int pinyin_et=0x7f0b0007;
+        public static final int pinyin_gallery=0x7f0b0008;
+        public static final int pinyin_ok=0x7f0b0006;
+        public static final int progress_tv=0x7f0b0015;
+        public static final int recbtn=0x7f0b0009;
+        public static final int recbtn2=0x7f0b000a;
+        public static final int sayBtn=0x7f0b000b;
+        public static final int starBtn=0x7f0b0013;
+        public static final int text=0x7f0b0019;
+        public static final int timeline_tv=0x7f0b0014;
     }
     public static final class integer {
         public static final int piechartView_amountLabelTextSize=0x7f070001;
@@ -649,10 +662,13 @@ public final class R {
         public static final int piechartView_totalLableTextSize=0x7f070000;
     }
     public static final class layout {
-        public static final int activity_main=0x7f030000;
-        public static final int activity_rec=0x7f030001;
-        public static final int activity_srt=0x7f030002;
-        public static final int setting_add_tags_dialg=0x7f030003;
+        public static final int activity_bihua=0x7f030000;
+        public static final int activity_main=0x7f030001;
+        public static final int activity_pinyin=0x7f030002;
+        public static final int activity_rec=0x7f030003;
+        public static final int activity_srt=0x7f030004;
+        public static final int gallery_item=0x7f030005;
+        public static final int setting_add_tags_dialg=0x7f030006;
     }
     public static final class raw {
         public static final int bdspeech_recognition_cancel=0x7f040000;

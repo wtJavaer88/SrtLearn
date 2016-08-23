@@ -20,7 +20,7 @@ public class SrtTextHelper
     public static String getSrtVoiceFolder(String srtFilePath)
     {
         return BasicFileUtil.getFileParent(srtFilePath) + File.separator
-                + common.TextFormatUtil.getFileNameNoExtend(srtFilePath);
+                + common.utils.TextFormatUtil.getFileNameNoExtend(srtFilePath);
     }
 
     public static String getSrtVoiceLocation()

@@ -24,4 +24,5 @@
     <color name="transfer_account_cost">#ff4d2e06</color>
     <color name="float_text_aligntop_toast_textcolor">#ff461400</color>
     <color name="memo_line_et_linecolor">#ffd1c1a2</color>
+    <color name="textColor">#15C0C9</color>
 </resources>

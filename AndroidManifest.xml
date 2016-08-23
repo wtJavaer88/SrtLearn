@@ -37,7 +37,7 @@
         android:theme="@style/MymoneyTheme" >
         
         <activity
-            android:name="com.wnc.srtlearn.ui.SrtActivity"
+            android:name="com.wnc.srtlearn.ui.PinyinActivity"
             android:label="@string/app_name" 
             android:launchMode="singleTask" 
             android:screenOrientation="landscape"

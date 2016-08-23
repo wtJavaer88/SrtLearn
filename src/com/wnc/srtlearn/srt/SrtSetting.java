@@ -1,6 +1,6 @@
 package com.wnc.srtlearn.srt;
 
-import app.SharedPreferenceUtil;
+import common.app.SharedPreferenceUtil;
 
 public class SrtSetting
 {

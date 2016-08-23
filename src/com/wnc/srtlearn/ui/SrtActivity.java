@@ -9,10 +9,7 @@ import srt.DataHolder;
 import srt.SRT_VIEW_TYPE;
 import srt.SrtInfo;
 import srt.SrtPlayService;
-import uihelper.AfterWheelChooseListener;
-import uihelper.HorGestureDetectorListener;
-import uihelper.MyGestureDetector;
-import uihelper.VerGestureDetectorListener;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -36,11 +33,6 @@ import android.view.View.OnLongClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
-import app.ClipBoardUtil;
-import app.ShareUtil;
-import app.SharedPreferenceUtil;
-import app.ToastUtil;
-import app.WheelDialogShowUtil;
 
 import com.wnc.basic.BasicFileUtil;
 import com.wnc.basic.BasicStringUtil;
@@ -49,8 +41,18 @@ import com.wnc.srtlearn.srt.HeadSetUtil;
 import com.wnc.srtlearn.srt.HeadSetUtil.OnHeadSetListener;
 import com.wnc.srtlearn.srt.SrtSetting;
 import com.wnc.srtlearn.srt.SrtVoiceHelper;
-import common.ClickFileIntentFactory;
-import common.TextFormatUtil;
+
+import common.app.ClipBoardUtil;
+import common.app.ShareUtil;
+import common.app.SharedPreferenceUtil;
+import common.app.ToastUtil;
+import common.app.WheelDialogShowUtil;
+import common.uihelper.AfterWheelChooseListener;
+import common.uihelper.HorGestureDetectorListener;
+import common.uihelper.MyGestureDetector;
+import common.uihelper.VerGestureDetectorListener;
+import common.utils.ClickFileIntentFactory;
+import common.utils.TextFormatUtil;
 
 public class SrtActivity extends Activity implements OnClickListener,
         OnLongClickListener, HorGestureDetectorListener,

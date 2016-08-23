@@ -10,7 +10,6 @@ import java.util.Map;
 import android.os.Environment;
 import android.os.Message;
 import android.util.Log;
-import app.ToastUtil;
 
 import com.wnc.basic.BasicDateUtil;
 import com.wnc.basic.BasicFileUtil;
@@ -18,8 +17,10 @@ import com.wnc.basic.BasicStringUtil;
 import com.wnc.srtlearn.srt.SrtSetting;
 import com.wnc.srtlearn.srt.SrtVoiceHelper;
 import com.wnc.srtlearn.ui.SrtActivity;
-import common.MyFileUtil;
-import common.TextFormatUtil;
+
+import common.app.ToastUtil;
+import common.utils.MyFileUtil;
+import common.utils.TextFormatUtil;
 
 public class SrtPlayService
 {
@@ -65,10 +66,8 @@ public class SrtPlayService
         int i = filePath.lastIndexOf(".");
         filePath = filePath.substring(0, i);
         File picFolder = new File(filePath);
-        System.out.println("picFolder..." + picFolder);
         if (picFolder.exists())
         {
-            System.out.println("exist....");
             filePath = filePath + File.separator
                     + TextFormatUtil.getFileNameNoExtend(getCurFile())
                     + "_p1.pic";
@@ -84,7 +83,6 @@ public class SrtPlayService
         {
             filePath = "";
         }
-        System.out.println("filePath:" + filePath);
         return filePath;
     }
 
