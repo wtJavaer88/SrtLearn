@@ -8,7 +8,7 @@ public class MainAss
     {
         String srtFile = "C:\\Users\\cpr216\\Downloads\\字幕\\Person.of.Interest.S03"
                 + "\\S03E01.ass";
-        List<SrtInfo> srtInfos = common.srt.picker.PickerFactory.getPicker(
+        List<SrtInfo> srtInfos = srt.picker.PickerFactory.getPicker(
                 srtFile).getSrtInfos();
         DataHolder.appendData(srtFile, srtInfos);
         System.out.println(DataHolder.getClosestSrt(0, 0, 9));
