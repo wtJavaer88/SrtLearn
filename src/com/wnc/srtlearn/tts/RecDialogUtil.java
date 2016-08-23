@@ -2,7 +2,6 @@ package com.wnc.srtlearn.tts;
 
 import java.util.ArrayList;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -14,16 +13,6 @@ public class RecDialogUtil
 {
 	// 对话框监听
 	static DialogRecognitionListener mRecognitionListener;
-
-	public static BaiduASRDigitalDialog getDialog(Activity recActivity, final CallBack callback)
-	{
-		Bundle params = new Bundle();
-		params.putString(BaiduASRDigitalDialog.PARAM_API_KEY, BdTextToSpeech.API_KEY);
-		params.putString(BaiduASRDigitalDialog.PARAM_SECRET_KEY, BdTextToSpeech.SECRET_KEY);
-		params.putInt(BaiduASRDigitalDialog.PARAM_DIALOG_THEME, Config.DIALOG_THEME);
-		BaiduASRDigitalDialog mDialog = new BaiduASRDigitalDialog(recActivity, params);
-		return mDialog;
-	}
 
 	public static BaiduASRDigitalDialog getDialog(TTSActivity recActivity, final CallBack callback)
 	{
