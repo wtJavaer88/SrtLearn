@@ -7,30 +7,35 @@
     android:padding="16dp"
 	>
 
-    <EditText
-        android:id="@+id/edt_content"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="start"
-        android:minLines="5"
-        android:text="Hi 我是百度语音合成，请输入要合成的语音内容" />
 
-    <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-	>
     <Button
-        android:id="@+id/btn_speakonline"
+        android:id="@+id/btn_bihua"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="在线合成播放" />
+        android:text="比划浏览" />
     <Button
-        android:id="@+id/btn_speaklocal"
-        android:layout_width="match_parent"
+        android:id="@+id/btn_pinyin"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="离线合成播放" />
-    </LinearLayout>
+        android:text="拼音浏览" />
+    <Button
+        android:id="@+id/btn_tts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="百度语音" />
+     <Button
+        android:id="@+id/btn_srt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="字幕学习" />
+      <Button
+        android:id="@+id/btn_favsrt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="收藏字幕" />
 </LinearLayout>

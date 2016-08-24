@@ -37,7 +37,7 @@
         android:theme="@style/MymoneyTheme" >
         
         <activity
-            android:name="com.wnc.srtlearn.ui.PinyinActivity"
+            android:name="com.wnc.srtlearn.ui.MainActivity"
             android:label="@string/app_name" 
             android:launchMode="singleTask" 
             android:screenOrientation="landscape"
@@ -48,7 +48,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-         <activity android:name="com.wnc.srtlearn.ui.ReadActivityity"/>
+         <activity android:name="com.wnc.srtlearn.ui.BihuaActivity"/>
+         <activity android:name="com.wnc.srtlearn.ui.PinyinActivity"/>
+         <activity android:name="com.wnc.srtlearn.ui.TTSActivity"/>
+         <activity android:name="com.wnc.srtlearn.ui.SrtActivity"/>
+         <activity android:name="com.wnc.srtlearn.ui.FavoriteSrtActivity"/>
+         <activity android:name="com.wnc.srtlearn.ui.ReadActivity"/>
     </application>
 
 </manifest>

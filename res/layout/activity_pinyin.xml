@@ -11,11 +11,17 @@
         android:orientation="horizontal" >
 
         <Button
+            android:id="@+id/pinyin_cancel"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="返回" />
+        <Button
             android:id="@+id/pinyin_ok"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Button" />
+            android:text="保存" />
 
         <EditText
             android:id="@+id/pinyin_et"

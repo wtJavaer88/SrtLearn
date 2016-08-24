@@ -10,8 +10,6 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.wnc.srtlearn.R;
-import com.wnc.srtlearn.R.id;
-import com.wnc.srtlearn.R.layout;
 import com.wnc.srtlearn.tts.BdTextToLocalSpeech;
 import com.wnc.srtlearn.tts.BdTextToOnlineSpeech;
 import com.wnc.srtlearn.tts.BdTextToSpeech;
@@ -22,7 +20,7 @@ public class ReadActivity extends Activity implements UncaughtExceptionHandler
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_read);
 
         // 设置未捕获异常UncaughtExceptionHandler的处理方法
         Thread.setDefaultUncaughtExceptionHandler(this);

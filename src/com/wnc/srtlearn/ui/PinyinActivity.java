@@ -1,6 +1,7 @@
 package com.wnc.srtlearn.ui;
 
 import java.lang.Thread.UncaughtExceptionHandler;
+import java.util.Arrays;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -13,9 +14,11 @@ import android.widget.EditText;
 import android.widget.Gallery;
 
 import com.wnc.basic.BasicNumberUtil;
+import com.wnc.basic.BasicStringUtil;
 import com.wnc.srtlearn.R;
 import com.wnc.string.PatternUtil;
 import common.app.GalleryUtil;
+import common.app.ToastUtil;
 import common.uihelper.AfterGalleryChooseListener;
 import common.utils.PinYinUtil;
 
@@ -35,15 +38,23 @@ public class PinyinActivity extends Activity implements OnClickListener,
 
         Thread.setDefaultUncaughtExceptionHandler(this);
         setContentView(R.layout.activity_pinyin);
+        initData();
         initView();
     }
 
-    String dialog = "武汉恒信,欢迎您的光临!";
-    String pinyin = PinYinUtil.getSeveralPinyin(dialog);
+    private void initData()
+    {
+        dialog = "武汉恒信,欢迎您的光临!";
+        pinyin = PinYinUtil.getSeveralPinyin(dialog).split(" ");
+    }
+
+    String dialog;
+    String[] pinyin;
 
     private void initView()
     {
         ((Button) findViewById(R.id.pinyin_ok)).setOnClickListener(this);
+        ((Button) findViewById(R.id.pinyin_cancel)).setOnClickListener(this);
         gallery = (Gallery) findViewById(R.id.pinyin_gallery);
         et = ((EditText) findViewById(R.id.pinyin_et));
 
@@ -51,9 +62,31 @@ public class PinyinActivity extends Activity implements OnClickListener,
         GalleryUtil.getPinyinGallery(this, gallery, dialog, pinyin, this);
     }
 
+    int curArrIndex = -1;
+
     @Override
     public void onClick(View v)
     {
+        switch (v.getId())
+        {
+        case R.id.pinyin_ok:
+            String pyContent = et.getText().toString().trim();
+            if (BasicStringUtil.isNotNullString(pyContent))
+            {
+                pinyin[curArrIndex] = pyContent;
+                System.out.println(Arrays.toString(pinyin));
+                ToastUtil.showShortToast(this, "修改拼音成功!");
+                final int selectedItemPosition = gallery
+                        .getSelectedItemPosition();
+                GalleryUtil.getPinyinGallery(this, gallery, dialog, pinyin,
+                        this);
+                gallery.setSelection(selectedItemPosition);
+            }
+            break;
+        case R.id.pinyin_cancel:
+            finish();
+            break;
+        }
     }
 
     @Override
@@ -72,10 +105,10 @@ public class PinyinActivity extends Activity implements OnClickListener,
     @Override
     public void afterGalleryChoose(String str)
     {
-        final int number = BasicNumberUtil.getNumber(PatternUtil
-                .getFirstPattern(str, "\\d+"));
-        et.setText(PatternUtil.getFirstPattern(str, ":.*+").replace(":", ""));
-        char charAt = dialog.charAt(number);
+        curArrIndex = BasicNumberUtil.getNumber(PatternUtil.getFirstPattern(
+                str, "\\d+"));
+        et.setText(pinyin[curArrIndex]);
+        char charAt = dialog.charAt(curArrIndex);
         System.out.println(charAt);
     }
 }

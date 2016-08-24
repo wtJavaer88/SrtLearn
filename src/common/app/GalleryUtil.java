@@ -115,15 +115,14 @@ public class GalleryUtil
     }
 
     public static Gallery getPinyinGallery(Activity activity, Gallery gallery,
-            String dialog, String pinyin,
+            String dialog, final String[] pinyin,
             final AfterGalleryChooseListener listener)
     {
-        if (BasicStringUtil.isNull2String(dialog, pinyin))
+        if (BasicStringUtil.isNullString(dialog) || pinyin == null)
         {
             throw new RuntimeException("请给一段合法的汉字和拼音!");
         }
-        final String[] pinyinArr = pinyin.split(" ");
-        if (dialog.length() != pinyinArr.length)
+        if (dialog.length() != pinyin.length)
         {
             throw new RuntimeException("汉字和拼音长度不匹配!");
         }
@@ -136,7 +135,7 @@ public class GalleryUtil
             if (TextFormatUtil.isChineseChar(ch))
             {
                 list.add(new GalleryModel(R.drawable.py_select, "" + ch + "("
-                        + pinyinArr[i] + ")"));
+                        + pinyin[i] + ")"));
                 indexs.put(newIndex, i);
                 newIndex++;
             }
@@ -156,8 +155,7 @@ public class GalleryUtil
                 {
                     if (position > -1 && position < indexs.size())
                     {
-                        listener.afterGalleryChoose(indexs.get(position) + ":"
-                                + pinyinArr[indexs.get(position)]);
+                        listener.afterGalleryChoose(indexs.get(position) + "");
                     }
                 }
             }

@@ -9,7 +9,6 @@ import srt.DataHolder;
 import srt.SRT_VIEW_TYPE;
 import srt.SrtInfo;
 import srt.SrtPlayService;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -41,7 +40,6 @@ import com.wnc.srtlearn.srt.HeadSetUtil;
 import com.wnc.srtlearn.srt.HeadSetUtil.OnHeadSetListener;
 import com.wnc.srtlearn.srt.SrtSetting;
 import com.wnc.srtlearn.srt.SrtVoiceHelper;
-
 import common.app.ClipBoardUtil;
 import common.app.ShareUtil;
 import common.app.SharedPreferenceUtil;
@@ -58,8 +56,8 @@ public class SrtActivity extends Activity implements OnClickListener,
         OnLongClickListener, HorGestureDetectorListener,
         VerGestureDetectorListener, UncaughtExceptionHandler
 {
-    private static final String SRT_PLAY_TEXT = "播放";
-    private static final String SRT_STOP_TEXT = "停止";
+    private final String SRT_PLAY_TEXT = "播放";
+    private final String SRT_STOP_TEXT = "停止";
     // 组件设置成静态, 防止屏幕旋转的时候内存地址会变
     private Button btnPlay;
     private TextView movieTv;

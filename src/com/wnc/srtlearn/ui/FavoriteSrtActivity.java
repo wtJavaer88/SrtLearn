@@ -17,7 +17,7 @@ import com.wnc.srtlearn.R;
 import com.wnc.srtlearn.tts.BdTextToOnlineSpeech;
 import com.wnc.srtlearn.tts.BdTextToSpeech;
 
-public class SrtViewActivity extends Activity implements UncaughtExceptionHandler
+public class FavoriteSrtActivity extends Activity implements UncaughtExceptionHandler
 {
 
 	List<srt.FavoriteSrtInfo> list = new ArrayList<FavoriteSrtInfo>();
@@ -89,7 +89,7 @@ public class SrtViewActivity extends Activity implements UncaughtExceptionHandle
 					bdTextToSpeech.stop();
 				}
 				String content = chsTv.getText().toString();
-				bdTextToSpeech = BdTextToOnlineSpeech.getInstance(SrtViewActivity.this);
+				bdTextToSpeech = BdTextToOnlineSpeech.getInstance(FavoriteSrtActivity.this);
 				bdTextToSpeech.speak(content);
 			}
 		});
