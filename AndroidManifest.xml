@@ -54,6 +54,7 @@
          <activity android:name="com.wnc.srtlearn.ui.SrtActivity"/>
          <activity android:name="com.wnc.srtlearn.ui.FavoriteSrtActivity"/>
          <activity android:name="com.wnc.srtlearn.ui.ReadActivity"/>
+         <activity android:name="com.wnc.srtlearn.ui.RecWordActivity"/>
     </application>
 
 </manifest>

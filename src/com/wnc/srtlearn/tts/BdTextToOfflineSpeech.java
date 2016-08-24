@@ -19,7 +19,7 @@ import com.baidu.tts.client.TtsMode;
 /**
  * Created by JunkChen on 2016/4/5 0005.
  */
-public class BdTextToLocalSpeech extends BdTextToSpeech implements SpeechSynthesizerListener
+public class BdTextToOfflineSpeech extends BdTextToSpeech implements SpeechSynthesizerListener
 {
 	private static final String TAG = "BdTextToLocalSpeech";
 
@@ -33,18 +33,18 @@ public class BdTextToLocalSpeech extends BdTextToSpeech implements SpeechSynthes
 	private static final String ENGLISH_SPEECH_FEMALE_MODEL_NAME = "bd_etts_speech_female_en.dat";
 	private static final String ENGLISH_SPEECH_MALE_MODEL_NAME = "bd_etts_speech_male_en.dat";
 	private static final String ENGLISH_TEXT_MODEL_NAME = "bd_etts_text_en.dat";
-	private static BdTextToLocalSpeech ourInstance;
+	private static BdTextToOfflineSpeech ourInstance;
 
-	public static synchronized BdTextToLocalSpeech getInstance(Context context)
+	public static synchronized BdTextToOfflineSpeech getInstance(Context context)
 	{
 		if (ourInstance == null)
 		{
-			ourInstance = new BdTextToLocalSpeech(context);
+			ourInstance = new BdTextToOfflineSpeech(context);
 		}
 		return ourInstance;
 	}
 
-	private BdTextToLocalSpeech(Context context)
+	private BdTextToOfflineSpeech(Context context)
 	{
 		Log.i(TAG, ">>>BdTextToSpeech executed.<<<");
 		this.context = context;

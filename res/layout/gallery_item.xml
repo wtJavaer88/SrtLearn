@@ -9,7 +9,7 @@
         android:id="@+id/imageview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/bihua_select"
+        android:src="@drawable/yuyin_select"
         android:focusableInTouchMode="true"
         android:focusable="true"/>
     

@@ -38,6 +38,7 @@ public class MainActivity extends Activity implements OnClickListener,
         ((Button) findViewById(R.id.btn_tts)).setOnClickListener(this);
         ((Button) findViewById(R.id.btn_srt)).setOnClickListener(this);
         ((Button) findViewById(R.id.btn_favsrt)).setOnClickListener(this);
+        ((Button) findViewById(R.id.btn_recword)).setOnClickListener(this);
     }
 
     @Override
@@ -59,6 +60,9 @@ public class MainActivity extends Activity implements OnClickListener,
             break;
         case R.id.btn_favsrt:
             gotoAct(FavoriteSrtActivity.class);
+            break;
+        case R.id.btn_recword:
+            gotoAct(RecWordActivity.class);
             break;
         }
     }

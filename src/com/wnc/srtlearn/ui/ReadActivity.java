@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.wnc.srtlearn.R;
-import com.wnc.srtlearn.tts.BdTextToLocalSpeech;
+import com.wnc.srtlearn.tts.BdTextToOfflineSpeech;
 import com.wnc.srtlearn.tts.BdTextToOnlineSpeech;
 import com.wnc.srtlearn.tts.BdTextToSpeech;
 
@@ -60,7 +60,7 @@ public class ReadActivity extends Activity implements UncaughtExceptionHandler
                     public void onClick(View v)
                     {
                         String content = edt_content.getText().toString();
-                        bdTextToSpeech = BdTextToLocalSpeech
+                        bdTextToSpeech = BdTextToOfflineSpeech
                                 .getInstance(ReadActivity.this);
                         bdTextToSpeech.speak(content);
                     }

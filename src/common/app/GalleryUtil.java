@@ -62,6 +62,47 @@ public class GalleryUtil
         return gallery;
     }
 
+    public static Gallery getYuyinGallery(Activity activity, Gallery gallery,
+            String dialog, final AfterGalleryChooseListener listener)
+    {
+        if (BasicStringUtil.isNullString(dialog))
+        {
+            throw new RuntimeException("请给一段合法的汉字!");
+        }
+        final List<GalleryModel> list = new ArrayList<GalleryModel>();
+        for (int i = 0; i < dialog.length(); i++)
+        {
+            final char ch = dialog.charAt(i);
+            if (TextFormatUtil.isChineseChar(ch))
+            {
+                list.add(new GalleryModel(R.drawable.yuyin_select, "" + ch));
+            }
+        }
+        final PictureAdapter adapter = new PictureAdapter(activity, list);
+
+        gallery.setAdapter(adapter);
+        gallery.setSelection(list.size() / 2);
+        gallery.setOnItemSelectedListener(new OnItemSelectedListener()
+        {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                    int position, long id)
+            {
+                adapter.setSelectItem(position);
+                if (listener != null)
+                {
+                    listener.afterGalleryChoose(list.get(position).getText());
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent)
+            {
+            }
+        });
+        return gallery;
+    }
+
     public static Gallery getPinyinGallery(Activity activity, Gallery gallery,
             String dialog, final AfterGalleryChooseListener listener)
     {

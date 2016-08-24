@@ -1,0 +1,60 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        
+		
+        <Button
+            android:id="@+id/btn_recword"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="读单字" />
+        <Button
+            android:id="@+id/btn_recdialog"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="读整段" />
+        
+        <TextView 
+            android:id="@+id/tv_rectip"
+		    android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:text="朗读结果:">
+		    
+		</TextView>
+        <EditText
+            android:id="@+id/et_recresult"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10" >
+
+            <requestFocus />
+        </EditText>
+        
+      
+    </LinearLayout>
+
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+        
+        <Gallery
+        android:id="@+id/recword_gallery"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:spacing="20dp"/>
+</LinearLayout>
+
+</LinearLayout>
