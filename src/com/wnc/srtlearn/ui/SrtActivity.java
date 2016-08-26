@@ -66,7 +66,7 @@ public class SrtActivity extends Activity implements OnClickListener,
     private static TextView timelineTv;
 
     public final String srtFolder = Environment.getExternalStorageDirectory()
-            .getPath() + "/wnc/app/srt/";
+            .getPath() + "/wnc/res/srt/";
 
     private GestureDetector gestureDetector;
     AlertDialog alertDialog;

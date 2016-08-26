@@ -17,7 +17,6 @@ import com.wnc.basic.BasicStringUtil;
 import com.wnc.srtlearn.srt.SrtSetting;
 import com.wnc.srtlearn.srt.SrtVoiceHelper;
 import com.wnc.srtlearn.ui.SrtActivity;
-
 import common.app.ToastUtil;
 import common.utils.MyFileUtil;
 import common.utils.TextFormatUtil;
@@ -31,9 +30,9 @@ public class SrtPlayService
     private int beginReplayIndex = -1;
     private int endReplayIndex = -1;
     final String favoriteTxt = Environment.getExternalStorageDirectory()
-            .getPath() + "/wnc/app/srt/favorite.txt";
+            .getPath() + "/wnc/app/srtlearn/favorite.txt";
     final String thumbPicFolder = Environment.getExternalStorageDirectory()
-            .getPath() + "/wnc/app/图片/";
+            .getPath() + "/wnc/res/srtpic/";
     // 文件夹名称最大只取12位
     final int FOLDER_NAME_MAXLEN = 12;
     final int DELTA_UNIQUE = 1000;// 文件夹和所属文件的Map的Key规则
