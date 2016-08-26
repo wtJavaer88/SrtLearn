@@ -19,10 +19,14 @@ import com.wnc.srtlearn.tts.CallBack;
 import com.wnc.srtlearn.tts.Config;
 import com.wnc.srtlearn.tts.RecDialogUtil;
 import common.app.GalleryUtil;
+import common.app.ToastUtil;
+import common.app.WheelDialogShowUtil;
 import common.uihelper.AfterGalleryChooseListener;
+import common.uihelper.AfterWheelChooseListener;
 
 public class RecWordActivity extends Activity implements OnClickListener,
-        UncaughtExceptionHandler, AfterGalleryChooseListener, CallBack
+        UncaughtExceptionHandler, AfterGalleryChooseListener, CallBack,
+        AfterWheelChooseListener
 {
     final String swfHtml = Environment.getExternalStorageDirectory().getPath()
             + "/wnc/app/swfplayer/swfplayer.htm";
@@ -46,13 +50,14 @@ public class RecWordActivity extends Activity implements OnClickListener,
 
     private void initData()
     {
-        dialog = "武汉恒信,欢迎您的光临!";
+        dialog = "武汉恒信,欢迎您的光临!".trim();
     }
 
     private void initView()
     {
         ((Button) findViewById(R.id.btn_recword)).setOnClickListener(this);
         ((Button) findViewById(R.id.btn_recdialog)).setOnClickListener(this);
+        ((Button) findViewById(R.id.btn_reccustom)).setOnClickListener(this);
         gallery = (Gallery) findViewById(R.id.recword_gallery);
         et = ((EditText) findViewById(R.id.et_recresult));
         et.setVisibility(View.INVISIBLE);
@@ -71,16 +76,21 @@ public class RecWordActivity extends Activity implements OnClickListener,
         case R.id.btn_recword:
             READ_MODE = 1;
             et.setVisibility(View.INVISIBLE);
-            speakChs_Baidu();
             ((TextView) findViewById(R.id.tv_rectip)).setText("单字 <"
                     + curWordContent + "> 朗读:");
+            speakChs_Baidu();
             break;
         case R.id.btn_recdialog:
             READ_MODE = 2;
             et.setVisibility(View.INVISIBLE);
-            speakChs_Baidu();
             ((TextView) findViewById(R.id.tv_rectip)).setText("整段 <" + dialog
                     + "> 朗读:");
+            speakChs_Baidu();
+            break;
+        case R.id.btn_reccustom:
+            READ_MODE = 3;
+            System.out.println(dialog + dialog.length());
+            WheelDialogShowUtil.showHanziDialog(this, dialog, 0, 0, this);
             break;
         }
     }
@@ -124,18 +134,41 @@ public class RecWordActivity extends Activity implements OnClickListener,
     {
         et.setVisibility(View.VISIBLE);
         et.setText(content);
-        if (READ_MODE == 1 && content.equals(curWordContent))
+        content = getTextNoSymbol(content);
+        boolean result = false;
+        if ((READ_MODE == 1 || READ_MODE == 3)
+                && content.equals(curWordContent))
         {
-            System.out.println("OK!");
+            result = true;
         }
         if (READ_MODE == 2 && content.equals(dialog))
         {
+            result = true;
+        }
+        if (result)
+        {
             System.out.println("OK!");
+            ToastUtil.showLongToast(getApplicationContext(), "你好棒!");
+        }
+        else
+        {
+            ToastUtil.showLongToast(getApplicationContext(), "还差一点!");
         }
     }
 
     public String getTextNoSymbol(String s)
     {
-        return s.trim().replaceAll("[,.*!?，。！？、]", "");
+        return s.trim().replaceAll("[,\\.!?，。！？、]", "");
+    }
+
+    @Override
+    public void afterWheelChoose(Object... objs)
+    {
+        curWordContent = getTextNoSymbol(dialog.substring(
+                Integer.parseInt(objs[0].toString()),
+                1 + Integer.parseInt(objs[1].toString())));
+        ((TextView) findViewById(R.id.tv_rectip)).setText("自定义 <"
+                + curWordContent + "> 朗读:");
+        speakChs_Baidu();
     }
 }

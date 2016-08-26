@@ -56,7 +56,7 @@ public class MainActivity extends Activity implements OnClickListener,
             gotoAct(TTSActivity.class);
             break;
         case R.id.btn_srt:
-            gotoAct(SrtActivity.class);
+            gotoAct(Activity.class);
             break;
         case R.id.btn_favsrt:
             gotoAct(FavoriteSrtActivity.class);

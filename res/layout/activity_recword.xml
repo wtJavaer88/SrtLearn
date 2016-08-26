@@ -18,13 +18,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="读单字" />
+      
         <Button
             android:id="@+id/btn_recdialog"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="读整段" />
-        
+        <Button
+            android:id="@+id/btn_reccustom"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="自定义" />  
         <TextView 
             android:id="@+id/tv_rectip"
 		    android:layout_width="wrap_content"

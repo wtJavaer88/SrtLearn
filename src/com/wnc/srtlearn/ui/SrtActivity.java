@@ -39,7 +39,6 @@ import com.wnc.srtlearn.srt.HeadSetUtil;
 import com.wnc.srtlearn.srt.HeadSetUtil.OnHeadSetListener;
 import com.wnc.srtlearn.srt.SrtSetting;
 import com.wnc.srtlearn.srt.SrtVoiceHelper;
-
 import common.app.ClickFileIntentFactory;
 import common.app.ClipBoardUtil;
 import common.app.ShareUtil;

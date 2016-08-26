@@ -1,12 +1,12 @@
 package common.app;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import srt.DataHolder;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,9 +19,7 @@ import cn.org.octopus.wheelview.widget.WheelView;
 
 import com.wnc.basic.BasicDateUtil;
 import com.wnc.basic.BasicStringUtil;
-import com.wnc.srtlearn.ui.SrtActivity;
 import com.wnc.string.PatternUtil;
-
 import common.uihelper.AfterWheelChooseListener;
 import common.utils.DateTimeSelectArrUtil;
 import common.utils.MyWheelBean;
@@ -236,8 +234,8 @@ public class WheelDialogShowUtil
         dialog.show();
     }
 
-    public static void showSrtDialog(final SrtActivity context,
-            String[] leftArr, String[] rightArr, int beginIndex, int endIndex,
+    public static void showSrtDialog(final Context context, String[] leftArr,
+            String[] rightArr, int beginIndex, int endIndex,
             final AfterWheelChooseListener listener)
     {
         final AlertDialog dialog = new AlertDialog.Builder(context).create();
@@ -279,6 +277,71 @@ public class WheelDialogShowUtil
         };
         wheelview1.addChangingListener(onWheelChangedListener);
         wheelview2.addChangingListener(onWheelChangedListener);
+        // 设置对话框点击事件 积极
+        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "确定",
+                new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        listener.afterWheelChoose(wheelview1.getCurrentItem(),
+                                wheelview2.getCurrentItem());
+                        dialog.dismiss();
+                    }
+
+                });
+
+        // 设置对话框点击事件 消极
+        dialog.setButton(AlertDialog.BUTTON_NEGATIVE, "取消",
+                new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        dialog.dismiss();
+                    }
+                });
+        dialog.setView(llContent);
+        dialog.show();
+    }
+
+    public static void showHanziDialog(final Context context, String dialogStr,
+            int beginIndex, int endIndex,
+            final AfterWheelChooseListener listener)
+    {
+        String[] hanziArr = new String[dialogStr.length()];
+        for (int i = 0; i < dialogStr.length(); i++)
+        {
+            hanziArr[i] = dialogStr.substring(i, i + 1);
+        }
+        System.out.println(Arrays.toString(hanziArr));
+        final AlertDialog dialog = new AlertDialog.Builder(context).create();
+        // dialog.setTitle(title);
+
+        final List<String[]> arrList = new ArrayList<String[]>();
+        arrList.add(DateTimeSelectArrUtil.getYears());
+        arrList.add(DateTimeSelectArrUtil.getMonths());
+        arrList.add(DateTimeSelectArrUtil.getDays());
+
+        LinearLayout llContent = new LinearLayout(context);
+        llContent.setOrientation(LinearLayout.HORIZONTAL);
+        final WheelView wheelview1 = new WheelView(context);
+        wheelview1.setVisibleItems(7);
+        wheelview1.setCyclic(false);
+        wheelview1.setAdapter(new ArrayWheelAdapter<String>(hanziArr));
+        wheelview1.setTextSize(40);
+        wheelview1.setCurrentItem(beginIndex);
+        llContent.addView(wheelview1, new LinearLayout.LayoutParams(
+                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
+
+        final WheelView wheelview2 = new WheelView(context);
+        wheelview2.setVisibleItems(7);
+        wheelview2.setCyclic(false);
+        wheelview2.setAdapter(new ArrayWheelAdapter<String>(hanziArr));
+        wheelview2.setTextSize(40);
+        wheelview2.setCurrentItem(endIndex);
+        llContent.addView(wheelview2, new LinearLayout.LayoutParams(
+                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
         // 设置对话框点击事件 积极
         dialog.setButton(AlertDialog.BUTTON_POSITIVE, "确定",
                 new DialogInterface.OnClickListener()
