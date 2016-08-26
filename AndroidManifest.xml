@@ -48,13 +48,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-         <activity android:name="com.wnc.srtlearn.ui.BihuaActivity"/>
-         <activity android:name="com.wnc.srtlearn.ui.PinyinActivity"/>
-         <activity android:name="com.wnc.srtlearn.ui.TTSActivity"/>
-         <activity android:name="com.wnc.srtlearn.ui.SrtActivity"/>
-         <activity android:name="com.wnc.srtlearn.ui.FavoriteSrtActivity"/>
+         <activity android:name="com.wnc.srtlearn.ui.BihuaActivity" android:screenOrientation="landscape"/>
+         <activity android:name="com.wnc.srtlearn.ui.PinyinActivity" android:screenOrientation="landscape"/>
+         <activity android:name="com.wnc.srtlearn.ui.RecWordActivity" android:screenOrientation="landscape"/>
+         <activity android:name="com.wnc.srtlearn.ui.TTSActivity" android:screenOrientation="landscape"/>
+         <activity android:name="com.wnc.srtlearn.ui.SrtActivity" android:screenOrientation="landscape"/>
+         <activity android:name="com.wnc.srtlearn.ui.FavoriteSrtActivity" android:screenOrientation="landscape"/>
          <activity android:name="com.wnc.srtlearn.ui.ReadActivity"/>
-         <activity android:name="com.wnc.srtlearn.ui.RecWordActivity"/>
     </application>
 
 </manifest>

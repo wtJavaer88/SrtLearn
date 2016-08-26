@@ -59,11 +59,11 @@ public class SrtActivity extends Activity implements OnClickListener,
     private final String SRT_PLAY_TEXT = "播放";
     private final String SRT_STOP_TEXT = "停止";
     // 组件设置成静态, 防止屏幕旋转的时候内存地址会变
-    private Button btnPlay;
-    private TextView movieTv;
-    private TextView chsTv;
-    private TextView engTv;
-    private TextView timelineTv;
+    private static Button btnPlay;
+    private static TextView movieTv;
+    private static TextView chsTv;
+    private static TextView engTv;
+    private static TextView timelineTv;
 
     public final String srtFolder = Environment.getExternalStorageDirectory()
             .getPath() + "/wnc/app/srt/";
