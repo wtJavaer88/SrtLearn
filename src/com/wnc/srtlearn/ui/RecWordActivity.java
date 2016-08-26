@@ -105,13 +105,20 @@ public class RecWordActivity extends Activity implements OnClickListener, Uncaug
 	// 百度语音识别
 	public void speakChs_Baidu()
 	{
-		Config.setCurrentLanguageIndex(0);
-		if (mDialog != null)
+		try
 		{
-			mDialog.dismiss();
+			Config.setCurrentLanguageIndex(0);
+			if (mDialog != null)
+			{
+				mDialog.dismiss();
+			}
+			mDialog = RecDialogUtil.getDialog(this, this);
+			mDialog.show();
 		}
-		mDialog = RecDialogUtil.getDialog(this, this);
-		mDialog.show();
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	@Override

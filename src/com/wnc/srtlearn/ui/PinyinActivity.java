@@ -94,9 +94,22 @@ public class PinyinActivity extends Activity implements OnClickListener, Uncaugh
 			}
 			break;
 		case R.id.pinyin_cancel:
-			finish();
+			setResultAndFinish();
 			break;
 		}
+	}
+
+	private void setResultAndFinish()
+	{
+		Intent intent = new Intent();
+		String ret = "";
+		for (String s : pinyinArr)
+		{
+			ret += " " + s;
+		}
+		intent.putExtra("pinyin", ret.trim());// 放入返回值
+		setResult(0, intent);// 放入回传的值,并添加一个Code,方便区分返回的数据
+		finish();
 	}
 
 	@Override

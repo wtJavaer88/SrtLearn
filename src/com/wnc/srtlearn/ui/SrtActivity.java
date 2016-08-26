@@ -55,6 +55,9 @@ public class SrtActivity extends Activity implements OnClickListener, OnLongClic
 {
 	private final String SRT_PLAY_TEXT = "播放";
 	private final String SRT_STOP_TEXT = "停止";
+
+	final int PINYIN_RESULT = 100;
+
 	// 组件设置成静态, 防止屏幕旋转的时候内存地址会变
 	private static Button btnPlay;
 	private static TextView movieTv;
@@ -118,16 +121,17 @@ public class SrtActivity extends Activity implements OnClickListener, OnLongClic
 					switch (which)
 					{
 					case 0:
-						srtPlayService.stopSrt();
+						stopSrtPlay();
 						SrtActivity.this.startActivity(new Intent(SrtActivity.this, RecWordActivity.class).putExtra("dialog", DataHolder.getCurrent().getChs()));
 						break;
 					case 1:
-						srtPlayService.stopSrt();
+						stopSrtPlay();
 						SrtActivity.this.startActivity(new Intent(SrtActivity.this, BihuaActivity.class).putExtra("dialog", DataHolder.getCurrent().getChs()));
 						break;
 					case 2:
 						srtPlayService.stopSrt();
-						SrtActivity.this.startActivity(new Intent(SrtActivity.this, PinyinActivity.class).putExtra("dialog", DataHolder.getCurrent().getChs()).putExtra("pinyin", DataHolder.getCurrent().getEng()));
+						Intent intent = new Intent(SrtActivity.this, PinyinActivity.class).putExtra("dialog", DataHolder.getCurrent().getChs()).putExtra("pinyin", DataHolder.getCurrent().getEng());
+						startActivityForResult(intent, PINYIN_RESULT);
 						break;
 					default:
 						break;
@@ -839,6 +843,17 @@ public class SrtActivity extends Activity implements OnClickListener, OnLongClic
 			// port
 			System.out.println("ORIENTATION_PORTRAIT");
 
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == this.PINYIN_RESULT && data != null)
+		{
+			String retPY = data.getStringExtra("pinyin");
+			System.out.println("返回:" + retPY);
 		}
 	}
 }
