@@ -5,6 +5,7 @@ import java.util.List;
 
 import srt.FavoriteSrtInfo;
 import srt.TimeInfo;
+import android.os.Environment;
 
 import com.wnc.basic.BasicNumberUtil;
 import com.wnc.string.PatternUtil;
@@ -14,8 +15,9 @@ public class TestReadSrt
 {
     public static List<FavoriteSrtInfo> getFSInfos()
     {
-        List<String> readFrom = FileOp.readFrom(
-                "/storage/emulated/0/wnc/app/srtlearn/favorite.txt", "UTF-8");
+        List<String> readFrom = FileOp.readFrom(Environment
+                .getExternalStorageDirectory().getPath()
+                + "/wnc/app/srtlearn/favorite.txt", "UTF-8");
         List<FavoriteSrtInfo> list = new ArrayList<FavoriteSrtInfo>();
         for (String info : readFrom)
         {

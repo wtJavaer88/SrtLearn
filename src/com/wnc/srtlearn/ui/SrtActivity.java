@@ -39,6 +39,8 @@ import com.wnc.srtlearn.srt.HeadSetUtil;
 import com.wnc.srtlearn.srt.HeadSetUtil.OnHeadSetListener;
 import com.wnc.srtlearn.srt.SrtSetting;
 import com.wnc.srtlearn.srt.SrtVoiceHelper;
+
+import common.app.ClickFileIntentFactory;
 import common.app.ClipBoardUtil;
 import common.app.ShareUtil;
 import common.app.SharedPreferenceUtil;
@@ -48,7 +50,6 @@ import common.uihelper.AfterWheelChooseListener;
 import common.uihelper.HorGestureDetectorListener;
 import common.uihelper.MyGestureDetector;
 import common.uihelper.VerGestureDetectorListener;
-import common.utils.ClickFileIntentFactory;
 import common.utils.TextFormatUtil;
 
 public class SrtActivity extends Activity implements OnClickListener,

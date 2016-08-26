@@ -37,8 +37,8 @@ public class SrtPlayService
             .getPath() + "/wnc/res/srt/";
     // 文件夹名称最大只取12位
     final int FOLDER_NAME_MAXLEN = 12;
-    final int DELTA_UNIQUE = 1000;// 文件夹和所属文件的Map的Key规则
-    private Map<Integer, String> srtFilePathes = new HashMap<Integer, String>();
+    final String DELTA_UNIQUE = "D%dF%d";// 用来生成srtFilePathes里的key
+    private Map<String, String> srtFilePathes = new HashMap<String, String>();
     List<File> tvFolders = null;
 
     public SrtPlayService(SrtActivity srtActivity)
@@ -363,7 +363,7 @@ public class SrtPlayService
             {
                 if (SrtTextHelper.isSrtfile(f2))
                 {
-                    srtFilePathes.put(DELTA_UNIQUE * i + j,
+                    srtFilePathes.put(String.format(DELTA_UNIQUE, i, j),
                             f2.getAbsolutePath());
                     // 文件名最大只取8位
                     srtList.add(BasicStringUtil.subString(
@@ -394,7 +394,7 @@ public class SrtPlayService
 
     public String getSrtFileByArrIndex(int dIndex, int fIndex)
     {
-        return srtFilePathes.get(DELTA_UNIQUE * dIndex + fIndex);
+        return srtFilePathes.get(String.format(DELTA_UNIQUE, dIndex, fIndex));
     }
 
     public List<SrtInfo> getCurrentPlaySrtInfo()

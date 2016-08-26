@@ -1,9 +1,10 @@
-package common.utils;
+package common.app;
 
 import android.content.Intent;
 
 import com.wnc.basic.BasicStringUtil;
-import common.app.MyIntentUtil;
+
+import common.utils.FileTypeUtil;
 
 public class ClickFileIntentFactory
 {
