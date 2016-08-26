@@ -2,6 +2,12 @@ package com.wnc.srtlearn.tts;
 
 import com.baidu.tts.client.SpeechSynthesizer;
 
+/**
+ * 加abstract是为了防止别人直接实例化
+ * 
+ * @author wnc
+ *
+ */
 public abstract class BdTextToSpeech
 {
 	public static final String APP_ID = "8483663";// 请更换为自己创建的应用

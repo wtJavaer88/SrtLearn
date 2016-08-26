@@ -20,69 +20,82 @@ import common.app.GalleryUtil;
 import common.app.ToastUtil;
 import common.uihelper.AfterGalleryChooseListener;
 
-public class BihuaActivity extends Activity implements OnClickListener,
-        UncaughtExceptionHandler, AfterGalleryChooseListener
+public class BihuaActivity extends Activity implements OnClickListener, UncaughtExceptionHandler, AfterGalleryChooseListener
 {
 
-    private Gallery gallery;
-    private EditText et;
+	private Gallery gallery;
+	private EditText et;
+	String dialog = "";
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE); // 设置无标题
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE); // 设置无标题
 
-        Thread.setDefaultUncaughtExceptionHandler(this);
-        setContentView(R.layout.activity_bihua);
-        initView();
-    }
+		Thread.setDefaultUncaughtExceptionHandler(this);
+		setContentView(R.layout.activity_bihua);
+		initData();
+		initView();
+	}
 
-    private void initView()
-    {
-        ((Button) findViewById(R.id.button1)).setOnClickListener(this);
-        gallery = (Gallery) findViewById(R.id.gallery);
-        et = ((EditText) findViewById(R.id.editText1));
-        String dialog = "武汉恒信,欢迎您的光临!";
-        GalleryUtil.getBihuaGallery(this, gallery, dialog, this);
-    }
+	private void initData()
+	{
+		// dialog = "武汉恒信,欢迎您的光临!".trim();
+		Intent intent = getIntent();
+		if (intent != null && intent.getStringExtra("dialog") != null)
+		{
+			dialog = intent.getStringExtra("dialog").trim();
+		}
+		else
+		{
+			dialog = "武汉恒信,欢迎您的光临!".trim();
+		}
+	}
 
-    @Override
-    public void onClick(View v)
-    {
-        String string = et.getText().toString().trim();
-        if (BasicStringUtil.isNotNullString(string))
-        {
-            SwfPlayMgr.reCreateHtml(string);
-            startBhHtml();
-        }
-    }
+	private void initView()
+	{
+		((Button) findViewById(R.id.button1)).setOnClickListener(this);
+		gallery = (Gallery) findViewById(R.id.gallery);
+		et = ((EditText) findViewById(R.id.editText1));
+		GalleryUtil.getBihuaGallery(this, gallery, dialog, this);
+	}
 
-    private void startBhHtml()
-    {
-        Intent intent = new Intent();
-        intent.setAction("android.intent.action.VIEW");
-        Uri content_url = Uri.parse("file:///" + SwfPlayMgr.SWF_HTML);
-        intent.setData(content_url);
-        intent.setClassName("com.android.browser",
-                "com.android.browser.BrowserActivity");
-        startActivity(intent);
-    }
+	@Override
+	public void onClick(View v)
+	{
+		String string = et.getText().toString().trim();
+		if (BasicStringUtil.isNotNullString(string))
+		{
+			SwfPlayMgr.reCreateHtml(string);
+			startBhHtml();
+		}
+	}
 
-    @Override
-    public void uncaughtException(Thread thread, Throwable ex)
-    {
-        System.out.println(ex.getMessage());
-        for (StackTraceElement o : ex.getStackTrace())
-        {
-            System.out.println(o.toString());
-        }
-    }
+	private void startBhHtml()
+	{
+		Intent intent = new Intent();
+		intent.setAction("android.intent.action.VIEW");
+		Uri content_url = Uri.parse("file:///" + SwfPlayMgr.SWF_HTML);
+		intent.setData(content_url);
+		intent.setClassName("com.android.browser", "com.android.browser.BrowserActivity");
+		startActivity(intent);
+	}
 
-    @Override
-    public void afterGalleryChoose(String str)
-    {
-        et.setText(str);
-        ToastUtil.showShortToast(this, str);
-    }
+	@Override
+	public void uncaughtException(Thread thread, Throwable ex)
+	{
+		System.out.println(ex.getMessage());
+		for (StackTraceElement o : ex.getStackTrace())
+		{
+			System.out.println(o.toString());
+		}
+	}
+
+	@Override
+	public void afterGalleryChoose(String str)
+	{
+		et.setText(str);
+		ToastUtil.showShortToast(this, str);
+	}
 }

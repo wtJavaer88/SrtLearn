@@ -4,8 +4,8 @@ import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.Arrays;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -22,93 +22,102 @@ import common.app.ToastUtil;
 import common.uihelper.AfterGalleryChooseListener;
 import common.utils.PinYinUtil;
 
-public class PinyinActivity extends Activity implements OnClickListener,
-        UncaughtExceptionHandler, AfterGalleryChooseListener
+public class PinyinActivity extends Activity implements OnClickListener, UncaughtExceptionHandler, AfterGalleryChooseListener
 {
-    final String swfHtml = Environment.getExternalStorageDirectory().getPath()
-            + "/wnc/app/swfplayer/swfplayer.htm";
-    private Gallery gallery;
-    private EditText et;
+	private Gallery gallery;
+	private EditText et;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE); // 设置无标题
+	String dialog;
+	String[] pinyinArr;
 
-        Thread.setDefaultUncaughtExceptionHandler(this);
-        setContentView(R.layout.activity_pinyin);
-        initData();
-        initView();
-    }
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE); // 设置无标题
 
-    private void initData()
-    {
-        dialog = "武汉恒信,欢迎您的光临!";
-        pinyin = PinYinUtil.getSeveralPinyin(dialog).split(" ");
-    }
+		Thread.setDefaultUncaughtExceptionHandler(this);
+		setContentView(R.layout.activity_pinyin);
+		initData();
+		initView();
+	}
 
-    String dialog;
-    String[] pinyin;
+	private void initData()
+	{
+		Intent intent = getIntent();
+		if (intent != null && intent.getStringExtra("dialog") != null)
+		{
+			dialog = intent.getStringExtra("dialog").trim();
+		}
+		else
+		{
+			dialog = "武汉恒信,欢迎您的光临!".trim();
+		}
+		if (intent != null && intent.getStringExtra("pinyin") != null)
+		{
+			pinyinArr = intent.getStringExtra("pinyin").trim().split(" ");
+		}
+		else
+		{
+			pinyinArr = PinYinUtil.getSeveralPinyin(dialog).split(" ");
+		}
+	}
 
-    private void initView()
-    {
-        ((Button) findViewById(R.id.pinyin_ok)).setOnClickListener(this);
-        ((Button) findViewById(R.id.pinyin_cancel)).setOnClickListener(this);
-        gallery = (Gallery) findViewById(R.id.pinyin_gallery);
-        et = ((EditText) findViewById(R.id.pinyin_et));
+	private void initView()
+	{
+		((Button) findViewById(R.id.pinyin_ok)).setOnClickListener(this);
+		((Button) findViewById(R.id.pinyin_cancel)).setOnClickListener(this);
+		gallery = (Gallery) findViewById(R.id.pinyin_gallery);
+		et = ((EditText) findViewById(R.id.pinyin_et));
 
-        // GalleryUtil.getPinyinGallery(this, gallery, dialog, this);
-        GalleryUtil.getPinyinGallery(this, gallery, dialog, pinyin, this);
-    }
+		// GalleryUtil.getPinyinGallery(this, gallery, dialog, this);
+		GalleryUtil.getPinyinGallery(this, gallery, dialog, pinyinArr, this);
+	}
 
-    int curArrIndex = -1;
+	int curArrIndex = -1;
 
-    @Override
-    public void onClick(View v)
-    {
-        switch (v.getId())
-        {
-        case R.id.pinyin_ok:
-            String pyContent = et.getText().toString().trim();
-            if (BasicStringUtil.isNotNullString(pyContent))
-            {
-                pinyin[curArrIndex] = pyContent;
-                System.out.println(Arrays.toString(pinyin));
-                ToastUtil.showShortToast(this, "修改拼音成功!");
-                final int selectedItemPosition = gallery
-                        .getSelectedItemPosition();
-                GalleryUtil.getPinyinGallery(this, gallery, dialog, pinyin,
-                        this);
-                gallery.setSelection(selectedItemPosition);
-            }
-            break;
-        case R.id.pinyin_cancel:
-            finish();
-            break;
-        }
-    }
+	@Override
+	public void onClick(View v)
+	{
+		switch (v.getId())
+		{
+		case R.id.pinyin_ok:
+			String pyContent = et.getText().toString().trim();
+			if (BasicStringUtil.isNotNullString(pyContent))
+			{
+				pinyinArr[curArrIndex] = pyContent;
+				System.out.println(Arrays.toString(pinyinArr));
+				ToastUtil.showShortToast(this, "修改拼音成功!");
+				final int selectedItemPosition = gallery.getSelectedItemPosition();
+				GalleryUtil.getPinyinGallery(this, gallery, dialog, pinyinArr, this);
+				gallery.setSelection(selectedItemPosition);
+			}
+			break;
+		case R.id.pinyin_cancel:
+			finish();
+			break;
+		}
+	}
 
-    @Override
-    public void uncaughtException(Thread thread, Throwable ex)
-    {
-        System.out.println(ex.getMessage());
-        for (StackTraceElement o : ex.getStackTrace())
-        {
-            System.out.println(o.toString());
-        }
-    }
+	@Override
+	public void uncaughtException(Thread thread, Throwable ex)
+	{
+		System.out.println(ex.getMessage());
+		for (StackTraceElement o : ex.getStackTrace())
+		{
+			System.out.println(o.toString());
+		}
+	}
 
-    /**
-     * 返回选中汉字的原始索引和原拼音
-     */
-    @Override
-    public void afterGalleryChoose(String str)
-    {
-        curArrIndex = BasicNumberUtil.getNumber(PatternUtil.getFirstPattern(
-                str, "\\d+"));
-        et.setText(pinyin[curArrIndex]);
-        char charAt = dialog.charAt(curArrIndex);
-        System.out.println(charAt);
-    }
+	/**
+	 * 返回选中汉字的原始索引和原拼音
+	 */
+	@Override
+	public void afterGalleryChoose(String str)
+	{
+		curArrIndex = BasicNumberUtil.getNumber(PatternUtil.getFirstPattern(str, "\\d+"));
+		et.setText(pinyinArr[curArrIndex]);
+		char charAt = dialog.charAt(curArrIndex);
+		System.out.println(charAt);
+	}
 }
