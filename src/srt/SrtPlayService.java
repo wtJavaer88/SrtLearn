@@ -29,10 +29,12 @@ public class SrtPlayService
     private SrtActivity srtActivity;
     private int beginReplayIndex = -1;
     private int endReplayIndex = -1;
-    final String favoriteTxt = Environment.getExternalStorageDirectory()
+    final String FAVORITE_TXT = Environment.getExternalStorageDirectory()
             .getPath() + "/wnc/app/srtlearn/favorite.txt";
-    final String thumbPicFolder = Environment.getExternalStorageDirectory()
+    final String THUMB_PICFOLDER = Environment.getExternalStorageDirectory()
             .getPath() + "/wnc/res/srtpic/";
+    final String SRT_FOLDER = Environment.getExternalStorageDirectory()
+            .getPath() + "/wnc/res/srt/";
     // 文件夹名称最大只取12位
     final int FOLDER_NAME_MAXLEN = 12;
     final int DELTA_UNIQUE = 1000;// 文件夹和所属文件的Map的Key规则
@@ -42,12 +44,11 @@ public class SrtPlayService
     public SrtPlayService(SrtActivity srtActivity)
     {
         this.srtActivity = srtActivity;
-
     }
 
     public void favorite()
     {
-        if (BasicFileUtil.writeFileString(favoriteTxt,
+        if (BasicFileUtil.writeFileString(FAVORITE_TXT,
                 getFavoriteCurrContent(), "UTF-8", true))
         {
             ToastUtil.showLongToast(srtActivity, "收藏成功!");
@@ -60,8 +61,8 @@ public class SrtPlayService
 
     public String getThumbPicPath()
     {
-        String filePath = thumbPicFolder
-                + getCurFile().replace(srtActivity.srtFolder, "");
+        String filePath = THUMB_PICFOLDER
+                + getCurFile().replace(SRT_FOLDER, "");
         int i = filePath.lastIndexOf(".");
         filePath = filePath.substring(0, i);
         File picFolder = new File(filePath);
@@ -132,7 +133,7 @@ public class SrtPlayService
     public String getFavoriteCurrContent()
     {
         return BasicDateUtil.getCurrentDateTimeString() + " \""
-                + getCurFile().replace(srtActivity.srtFolder, "") + "\" "
+                + getCurFile().replace(SRT_FOLDER, "") + "\" "
                 + getCurrentPlaySrtInfo() + "\r\n";
     }
 
@@ -380,7 +381,7 @@ public class SrtPlayService
     private List<File> getFolderFiles()
     {
         tvFolders = new ArrayList<File>();
-        File srtFolderFile = new File(srtActivity.srtFolder);
+        File srtFolderFile = new File(SRT_FOLDER);
         for (File f : MyFileUtil.getSortFiles(srtFolderFile.listFiles()))
         {
             if (f.isDirectory())

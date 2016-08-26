@@ -18,7 +18,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.media.AudioManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.text.method.ScrollingMovementMethod;
@@ -64,9 +63,6 @@ public class SrtActivity extends Activity implements OnClickListener,
     private static TextView chsTv;
     private static TextView engTv;
     private static TextView timelineTv;
-
-    public final String srtFolder = Environment.getExternalStorageDirectory()
-            .getPath() + "/wnc/res/srt/";
 
     private GestureDetector gestureDetector;
     AlertDialog alertDialog;
