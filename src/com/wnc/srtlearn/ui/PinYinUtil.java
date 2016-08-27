@@ -1,4 +1,4 @@
-package common.utils;
+package com.wnc.srtlearn.ui;
 
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
@@ -38,7 +38,7 @@ public class PinYinUtil
         return pinyinArray[0];
     }
 
-    private static boolean isChinese(char hanzi)
+    public static boolean isChinese(char hanzi)
     {
         return hanzi >= 0x4e00 && hanzi <= 0x9fa5;
     }
