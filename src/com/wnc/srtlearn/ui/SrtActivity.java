@@ -83,8 +83,6 @@ public class SrtActivity extends Activity implements OnClickListener, OnLongClic
 		setContentView(R.layout.activity_srt);
 
 		SharedPreferenceUtil.init(this);
-		// 设置横屏显示
-		// setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		// 引入线控监听
 		HeadSetUtil.getInstance().setOnHeadSetListener(headSetListener);
 		HeadSetUtil.getInstance().open(this);
@@ -198,7 +196,6 @@ public class SrtActivity extends Activity implements OnClickListener, OnLongClic
 				{
 					result += srtInfo.getEng() + " ";
 				}
-				System.out.println(result);
 				return result;
 			}
 
@@ -248,6 +245,10 @@ public class SrtActivity extends Activity implements OnClickListener, OnLongClic
 						break;
 					case 2:
 						srtPlayService.switchReplayModel();
+						if (srtPlayService.getAutoPlayThread() == null)
+						{
+							beginSrtPlay();
+						}
 						break;
 					case 3:
 						AudioManager mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
@@ -479,11 +480,11 @@ public class SrtActivity extends Activity implements OnClickListener, OnLongClic
 
 	public void clickPlayBtn()
 	{
-		if (btnPlay.getText().equals(SRT_STOP_TEXT))
+		if (btnPlay.getText().toString().equals(SRT_STOP_TEXT))
 		{
 			stopSrtPlay();
 		}
-		else if (btnPlay.getText().equals(SRT_PLAY_TEXT))
+		else if (btnPlay.getText().toString().equals(SRT_PLAY_TEXT))
 		{
 			beginSrtPlay();
 		}
@@ -733,6 +734,10 @@ public class SrtActivity extends Activity implements OnClickListener, OnLongClic
 		public void onDoubleClick()
 		{
 			srtPlayService.switchReplayModel();
+			if (srtPlayService.getAutoPlayThread() == null)
+			{
+				beginSrtPlay();
+			}
 		}
 
 		@Override

@@ -19,8 +19,11 @@ import com.wnc.srtlearn.R;
 import com.wnc.string.PatternUtil;
 import common.app.GalleryUtil;
 import common.app.ToastUtil;
+import common.app.WheelDialogShowUtil;
 import common.uihelper.AfterGalleryChooseListener;
+import common.uihelper.AfterWheelChooseListener;
 import common.utils.PinYinUtil;
+import common.utils.PinyinStructUtil;
 
 public class PinyinActivity extends Activity implements OnClickListener, UncaughtExceptionHandler, AfterGalleryChooseListener
 {
@@ -40,6 +43,8 @@ public class PinyinActivity extends Activity implements OnClickListener, Uncaugh
 		setContentView(R.layout.activity_pinyin);
 		initData();
 		initView();
+		// PinyinStructUtil.testdialog();
+		// PinyinStructUtil.testCode();
 	}
 
 	private void initData()
@@ -65,6 +70,7 @@ public class PinyinActivity extends Activity implements OnClickListener, Uncaugh
 
 	private void initView()
 	{
+		((Button) findViewById(R.id.pinyin_sd)).setOnClickListener(this);
 		((Button) findViewById(R.id.pinyin_ok)).setOnClickListener(this);
 		((Button) findViewById(R.id.pinyin_cancel)).setOnClickListener(this);
 		gallery = (Gallery) findViewById(R.id.pinyin_gallery);
@@ -81,11 +87,30 @@ public class PinyinActivity extends Activity implements OnClickListener, Uncaugh
 	{
 		switch (v.getId())
 		{
-		case R.id.pinyin_ok:
+		case R.id.pinyin_sd:
 			String pyContent = et.getText().toString().trim();
-			if (BasicStringUtil.isNotNullString(pyContent))
+			if (BasicStringUtil.isNullString(pyContent))
 			{
-				pinyinArr[curArrIndex] = pyContent;
+				return;
+			}
+			int defaultLeftId = PinyinStructUtil.getBasicShengdiao(pyContent);
+			WheelDialogShowUtil.showRelativeDialog(this, "声调选择", PinyinStructUtil.basic, PinyinStructUtil.basicAll, defaultLeftId, 2, new AfterWheelChooseListener()
+			{
+
+				@Override
+				public void afterWheelChoose(Object... objs)
+				{
+					int l = Integer.parseInt(objs[0].toString());
+					int r = Integer.parseInt(objs[1].toString());
+					et.append(PinyinStructUtil.basicAll[l][r]);
+				}
+			});
+			break;
+		case R.id.pinyin_ok:
+			String pyContent2 = et.getText().toString().trim();
+			if (BasicStringUtil.isNotNullString(pyContent2))
+			{
+				pinyinArr[curArrIndex] = pyContent2;
 				System.out.println(Arrays.toString(pinyinArr));
 				ToastUtil.showShortToast(this, "修改拼音成功!");
 				final int selectedItemPosition = gallery.getSelectedItemPosition();

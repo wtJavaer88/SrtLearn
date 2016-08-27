@@ -17,7 +17,7 @@
         android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@drawable/bg_text_color"
+        android:textColor="#820072"
         android:text="aa"
         android:textSize="16dp"/>
 

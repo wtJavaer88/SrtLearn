@@ -38,7 +38,7 @@ public class PinYinUtil
         return pinyinArray[0];
     }
 
-    private static boolean isChinese(char hanzi)
+    public static boolean isChinese(char hanzi)
     {
         return hanzi >= 0x4e00 && hanzi <= 0x9fa5;
     }
