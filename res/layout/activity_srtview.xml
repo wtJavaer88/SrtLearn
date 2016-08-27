@@ -34,32 +34,111 @@
         android:orientation="horizontal" >
 
         <Button
-            android:id="@+id/pre_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/btnFirst"
+            android:layout_width="80dp"
+            android:layout_height="@dimen/dimen_60_dip"
             android:layout_gravity="center"
-            android:text="上一条" />
+            android:layout_marginRight="@dimen/dimen_5_dip"
+            android:background="@drawable/main_add_expense_quickly_new"
+            android:gravity="center"
+            android:paddingBottom="@dimen/dimen_6_dip"
+            android:shadowColor="@color/black"
+            android:shadowDx="0.0"
+            android:shadowDy="2.0"
+            android:shadowRadius="1.0"
+            android:text="第一条"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dimen_15_dip"
+            android:textStyle="bold" />
 
         <Button
-            android:id="@+id/next_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/btnLast"
+            android:layout_width="100dp"
+            android:layout_height="@dimen/dimen_60_dip"
             android:layout_gravity="center"
-            android:text="下一条" />
+            android:layout_marginRight="@dimen/dimen_5_dip"
+            android:background="@drawable/main_add_expense_quickly_new"
+            android:gravity="center"
+            android:paddingBottom="@dimen/dimen_6_dip"
+            android:shadowColor="@color/black"
+            android:shadowDx="0.0"
+            android:shadowDy="2.0"
+            android:shadowRadius="1.0"
+            android:text="最后一条"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dimen_15_dip"
+            android:textStyle="bold" />
 
         <Button
-            android:id="@+id/btn_speak"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/btnPre"
+            android:layout_width="80dp"
+            android:layout_height="@dimen/dimen_60_dip"
             android:layout_gravity="center"
-            android:text="播放" />
+            android:layout_marginRight="@dimen/dimen_5_dip"
+            android:background="@drawable/main_add_expense_quickly_new"
+            android:gravity="center"
+            android:paddingBottom="@dimen/dimen_6_dip"
+            android:shadowColor="@color/black"
+            android:shadowDx="0.0"
+            android:shadowDy="2.0"
+            android:shadowRadius="1.0"
+            android:text="上一条"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dimen_15_dip"
+            android:textStyle="bold" />
 
         <Button
-            android:id="@+id/btn_rec"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/btnNext"
+            android:layout_width="80dp"
+            android:layout_height="@dimen/dimen_60_dip"
             android:layout_gravity="center"
-            android:text="Rec" />
+            android:layout_marginRight="@dimen/dimen_5_dip"
+            android:background="@drawable/main_add_expense_quickly_new"
+            android:gravity="center"
+            android:paddingBottom="@dimen/dimen_6_dip"
+            android:shadowColor="@color/black"
+            android:shadowDx="0.0"
+            android:shadowDy="2.0"
+            android:shadowRadius="1.0"
+            android:text="下一条"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dimen_15_dip"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnSpeakCh"
+            android:layout_width="60dp"
+            android:layout_height="@dimen/dimen_60_dip"
+            android:layout_gravity="center"
+            android:layout_marginRight="@dimen/dimen_5_dip"
+            android:background="@drawable/main_add_expense_quickly_new"
+            android:gravity="center"
+            android:paddingBottom="@dimen/dimen_6_dip"
+            android:shadowColor="@color/black"
+            android:shadowDx="0.0"
+            android:shadowDy="2.0"
+            android:shadowRadius="1.0"
+            android:text="说中文"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dimen_15_dip"
+            android:textStyle="bold" />
+         <Button
+            android:id="@+id/btnSpeakEn"
+            android:layout_width="60dp"
+            android:layout_height="@dimen/dimen_60_dip"
+            android:layout_gravity="center"
+            android:layout_marginRight="@dimen/dimen_5_dip"
+            android:background="@drawable/main_add_expense_quickly_new"
+            android:gravity="center"
+            android:paddingBottom="@dimen/dimen_6_dip"
+            android:shadowColor="@color/black"
+            android:shadowDx="0.0"
+            android:shadowDy="2.0"
+            android:shadowRadius="1.0"
+            android:text="说英文"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dimen_15_dip"
+            android:textStyle="bold" />
     </LinearLayout>
 
 </LinearLayout>

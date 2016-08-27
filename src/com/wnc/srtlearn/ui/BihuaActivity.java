@@ -15,7 +15,8 @@ import android.widget.Gallery;
 
 import com.wnc.basic.BasicStringUtil;
 import com.wnc.srtlearn.R;
-import com.wnc.srtlearn.srt.SwfPlayMgr;
+import com.wnc.srtlearn.bihua.SwfPlayMgr;
+
 import common.app.GalleryUtil;
 import common.app.ToastUtil;
 import common.uihelper.AfterGalleryChooseListener;
@@ -55,9 +56,9 @@ public class BihuaActivity extends Activity implements OnClickListener, Uncaught
 
 	private void initView()
 	{
-		((Button) findViewById(R.id.button1)).setOnClickListener(this);
+		((Button) findViewById(R.id.btnBihua)).setOnClickListener(this);
 		gallery = (Gallery) findViewById(R.id.gallery);
-		et = ((EditText) findViewById(R.id.editText1));
+		et = ((EditText) findViewById(R.id.etHanzi_bh));
 		GalleryUtil.getBihuaGallery(this, gallery, dialog, this);
 	}
 

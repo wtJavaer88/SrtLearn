@@ -2,17 +2,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".MainActivity" >
+    android:gravity="center"
+    android:orientation="vertical" >
 
-    <LinearLayout
-        android:layout_width="match_parent"
+        <EditText
+        android:id="@+id/etFanyi"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+		android:textSize="20dp"
+        android:ems="10"
+        android:gravity="center"
+        android:text="pretty" >
+
+        <requestFocus />
+    </EditText>
+    
+        
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:orientation="horizontal" >
 
         <Button
-            android:id="@+id/btn_recword"
-            android:layout_width="70dp"
+            android:id="@+id/btnBDFanyi"
+            android:layout_width="100dp"
             android:layout_height="@dimen/dimen_60_dip"
             android:layout_gravity="center"
             android:layout_marginRight="@dimen/dimen_5_dip"
@@ -23,14 +38,14 @@
             android:shadowDx="0.0"
             android:shadowDy="2.0"
             android:shadowRadius="1.0"
-            android:text="读单字"
+            android:text="百度翻译"
             android:textColor="@color/white"
             android:textSize="@dimen/dimen_15_dip"
             android:textStyle="bold" />
 
         <Button
-            android:id="@+id/btn_recdialog"
-            android:layout_width="70dp"
+            android:id="@+id/btnCBFanyi"
+            android:layout_width="100dp"
             android:layout_height="@dimen/dimen_60_dip"
             android:layout_gravity="center"
             android:layout_marginRight="@dimen/dimen_5_dip"
@@ -41,14 +56,14 @@
             android:shadowDx="0.0"
             android:shadowDy="2.0"
             android:shadowRadius="1.0"
-            android:text="读整段"
+            android:text="词霸翻译"
             android:textColor="@color/white"
             android:textSize="@dimen/dimen_15_dip"
             android:textStyle="bold" />
 
         <Button
-            android:id="@+id/btn_reccustom"
-            android:layout_width="70dp"
+            android:id="@+id/btnHCFanyi"
+            android:layout_width="100dp"
             android:layout_height="@dimen/dimen_60_dip"
             android:layout_gravity="center"
             android:layout_marginRight="@dimen/dimen_5_dip"
@@ -59,41 +74,11 @@
             android:shadowDx="0.0"
             android:shadowDy="2.0"
             android:shadowRadius="1.0"
-            android:text="自定义"
+            android:text="海词翻译"
             android:textColor="@color/white"
             android:textSize="@dimen/dimen_15_dip"
             android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tv_rectip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="朗读结果:"
-            android:textColor="@color/black" >
-        </TextView>
-
-        <EditText
-            android:id="@+id/et_recresult"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:ems="10" >
-
-            <requestFocus />
-        </EditText>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" >
-
-        <Gallery
-            android:id="@+id/recword_gallery"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:spacing="20dp" />
-    </LinearLayout>
 
 </LinearLayout>

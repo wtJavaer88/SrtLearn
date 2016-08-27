@@ -3,45 +3,134 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     android:orientation="vertical"
-    android:padding="16dp"
-	>
-
+    android:padding="16dp" >
 
     <Button
         android:id="@+id/btn_bihua"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="@dimen/dimen_60_dip"
         android:layout_gravity="center"
-        android:text="比划浏览" />
+        android:layout_marginRight="@dimen/dimen_5_dip"
+        android:background="@drawable/main_add_expense_quickly_new"
+        android:gravity="center"
+        android:paddingBottom="@dimen/dimen_6_dip"
+        android:shadowColor="@color/black"
+        android:shadowDx="0.0"
+        android:shadowDy="2.0"
+        android:shadowRadius="1.0"
+        android:text="笔画浏览"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dimen_15_dip"
+        android:textStyle="bold" />
+
     <Button
         android:id="@+id/btn_pinyin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="@dimen/dimen_60_dip"
         android:layout_gravity="center"
-        android:text="拼音浏览" />
+        android:layout_marginRight="@dimen/dimen_5_dip"
+        android:background="@drawable/main_add_expense_quickly_new"
+        android:gravity="center"
+        android:paddingBottom="@dimen/dimen_6_dip"
+        android:shadowColor="@color/black"
+        android:shadowDx="0.0"
+        android:shadowDy="2.0"
+        android:shadowRadius="1.0"
+        android:text="拼音浏览"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dimen_15_dip"
+        android:textStyle="bold" />
+
     <Button
         android:id="@+id/btn_recword"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="@dimen/dimen_60_dip"
         android:layout_gravity="center"
-        android:text="课文跟读" />
+        android:layout_marginRight="@dimen/dimen_5_dip"
+        android:background="@drawable/main_add_expense_quickly_new"
+        android:gravity="center"
+        android:paddingBottom="@dimen/dimen_6_dip"
+        android:shadowColor="@color/black"
+        android:shadowDx="0.0"
+        android:shadowDy="2.0"
+        android:shadowRadius="1.0"
+        android:text="课文朗读"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dimen_15_dip"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/btn_srt"
+        android:layout_width="100dp"
+        android:layout_height="@dimen/dimen_60_dip"
+        android:layout_gravity="center"
+        android:layout_marginRight="@dimen/dimen_5_dip"
+        android:background="@drawable/main_add_expense_quickly_new"
+        android:gravity="center"
+        android:paddingBottom="@dimen/dimen_6_dip"
+        android:shadowColor="@color/black"
+        android:shadowDx="0.0"
+        android:shadowDy="2.0"
+        android:shadowRadius="1.0"
+        android:text="字幕学习"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dimen_15_dip"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/btn_favsrt"
+        android:layout_width="100dp"
+        android:layout_height="@dimen/dimen_60_dip"
+        android:layout_gravity="center"
+        android:layout_marginRight="@dimen/dimen_5_dip"
+        android:background="@drawable/main_add_expense_quickly_new"
+        android:gravity="center"
+        android:paddingBottom="@dimen/dimen_6_dip"
+        android:shadowColor="@color/black"
+        android:shadowDx="0.0"
+        android:shadowDy="2.0"
+        android:shadowRadius="1.0"
+        android:text="收藏字幕"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dimen_15_dip"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/btn_fanyi"
+        android:layout_width="100dp"
+        android:layout_height="@dimen/dimen_60_dip"
+        android:layout_gravity="center"
+        android:layout_marginRight="@dimen/dimen_5_dip"
+        android:background="@drawable/main_add_expense_quickly_new"
+        android:gravity="center"
+        android:paddingBottom="@dimen/dimen_6_dip"
+        android:shadowColor="@color/black"
+        android:shadowDx="0.0"
+        android:shadowDy="2.0"
+        android:shadowRadius="1.0"
+        android:text="英语翻译"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dimen_15_dip"
+        android:textStyle="bold" />
+
     <Button
         android:id="@+id/btn_tts"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="@dimen/dimen_60_dip"
         android:layout_gravity="center"
-        android:text="百度语音" />
-     <Button
-        android:id="@+id/btn_srt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="字幕学习" />
-      <Button
-        android:id="@+id/btn_favsrt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="收藏字幕" />
+        android:layout_marginRight="@dimen/dimen_5_dip"
+        android:background="@drawable/main_add_expense_quickly_new"
+        android:gravity="center"
+        android:paddingBottom="@dimen/dimen_6_dip"
+        android:shadowColor="@color/black"
+        android:shadowDx="0.0"
+        android:shadowDy="2.0"
+        android:shadowRadius="1.0"
+        android:text="百度语音"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dimen_15_dip"
+        android:textStyle="bold" />
+
 </LinearLayout>

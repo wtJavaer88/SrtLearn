@@ -39,8 +39,7 @@
         <activity
             android:name="com.wnc.srtlearn.ui.MainActivity"
             android:label="@string/app_name" 
-            android:launchMode="singleTask" 
-            android:screenOrientation="landscape"
+            android:launchMode="singleTask"
             android:configChanges="orientation|keyboardHidden|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -53,6 +52,7 @@
          <activity android:name="com.wnc.srtlearn.ui.RecWordActivity" android:screenOrientation="landscape"/>
          <activity android:name="com.wnc.srtlearn.ui.TTSActivity" android:screenOrientation="landscape"/>
          <activity android:name="com.wnc.srtlearn.ui.SrtActivity" android:screenOrientation="landscape"/>
+         <activity android:name="com.wnc.srtlearn.ui.FanyiActivity" android:screenOrientation="landscape"/>
          <activity android:name="com.wnc.srtlearn.ui.FavoriteSrtActivity" android:screenOrientation="landscape"/>
          <activity android:name="com.wnc.srtlearn.ui.ReadActivity"/>
     </application>

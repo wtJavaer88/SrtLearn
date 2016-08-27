@@ -12,38 +12,62 @@
 
         <Button
             android:id="@+id/pinyin_cancel"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="返回" />
+            android:layout_width="100dp"
+            android:layout_height="@dimen/dimen_60_dip"
+            android:layout_gravity="center"
+            android:layout_marginRight="@dimen/dimen_5_dip"
+            android:background="@drawable/main_add_expense_quickly_new"
+            android:gravity="center"
+            android:paddingBottom="@dimen/dimen_6_dip"
+            android:shadowColor="@color/black"
+            android:shadowDx="0.0"
+            android:shadowDy="2.0"
+            android:shadowRadius="1.0"
+            android:text="返回"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dimen_15_dip"
+            android:textStyle="bold" />
+
         <Button
             android:id="@+id/pinyin_ok"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="保存" />
+            android:layout_width="100dp"
+            android:layout_height="@dimen/dimen_60_dip"
+            android:layout_gravity="center"
+            android:layout_marginRight="@dimen/dimen_5_dip"
+            android:background="@drawable/main_add_expense_quickly_new"
+            android:gravity="center"
+            android:paddingBottom="@dimen/dimen_6_dip"
+            android:shadowColor="@color/black"
+            android:shadowDx="0.0"
+            android:shadowDy="2.0"
+            android:shadowRadius="1.0"
+            android:text="保存"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dimen_15_dip"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/pinyin_et"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="树"
-            android:ems="10" >
+            android:ems="10"
+            android:layout_gravity="center"
+            android:text="树" >
 
             <requestFocus />
         </EditText>
     </LinearLayout>
 
-        <LinearLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical" >
-        
+
         <Gallery
-        android:id="@+id/pinyin_gallery"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:spacing="20dp"/>
-</LinearLayout>
+            android:id="@+id/pinyin_gallery"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:spacing="20dp" />
+    </LinearLayout>
 
 </LinearLayout>
