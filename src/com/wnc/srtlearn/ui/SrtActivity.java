@@ -859,6 +859,9 @@ public class SrtActivity extends Activity implements OnClickListener, OnLongClic
 		{
 			String retPY = data.getStringExtra("pinyin");
 			System.out.println("返回:" + retPY);
+			SrtInfo srtInfo = DataHolder.getCurrent();
+			srtInfo.setEng(retPY);
+			setContent(srtInfo);
 		}
 	}
 }

@@ -9,11 +9,11 @@ import android.widget.Button;
 
 import com.baidu.voicerecognition.android.ui.BaiduASRDigitalDialog;
 import com.wnc.srtlearn.R;
-import com.wnc.srtlearn.tts.CallBack;
+import com.wnc.srtlearn.tts.RecCallBack;
 import com.wnc.srtlearn.tts.Config;
 import com.wnc.srtlearn.tts.RecDialogUtil;
 
-public class TTSActivity extends Activity implements CallBack
+public class TTSActivity extends Activity implements RecCallBack
 {
 
     // 百度自定义对话框

@@ -1,6 +1,6 @@
 package com.wnc.srtlearn.tts;
 
-public interface CallBack
+public interface RecCallBack
 {
     public void listenComplete(String content);
 }
