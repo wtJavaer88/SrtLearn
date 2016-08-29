@@ -5,14 +5,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.widget.sdufe.thea.guo.GalleryModel;
+import net.widget.sdufe.thea.guo.PictureAdapter;
+
 import android.app.Activity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Gallery;
 
-import com.sdufe.thea.guo.GalleryModel;
-import com.sdufe.thea.guo.PictureAdapter;
 import com.wnc.basic.BasicStringUtil;
 import com.wnc.srtlearn.R;
 import common.uihelper.AfterGalleryChooseListener;

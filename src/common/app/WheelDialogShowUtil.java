@@ -6,9 +6,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import kankan.wheel.widget.OnWheelChangedListener;
-import kankan.wheel.widget.WheelView;
-import kankan.wheel.widget.adapters.ArrayWheelAdapter;
+import net.widget.kankan.wheel.OnWheelChangedListener;
+import net.widget.kankan.wheel.WheelView;
+import net.widget.kankan.wheel.adapters.ArrayWheelAdapter;
+
 import srt.DataHolder;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -539,21 +540,21 @@ public class WheelDialogShowUtil
         final LinearLayout llContent = new LinearLayout(context);
         llContent.setOrientation(LinearLayout.HORIZONTAL);
 
-        final kankan.wheel.widget.WheelView wheelLeft = new kankan.wheel.widget.WheelView(
+        final net.widget.kankan.wheel.WheelView wheelLeft = new net.widget.kankan.wheel.WheelView(
                 context);
         wheelLeft.setVisibleItems(5);
         wheelLeft.setCyclic(false);
         wheelLeft
-                .setViewAdapter(new kankan.wheel.widget.adapters.ArrayWheelAdapter<String>(
+                .setViewAdapter(new net.widget.kankan.wheel.adapters.ArrayWheelAdapter<String>(
                         context, left));
         // wheelLeft.setTextSize(60);
 
-        final kankan.wheel.widget.WheelView wheelRight = new kankan.wheel.widget.WheelView(
+        final net.widget.kankan.wheel.WheelView wheelRight = new net.widget.kankan.wheel.WheelView(
                 context).setFormatTextLength(Format_Length);
         wheelRight.setVisibleItems(5);
         wheelRight.setCyclic(false);
         wheelRight
-                .setViewAdapter(new kankan.wheel.widget.adapters.ArrayWheelAdapter<String>(
+                .setViewAdapter(new net.widget.kankan.wheel.adapters.ArrayWheelAdapter<String>(
                         context, right[0]));
         // wheelRight.setTextSize(60);
         LinearLayout.LayoutParams paramsLeft = new LinearLayout.LayoutParams(
@@ -567,7 +568,7 @@ public class WheelDialogShowUtil
 
         wheelLeft.setCurrentItem(defaultLeftId);
         wheelRight
-                .setViewAdapter(new kankan.wheel.widget.adapters.ArrayWheelAdapter<String>(
+                .setViewAdapter(new net.widget.kankan.wheel.adapters.ArrayWheelAdapter<String>(
                         context, right[defaultLeftId]));
         if (defaultLeftId == 0 && defaultRightId == -1)
         {
@@ -582,15 +583,15 @@ public class WheelDialogShowUtil
                 .println("选中项: l: " + defaultLeftId + " r: " + defaultRightId);
 
         wheelLeft
-                .addChangingListener(new kankan.wheel.widget.OnWheelChangedListener()
+                .addChangingListener(new net.widget.kankan.wheel.OnWheelChangedListener()
                 {
 
                     @Override
-                    public void onChanged(kankan.wheel.widget.WheelView wheel,
+                    public void onChanged(net.widget.kankan.wheel.WheelView wheel,
                             int oldValue, int newValue)
                     {
                         wheelRight
-                                .setViewAdapter(new kankan.wheel.widget.adapters.ArrayWheelAdapter<String>(
+                                .setViewAdapter(new net.widget.kankan.wheel.adapters.ArrayWheelAdapter<String>(
                                         context, right[newValue]));
                         wheelRight.setCurrentItem(right[newValue].length / 2);
                     }

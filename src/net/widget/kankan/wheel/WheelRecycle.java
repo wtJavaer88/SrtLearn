@@ -17,7 +17,7 @@
  *  limitations under the License.
  */
 
-package kankan.wheel.widget;
+package net.widget.kankan.wheel;
 
 import java.util.LinkedList;
 import java.util.List;

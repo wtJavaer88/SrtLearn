@@ -17,12 +17,13 @@
  *  limitations under the License.
  */
 
-package kankan.wheel.widget;
+package net.widget.kankan.wheel;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import kankan.wheel.widget.adapters.WheelViewAdapter;
+import net.widget.kankan.wheel.adapters.WheelViewAdapter;
+
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.graphics.Canvas;

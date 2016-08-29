@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package kankan.wheel.widget.adapters;
+package net.widget.kankan.wheel.adapters;
 
 import android.database.DataSetObserver;
 import android.view.View;

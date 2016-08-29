@@ -55,6 +55,9 @@
          <activity android:name="com.wnc.srtlearn.ui.FanyiActivity" android:screenOrientation="landscape"/>
          <activity android:name="com.wnc.srtlearn.ui.FavoriteSrtActivity" android:screenOrientation="landscape"/>
          <activity android:name="com.wnc.srtlearn.ui.ReadActivity"/>
+         
+         <activity android:name="net.widget.act.sample.ActTestActivity"/>
+         
          <!-- 线控的广播 -->
          <receiver android:name="com.wnc.srtlearn.srt.MediaButtonReceiver" >
             <intent-filter android:priority="1000">

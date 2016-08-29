@@ -14,9 +14,9 @@
  *  limitations under the License.
  */
 
-package kankan.wheel.widget.adapters;
+package net.widget.kankan.wheel.adapters;
 
-import kankan.wheel.widget.WheelAdapter;
+import net.widget.kankan.wheel.WheelAdapter;
 import android.content.Context;
 
 /**
