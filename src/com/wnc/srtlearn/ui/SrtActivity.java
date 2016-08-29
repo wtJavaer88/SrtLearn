@@ -647,7 +647,7 @@ public class SrtActivity extends Activity implements OnClickListener,
             final String[][] rightArr = srtPlayService.getDirsFiles();
             System.out.println(Arrays.toString(rightArr));
             WheelDialogShowUtil.showRelativeDialog(this, "选择剧集", leftArr,
-                    rightArr, defaultMoviePoint[0], defaultMoviePoint[1],
+                    rightArr, defaultMoviePoint[0], defaultMoviePoint[1], 8,
                     new AfterWheelChooseListener()
                     {
                         @Override

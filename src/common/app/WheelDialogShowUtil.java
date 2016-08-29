@@ -6,6 +6,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import kankan.wheel.widget.OnWheelChangedListener;
+import kankan.wheel.widget.WheelView;
+import kankan.wheel.widget.adapters.ArrayWheelAdapter;
 import srt.DataHolder;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -13,9 +16,6 @@ import android.content.DialogInterface;
 import android.view.Gravity;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
-import cn.org.octopus.wheelview.widget.ArrayWheelAdapter;
-import cn.org.octopus.wheelview.widget.OnWheelChangedListener;
-import cn.org.octopus.wheelview.widget.WheelView;
 
 import com.wnc.basic.BasicDateUtil;
 import com.wnc.basic.BasicStringUtil;
@@ -59,9 +59,9 @@ public class WheelDialogShowUtil
                 wheelview.setCyclic(false);
             }
             String[] data = arrList.get(i);
-            wheelview.setAdapter(new ArrayWheelAdapter<String>(data));
+            wheelview.setViewAdapter(new ArrayWheelAdapter<String>(context,
+                    data));
 
-            wheelview.setTextSize(40);
             llContent.addView(wheelview, new LinearLayout.LayoutParams(
                     LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
             wheelviews.add(wheelview);
@@ -128,9 +128,9 @@ public class WheelDialogShowUtil
                 wheelview.setCyclic(false);
             }
             String[] data = arrList.get(i);
-            wheelview.setAdapter(new ArrayWheelAdapter<String>(data));
+            wheelview.setViewAdapter(new ArrayWheelAdapter<String>(context,
+                    data));
 
-            wheelview.setTextSize(40);
             llContent.addView(wheelview, new LinearLayout.LayoutParams(
                     LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
             wheelviews.add(wheelview);
@@ -196,9 +196,9 @@ public class WheelDialogShowUtil
                 wheelview.setCyclic(false);
             }
             String[] data = arrList.get(i);
-            wheelview.setAdapter(new ArrayWheelAdapter<String>(data));
+            wheelview.setViewAdapter(new ArrayWheelAdapter<String>(context,
+                    data));
             wheelview.setCurrentItem(defaultIndex[i]);
-            wheelview.setTextSize(40);
             llContent.addView(wheelview, new LinearLayout.LayoutParams(
                     LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
             wheelviews.add(wheelview);
@@ -251,8 +251,8 @@ public class WheelDialogShowUtil
         final WheelView wheelview1 = new WheelView(context);
         wheelview1.setVisibleItems(7);
         wheelview1.setCyclic(true);
-        wheelview1.setAdapter(new ArrayWheelAdapter<String>(leftArr));
-        wheelview1.setTextSize(40);
+        wheelview1.setViewAdapter(new ArrayWheelAdapter<String>(context,
+                leftArr));
         wheelview1.setCurrentItem(beginIndex);
         llContent.addView(wheelview1, new LinearLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
@@ -260,8 +260,8 @@ public class WheelDialogShowUtil
         final WheelView wheelview2 = new WheelView(context);
         wheelview2.setVisibleItems(7);
         wheelview2.setCyclic(true);
-        wheelview2.setAdapter(new ArrayWheelAdapter<String>(rightArr));
-        wheelview2.setTextSize(40);
+        wheelview2.setViewAdapter(new ArrayWheelAdapter<String>(context,
+                rightArr));
         wheelview2.setCurrentItem(endIndex);
         llContent.addView(wheelview2, new LinearLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
@@ -328,8 +328,8 @@ public class WheelDialogShowUtil
         final WheelView wheelview1 = new WheelView(context);
         wheelview1.setVisibleItems(7);
         wheelview1.setCyclic(false);
-        wheelview1.setAdapter(new ArrayWheelAdapter<String>(hanziArr));
-        wheelview1.setTextSize(40);
+        wheelview1.setViewAdapter(new ArrayWheelAdapter<String>(context,
+                hanziArr));
         wheelview1.setCurrentItem(beginIndex);
         llContent.addView(wheelview1, new LinearLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
@@ -337,8 +337,8 @@ public class WheelDialogShowUtil
         final WheelView wheelview2 = new WheelView(context);
         wheelview2.setVisibleItems(7);
         wheelview2.setCyclic(false);
-        wheelview2.setAdapter(new ArrayWheelAdapter<String>(hanziArr));
-        wheelview2.setTextSize(40);
+        wheelview2.setViewAdapter(new ArrayWheelAdapter<String>(context,
+                hanziArr));
         wheelview2.setCurrentItem(endIndex);
         llContent.addView(wheelview2, new LinearLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
@@ -527,55 +527,48 @@ public class WheelDialogShowUtil
         }
 
         showRelativeDialog(context, title, leftArr, rightArr, leftId, rightId,
-                listener);
+                0, listener);
     }
 
-    public static void showRelativeDialog(Context context, String title,
+    public static void showRelativeDialog(final Context context, String title,
             final String[] left, final String[][] right, int defaultLeftId,
-            int defaultRightId, final AfterWheelChooseListener listener)
+            int defaultRightId, float Format_Length,
+            final AfterWheelChooseListener listener)
     {
         final AlertDialog dialog = new AlertDialog.Builder(context).create();
-        // dialog.setTitle(title);
-
-        // 创建对话框内容, 创建一个 LinearLayout
-        LinearLayout llContent = new LinearLayout(context);
-        // 将创建的 LinearLayout 设置成横向的
+        final LinearLayout llContent = new LinearLayout(context);
         llContent.setOrientation(LinearLayout.HORIZONTAL);
 
-        // 创建 WheelView 组件
-        final WheelView wheelLeft = new WheelView(context);
-        // 设置 WheelView 组件最多显示元素
+        final kankan.wheel.widget.WheelView wheelLeft = new kankan.wheel.widget.WheelView(
+                context);
         wheelLeft.setVisibleItems(5);
-        // 设置 WheelView 元素是否循环滚动
         wheelLeft.setCyclic(false);
-        // 设置 WheelView 适配器
-        wheelLeft.setAdapter(new ArrayWheelAdapter<String>(left));
-        wheelLeft.setTextSize(60);
+        wheelLeft
+                .setViewAdapter(new kankan.wheel.widget.adapters.ArrayWheelAdapter<String>(
+                        context, left));
+        // wheelLeft.setTextSize(60);
 
-        // 设置右侧的 WheelView
-        final WheelView wheelRight = new WheelView(context);
-        // 设置右侧 WheelView 显示个数
+        final kankan.wheel.widget.WheelView wheelRight = new kankan.wheel.widget.WheelView(
+                context).setFormatTextLength(Format_Length);
         wheelRight.setVisibleItems(5);
-        // 设置右侧 WheelView 元素是否循环滚动
         wheelRight.setCyclic(false);
-        // 设置右侧 WheelView 的元素适配器
-        wheelRight.setAdapter(new ArrayWheelAdapter<String>(right[0]));
-        wheelRight.setTextSize(60);
-        // 设置 LinearLayout 的布局参数
+        wheelRight
+                .setViewAdapter(new kankan.wheel.widget.adapters.ArrayWheelAdapter<String>(
+                        context, right[0]));
+        // wheelRight.setTextSize(60);
         LinearLayout.LayoutParams paramsLeft = new LinearLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 4);
         paramsLeft.gravity = Gravity.CENTER_VERTICAL;
-        LinearLayout.LayoutParams paramsRight = new LinearLayout.LayoutParams(
+        final LinearLayout.LayoutParams paramsRight = new LinearLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 6);
         paramsRight.gravity = Gravity.RIGHT;
-        // 将 WheelView 对象放到左侧 LinearLayout 中
         llContent.addView(wheelLeft, paramsLeft);
-        // 将 WheelView 对象放到 右侧 LinearLayout 中
         llContent.addView(wheelRight, paramsRight);
 
         wheelLeft.setCurrentItem(defaultLeftId);
-        wheelRight.setAdapter(new ArrayWheelAdapter<String>(
-                right[defaultLeftId]));
+        wheelRight
+                .setViewAdapter(new kankan.wheel.widget.adapters.ArrayWheelAdapter<String>(
+                        context, right[defaultLeftId]));
         if (defaultLeftId == 0 && defaultRightId == -1)
         {
             System.out.println(left[0].length() / 2 + "  " + left[0].length());
@@ -588,19 +581,20 @@ public class WheelDialogShowUtil
         System.out
                 .println("选中项: l: " + defaultLeftId + " r: " + defaultRightId);
 
-        // 为左侧的 WheelView 设置条目改变监听器
-        wheelLeft.addChangingListener(new OnWheelChangedListener()
-        {
-            @Override
-            public void onChanged(WheelView wheel, int oldValue, int newValue)
-            {
-                // 设置右侧的 WheelView 的适配器
-                wheelRight.setAdapter(new ArrayWheelAdapter<String>(
-                        right[newValue]));
-                wheelRight.setCurrentItem(right[newValue].length / 2);
-            }
-        });
-        // 设置对话框点击事件 积极
+        wheelLeft
+                .addChangingListener(new kankan.wheel.widget.OnWheelChangedListener()
+                {
+
+                    @Override
+                    public void onChanged(kankan.wheel.widget.WheelView wheel,
+                            int oldValue, int newValue)
+                    {
+                        wheelRight
+                                .setViewAdapter(new kankan.wheel.widget.adapters.ArrayWheelAdapter<String>(
+                                        context, right[newValue]));
+                        wheelRight.setCurrentItem(right[newValue].length / 2);
+                    }
+                });
         dialog.setButton(AlertDialog.BUTTON_POSITIVE, "确定",
                 new DialogInterface.OnClickListener()
                 {

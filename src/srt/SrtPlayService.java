@@ -35,8 +35,10 @@ public class SrtPlayService
             .getPath() + "/wnc/res/srtpic/";
     final String SRT_FOLDER = Environment.getExternalStorageDirectory()
             .getPath() + "/wnc/res/srt/";
-    // 文件夹名称最大只取12位
-    final int FOLDER_NAME_MAXLEN = 12;
+    // 文件夹名称最大只取16位
+    final int FOLDER_NAME_MAXLEN = 16;
+    // 文件名最大只取10位
+    final int FILE_NAME_MAXLEN = 8;
     final String DELTA_UNIQUE = "D%dF%d";// 用来生成srtFilePathes里的key
     private Map<String, String> srtFilePathes = new HashMap<String, String>();
     List<File> tvFolders = null;
@@ -368,7 +370,7 @@ public class SrtPlayService
                     // 文件名最大只取8位
                     srtList.add(BasicStringUtil.subString(
                             TextFormatUtil.getFileNameNoExtend(f2.getName()),
-                            0, 8));
+                            0, FILE_NAME_MAXLEN));
                     j++;
                 }
             }

@@ -25,137 +25,143 @@ import common.uihelper.AfterWheelChooseListener;
 import common.utils.PinYinUtil;
 import common.utils.PinyinStructUtil;
 
-public class PinyinActivity extends Activity implements OnClickListener, UncaughtExceptionHandler, AfterGalleryChooseListener
+public class PinyinActivity extends Activity implements OnClickListener,
+        UncaughtExceptionHandler, AfterGalleryChooseListener
 {
-	private Gallery gallery;
-	private EditText et;
+    private Gallery gallery;
+    private EditText et;
 
-	String dialog;
-	String[] pinyinArr;
+    String dialog;
+    String[] pinyinArr;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState)
-	{
-		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE); // 设置无标题
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE); // 设置无标题
 
-		Thread.setDefaultUncaughtExceptionHandler(this);
-		setContentView(R.layout.activity_pinyin);
-		initData();
-		initView();
-		// PinyinStructUtil.testdialog();
-		// PinyinStructUtil.testCode();
-	}
+        Thread.setDefaultUncaughtExceptionHandler(this);
+        setContentView(R.layout.activity_pinyin);
+        initData();
+        initView();
+        // PinyinStructUtil.testdialog();
+        // PinyinStructUtil.testCode();
+    }
 
-	private void initData()
-	{
-		Intent intent = getIntent();
-		if (intent != null && intent.getStringExtra("dialog") != null)
-		{
-			dialog = intent.getStringExtra("dialog").trim();
-		}
-		else
-		{
-			dialog = "武汉恒信,欢迎您的光临!".trim();
-		}
-		if (intent != null && intent.getStringExtra("pinyin") != null)
-		{
-			pinyinArr = intent.getStringExtra("pinyin").trim().split(" ");
-		}
-		else
-		{
-			pinyinArr = PinYinUtil.getSeveralPinyin(dialog).split(" ");
-		}
-	}
+    private void initData()
+    {
+        Intent intent = getIntent();
+        if (intent != null && intent.getStringExtra("dialog") != null)
+        {
+            dialog = intent.getStringExtra("dialog").trim();
+        }
+        else
+        {
+            dialog = "武汉恒信,欢迎您的光临!".trim();
+        }
+        if (intent != null && intent.getStringExtra("pinyin") != null)
+        {
+            pinyinArr = intent.getStringExtra("pinyin").trim().split(" ");
+        }
+        else
+        {
+            pinyinArr = PinYinUtil.getSeveralPinyin(dialog).split(" ");
+        }
+    }
 
-	private void initView()
-	{
-		((Button) findViewById(R.id.pinyin_sd)).setOnClickListener(this);
-		((Button) findViewById(R.id.pinyin_ok)).setOnClickListener(this);
-		((Button) findViewById(R.id.pinyin_cancel)).setOnClickListener(this);
-		gallery = (Gallery) findViewById(R.id.pinyin_gallery);
-		et = ((EditText) findViewById(R.id.pinyin_et));
+    private void initView()
+    {
+        ((Button) findViewById(R.id.pinyin_sd)).setOnClickListener(this);
+        ((Button) findViewById(R.id.pinyin_ok)).setOnClickListener(this);
+        ((Button) findViewById(R.id.pinyin_cancel)).setOnClickListener(this);
+        gallery = (Gallery) findViewById(R.id.pinyin_gallery);
+        et = ((EditText) findViewById(R.id.pinyin_et));
 
-		// GalleryUtil.getPinyinGallery(this, gallery, dialog, this);
-		GalleryUtil.getPinyinGallery(this, gallery, dialog, pinyinArr, this);
-	}
+        // GalleryUtil.getPinyinGallery(this, gallery, dialog, this);
+        GalleryUtil.getPinyinGallery(this, gallery, dialog, pinyinArr, this);
+    }
 
-	int curArrIndex = -1;
+    int curArrIndex = -1;
 
-	@Override
-	public void onClick(View v)
-	{
-		switch (v.getId())
-		{
-		case R.id.pinyin_sd:
-			String pyContent = et.getText().toString().trim();
-			if (BasicStringUtil.isNullString(pyContent))
-			{
-				return;
-			}
-			int defaultLeftId = PinyinStructUtil.getBasicShengdiao(pyContent);
-			WheelDialogShowUtil.showRelativeDialog(this, "声调选择", PinyinStructUtil.basic, PinyinStructUtil.basicAll, defaultLeftId, 2, new AfterWheelChooseListener()
-			{
+    @Override
+    public void onClick(View v)
+    {
+        switch (v.getId())
+        {
+        case R.id.pinyin_sd:
+            String pyContent = et.getText().toString().trim();
+            if (BasicStringUtil.isNullString(pyContent))
+            {
+                return;
+            }
+            int defaultLeftId = PinyinStructUtil.getBasicShengdiao(pyContent);
+            WheelDialogShowUtil.showRelativeDialog(this, "声调选择",
+                    PinyinStructUtil.basic, PinyinStructUtil.basicAll,
+                    defaultLeftId, 2, 0, new AfterWheelChooseListener()
+                    {
 
-				@Override
-				public void afterWheelChoose(Object... objs)
-				{
-					int l = Integer.parseInt(objs[0].toString());
-					int r = Integer.parseInt(objs[1].toString());
-					et.append(PinyinStructUtil.basicAll[l][r]);
-				}
-			});
-			break;
-		case R.id.pinyin_ok:
-			String pyContent2 = et.getText().toString().trim();
-			if (BasicStringUtil.isNotNullString(pyContent2))
-			{
-				pinyinArr[curArrIndex] = pyContent2;
-				System.out.println(Arrays.toString(pinyinArr));
-				ToastUtil.showShortToast(this, "修改拼音成功!");
-				final int selectedItemPosition = gallery.getSelectedItemPosition();
-				GalleryUtil.getPinyinGallery(this, gallery, dialog, pinyinArr, this);
-				gallery.setSelection(selectedItemPosition);
-			}
-			break;
-		case R.id.pinyin_cancel:
-			setResultAndFinish();
-			break;
-		}
-	}
+                        @Override
+                        public void afterWheelChoose(Object... objs)
+                        {
+                            int l = Integer.parseInt(objs[0].toString());
+                            int r = Integer.parseInt(objs[1].toString());
+                            et.append(PinyinStructUtil.basicAll[l][r]);
+                        }
+                    });
+            break;
+        case R.id.pinyin_ok:
+            String pyContent2 = et.getText().toString().trim();
+            if (BasicStringUtil.isNotNullString(pyContent2))
+            {
+                pinyinArr[curArrIndex] = pyContent2;
+                System.out.println(Arrays.toString(pinyinArr));
+                ToastUtil.showShortToast(this, "修改拼音成功!");
+                final int selectedItemPosition = gallery
+                        .getSelectedItemPosition();
+                GalleryUtil.getPinyinGallery(this, gallery, dialog, pinyinArr,
+                        this);
+                gallery.setSelection(selectedItemPosition);
+            }
+            break;
+        case R.id.pinyin_cancel:
+            setResultAndFinish();
+            break;
+        }
+    }
 
-	private void setResultAndFinish()
-	{
-		Intent intent = new Intent();
-		String ret = "";
-		for (String s : pinyinArr)
-		{
-			ret += " " + s;
-		}
-		intent.putExtra("pinyin", ret.trim());// 放入返回值
-		setResult(0, intent);// 放入回传的值,并添加一个Code,方便区分返回的数据
-		finish();
-	}
+    private void setResultAndFinish()
+    {
+        Intent intent = new Intent();
+        String ret = "";
+        for (String s : pinyinArr)
+        {
+            ret += " " + s;
+        }
+        intent.putExtra("pinyin", ret.trim());// 放入返回值
+        setResult(0, intent);// 放入回传的值,并添加一个Code,方便区分返回的数据
+        finish();
+    }
 
-	@Override
-	public void uncaughtException(Thread thread, Throwable ex)
-	{
-		System.out.println(ex.getMessage());
-		for (StackTraceElement o : ex.getStackTrace())
-		{
-			System.out.println(o.toString());
-		}
-	}
+    @Override
+    public void uncaughtException(Thread thread, Throwable ex)
+    {
+        System.out.println(ex.getMessage());
+        for (StackTraceElement o : ex.getStackTrace())
+        {
+            System.out.println(o.toString());
+        }
+    }
 
-	/**
-	 * 返回选中汉字的原始索引和原拼音
-	 */
-	@Override
-	public void afterGalleryChoose(String str)
-	{
-		curArrIndex = BasicNumberUtil.getNumber(PatternUtil.getFirstPattern(str, "\\d+"));
-		et.setText(pinyinArr[curArrIndex]);
-		char charAt = dialog.charAt(curArrIndex);
-		System.out.println(charAt);
-	}
+    /**
+     * 返回选中汉字的原始索引和原拼音
+     */
+    @Override
+    public void afterGalleryChoose(String str)
+    {
+        curArrIndex = BasicNumberUtil.getNumber(PatternUtil.getFirstPattern(
+                str, "\\d+"));
+        et.setText(pinyinArr[curArrIndex]);
+        char charAt = dialog.charAt(curArrIndex);
+        System.out.println(charAt);
+    }
 }
