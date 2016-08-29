@@ -1,9 +1,12 @@
 package com.wnc.srtlearn.bihua;
 
+import android.content.Context;
 import android.os.Environment;
 
 import com.wnc.basic.BasicFileUtil;
 import com.wnc.srtlearn.srt.DownPicTask;
+import common.app.BasicPhoneUtil;
+import common.app.ToastUtil;
 
 public class SwfPlayMgr
 {
@@ -12,7 +15,7 @@ public class SwfPlayMgr
     public final static String SWF_HTML = SWF_FOLDER + "swfplayer.htm";
     private final static String swfAPI = "http://zd.diyifanwen.com/Files/WordSwf/%s.swf";
 
-    public static void reCreateHtml(String hanzi)
+    public static void reCreateHtml(String hanzi, Context context)
     {
         final String localSwfFile = SWF_FOLDER + hanzi + ".swf";
         if (BasicFileUtil.isExistFile(localSwfFile)
@@ -22,8 +25,15 @@ public class SwfPlayMgr
         }
         else
         {
-            writeSwfData(hanzi, false);
-            downLoadSwf(hanzi);
+            if (BasicPhoneUtil.isNetworkAvailable(context))
+            {
+                writeSwfData(hanzi, false);
+                downLoadSwf(hanzi);
+            }
+            else
+            {
+                ToastUtil.showShortToast(context, "网络连接不可用!");
+            }
         }
     }
 

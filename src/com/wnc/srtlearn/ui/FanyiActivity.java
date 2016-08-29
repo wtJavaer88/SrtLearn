@@ -18,6 +18,7 @@ import android.widget.EditText;
 
 import com.wnc.basic.BasicStringUtil;
 import com.wnc.srtlearn.R;
+import common.app.BasicPhoneUtil;
 import common.app.ToastUtil;
 
 public class FanyiActivity extends Activity implements OnClickListener,
@@ -70,6 +71,11 @@ public class FanyiActivity extends Activity implements OnClickListener,
         @Override
         public void onClick(View v)
         {
+            if (!BasicPhoneUtil.isNetworkAvailable(getApplicationContext()))
+            {
+                ToastUtil.showShortToast(getApplicationContext(), "网络连接不可用!");
+                return;
+            }
             String word = et.getText().toString().trim();
             if (BasicStringUtil.isNullString(word))
             {
