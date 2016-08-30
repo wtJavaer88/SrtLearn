@@ -7,6 +7,8 @@ import java.util.List;
 
 import srt.DataHolder;
 import srt.SRT_VIEW_TYPE;
+import srt.SrtFileDataHelper;
+import srt.SrtFilesAchieve;
 import srt.SrtInfo;
 import srt.SrtPlayService;
 import android.app.Activity;
@@ -101,7 +103,7 @@ public class SrtActivity extends Activity implements OnClickListener,
         initEngMenuDialog();
         initSettingDialog();
         initMoreDialog();
-        if (srtPlayService.getAutoPlayThread() != null)
+        if (srtPlayService.isRunning())
         {
             btnPlay.setText(SRT_STOP_TEXT);
         }
@@ -225,7 +227,7 @@ public class SrtActivity extends Activity implements OnClickListener,
                     {
                         String result = "";
                         for (SrtInfo srtInfo : srtPlayService
-                                .getCurrentPlaySrtInfo())
+                                .getCurrentPlaySrtInfos())
                         {
                             result += srtInfo.getEng() + " ";
                         }
@@ -237,7 +239,7 @@ public class SrtActivity extends Activity implements OnClickListener,
                         String eresult = "";
                         String cresult = "";
                         for (SrtInfo srtInfo : srtPlayService
-                                .getCurrentPlaySrtInfo())
+                                .getCurrentPlaySrtInfos())
                         {
                             eresult += srtInfo.getEng() + " ";
                             cresult += srtInfo.getChs() + " ";
@@ -284,7 +286,7 @@ public class SrtActivity extends Activity implements OnClickListener,
                                 break;
                             case 2:
                                 srtPlayService.switchReplayModel();
-                                if (srtPlayService.getAutoPlayThread() == null)
+                                if (!srtPlayService.isRunning())
                                 {
                                     beginSrtPlay();
                                 }
@@ -461,18 +463,10 @@ public class SrtActivity extends Activity implements OnClickListener,
 
     private void showSrtInfoWheel()
     {
-        List<SrtInfo> currentSrtInfos = DataHolder.getCurrentSrtInfos();
+        List<SrtInfo> currentSrtInfos = DataHolder.getAllSrtInfos();
+
         if (currentSrtInfos != null && !currentSrtInfos.isEmpty())
         {
-            int size = currentSrtInfos.size();
-            String leftArr[] = new String[size];
-            String rightArr[] = new String[size];
-            for (int i = 0; i < size; i++)
-            {
-                SrtInfo srtInfo = currentSrtInfos.get(i);
-                leftArr[i] = srtInfo.getFromTime().toString();
-                rightArr[i] = srtInfo.getToTime().toString();
-            }
 
             int wheelIndex1 = -1;
             int wheelIndex2 = -1;
@@ -488,22 +482,28 @@ public class SrtActivity extends Activity implements OnClickListener,
                 wheelIndex1 = srtPlayService.getCurIndex();
                 wheelIndex2 = srtPlayService.getCurIndex();
             }
-            WheelDialogShowUtil.showSrtDialog(this, leftArr, rightArr,
-                    wheelIndex1, wheelIndex2, new AfterWheelChooseListener()
-                    {
-                        @Override
-                        public void afterWheelChoose(Object... objs)
+            if (SrtFileDataHelper.leftTimelineArr != null
+                    && SrtFileDataHelper.rightTimelineArr != null)
+            {
+                WheelDialogShowUtil.showSrtDialog(this,
+                        SrtFileDataHelper.leftTimelineArr,
+                        SrtFileDataHelper.rightTimelineArr, wheelIndex1,
+                        wheelIndex2, new AfterWheelChooseListener()
                         {
-                            srtPlayService.setReplayIndex(
-                                    Integer.valueOf(objs[0].toString()),
-                                    Integer.valueOf(objs[1].toString()));
-                            srtPlayService.setReplayCtrl(true);
-                            DataHolder.setCurrentSrtIndex(srtPlayService
-                                    .getBeginReplayIndex());
-                            // 选择完毕立即开始播放
-                            beginSrtPlay();
-                        }
-                    });
+                            @Override
+                            public void afterWheelChoose(Object... objs)
+                            {
+                                srtPlayService.setReplayIndex(
+                                        Integer.valueOf(objs[0].toString()),
+                                        Integer.valueOf(objs[1].toString()));
+                                srtPlayService.setReplayCtrl(true);
+                                DataHolder.setCurrentSrtIndex(srtPlayService
+                                        .getBeginReplayIndex());
+                                // 选择完毕立即开始播放
+                                beginSrtPlay();
+                            }
+                        });
+            }
         }
     }
 
@@ -517,7 +517,8 @@ public class SrtActivity extends Activity implements OnClickListener,
      */
     private void showThumbPic()
     {
-        String filePath = srtPlayService.getThumbPicPath();
+        String filePath = SrtFilesAchieve.getThumbPicPath(srtPlayService
+                .getCurFile());
         System.out.println("filePath...");
         try
         {
@@ -534,11 +535,11 @@ public class SrtActivity extends Activity implements OnClickListener,
 
     public void clickPlayBtn()
     {
-        if (btnPlay.getText().toString().equals(SRT_STOP_TEXT))
+        if (srtPlayService.isRunning())
         {
             stopSrtPlay();
         }
-        else if (btnPlay.getText().toString().equals(SRT_PLAY_TEXT))
+        else
         {
             beginSrtPlay();
         }
@@ -642,9 +643,9 @@ public class SrtActivity extends Activity implements OnClickListener,
     {
         try
         {
-            final String[] leftArr = srtPlayService.getDirs();
+            final String[] leftArr = SrtFilesAchieve.getDirs();
             System.out.println(Arrays.toString(leftArr));
-            final String[][] rightArr = srtPlayService.getDirsFiles();
+            final String[][] rightArr = SrtFilesAchieve.getDirsFiles();
             System.out.println(Arrays.toString(rightArr));
             WheelDialogShowUtil.showRelativeDialog(this, "选择剧集", leftArr,
                     rightArr, defaultMoviePoint[0], defaultMoviePoint[1], 8,
@@ -657,7 +658,7 @@ public class SrtActivity extends Activity implements OnClickListener,
                                     .toString());
                             defaultMoviePoint[1] = Integer.valueOf(objs[1]
                                     .toString());
-                            String srtFilePath = srtPlayService
+                            String srtFilePath = SrtFilesAchieve
                                     .getSrtFileByArrIndex(defaultMoviePoint[0],
                                             defaultMoviePoint[1]);
                             initFileTv(srtFilePath);
@@ -798,7 +799,7 @@ public class SrtActivity extends Activity implements OnClickListener,
         public void onDoubleClick()
         {
             srtPlayService.switchReplayModel();
-            if (srtPlayService.getAutoPlayThread() == null)
+            if (!srtPlayService.isRunning())
             {
                 beginSrtPlay();
             }

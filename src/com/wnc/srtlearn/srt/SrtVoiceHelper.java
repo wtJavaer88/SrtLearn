@@ -28,6 +28,7 @@ public class SrtVoiceHelper
         {
             player = null;
             isPlaying = false;
+            System.out.println("voiceStopEx." + e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -36,40 +37,24 @@ public class SrtVoiceHelper
     {
         try
         {
-            if (player != null)
-            {
-                player.reset();
-                player.release();
-                player = null;
-                isPlaying = false;
-            }
+            stop();
 
             if (!isPlaying)
             {
+                // System.out.println(voicePath);
                 File file = new File(voicePath);
                 FileInputStream fis = new FileInputStream(file);
                 player = new MediaPlayer();
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 player.setDataSource(fis.getFD());
                 player.prepare();
+                player.start();
+                isPlaying = true;
                 player.setOnCompletionListener(new OnCompletionListener()
                 {
                     @Override
                     public void onCompletion(MediaPlayer mp)
                     {
-                        isPlaying = false;
-                        player.reset();
-                        player.release();
-                        player = null;
-                    }
-                });
-                player.setOnPreparedListener(new MediaPlayer.OnPreparedListener()
-                {
-                    @Override
-                    public void onPrepared(MediaPlayer mediaPlayer)
-                    {
-                        mediaPlayer.start();
-                        isPlaying = true;
                     }
                 });
             }
@@ -78,6 +63,7 @@ public class SrtVoiceHelper
         {
             player = null;
             isPlaying = false;
+            System.out.println("voicePlayEx." + e.getMessage());
             throw new RuntimeException(e);
         }
     }

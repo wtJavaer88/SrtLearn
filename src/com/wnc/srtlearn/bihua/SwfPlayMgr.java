@@ -7,13 +7,22 @@ import com.wnc.basic.BasicFileUtil;
 import com.wnc.srtlearn.srt.DownPicTask;
 import common.app.BasicPhoneUtil;
 import common.app.ToastUtil;
+import common.utils.TextFormatUtil;
 
 public class SwfPlayMgr
 {
     public final static String SWF_FOLDER = Environment
             .getExternalStorageDirectory().getPath() + "/wnc/res/swf/";
     public final static String SWF_HTML = SWF_FOLDER + "swfplayer.htm";
-    private final static String swfAPI = "http://zd.diyifanwen.com/Files/WordSwf/%s.swf";
+    private final static String SWF_API = "http://zd.diyifanwen.com/Files/WordSwf/%s.swf";
+
+    static
+    {
+        if (!BasicFileUtil.isExistFolder(SWF_FOLDER))
+        {
+            BasicFileUtil.makeDirectory(SWF_FOLDER);
+        }
+    }
 
     public static void reCreateHtml(String hanzi, Context context)
     {
@@ -40,7 +49,7 @@ public class SwfPlayMgr
     private static void downLoadSwf(String hanzi)
     {
         String destSave = SWF_FOLDER + hanzi + ".swf";
-        String swfUrl = getSwfUrl(java.net.URLEncoder.encode(hanzi));
+        String swfUrl = getSwfUrl(TextFormatUtil.getUrlEncodeStr(hanzi));
         new Thread(new DownPicTask(destSave, swfUrl)).start();
     }
 
@@ -68,6 +77,6 @@ public class SwfPlayMgr
 
     private static String getSwfUrl(String hanzi)
     {
-        return String.format(swfAPI, hanzi);
+        return String.format(SWF_API, hanzi);
     }
 }

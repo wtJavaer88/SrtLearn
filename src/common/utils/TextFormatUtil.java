@@ -190,6 +190,12 @@ public class TextFormatUtil
         return false;
     }
 
+    /**
+     * 获取不带后缀的文件名
+     * 
+     * @param filePath
+     * @return
+     */
     public static String getFileNameNoExtend(String filePath)
     {
         int dotPos = filePath.lastIndexOf(".");
@@ -217,7 +223,7 @@ public class TextFormatUtil
     }
 
     /**
-     * 判断是否包含中文
+     * 判断字符串是否包含中文
      * 
      * @param string
      * @return
@@ -228,9 +234,26 @@ public class TextFormatUtil
                 string, "[\u4e00-\u9fa5]"));
     }
 
+    /**
+     * 判断字符是否为中文
+     * 
+     * @param ch
+     * @return
+     */
     public static boolean isChineseChar(char ch)
     {
         return ch >= 0x4e00 && ch <= 0x9fa5;
+    }
+
+    /**
+     * 把字符串变成url通用的编码,一般用于中文
+     * 
+     * @param str
+     * @return
+     */
+    public static String getUrlEncodeStr(String str)
+    {
+        return java.net.URLEncoder.encode(str);
     }
 
 }

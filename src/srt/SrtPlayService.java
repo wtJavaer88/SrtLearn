@@ -1,11 +1,8 @@
 package srt;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import android.os.Environment;
 import android.os.Message;
@@ -13,17 +10,14 @@ import android.util.Log;
 
 import com.wnc.basic.BasicDateUtil;
 import com.wnc.basic.BasicFileUtil;
-import com.wnc.basic.BasicStringUtil;
 import com.wnc.srtlearn.srt.SrtSetting;
 import com.wnc.srtlearn.srt.SrtVoiceHelper;
 import com.wnc.srtlearn.ui.SrtActivity;
 import common.app.ToastUtil;
-import common.utils.MyFileUtil;
-import common.utils.TextFormatUtil;
 
 public class SrtPlayService
 {
-    private Thread autoPlayThread;
+    private Thread playThread;
     private boolean replayCtrl = false;// 复读模式
     boolean autoPlayNextCtrl = true;// 如果播放过程出异常,就不能单靠系统设置的值控制自动播放下一个了,
     private SrtActivity srtActivity;
@@ -31,17 +25,11 @@ public class SrtPlayService
     private int endReplayIndex = -1;
     final String FAVORITE_TXT = Environment.getExternalStorageDirectory()
             .getPath() + "/wnc/app/srtlearn/favorite.txt";
-    final String THUMB_PICFOLDER = Environment.getExternalStorageDirectory()
-            .getPath() + "/wnc/res/srtpic/";
     final String SRT_FOLDER = Environment.getExternalStorageDirectory()
             .getPath() + "/wnc/res/srt/";
-    // 文件夹名称最大只取16位
-    final int FOLDER_NAME_MAXLEN = 16;
-    // 文件名最大只取10位
-    final int FILE_NAME_MAXLEN = 8;
-    final String DELTA_UNIQUE = "D%dF%d";// 用来生成srtFilePathes里的key
-    private Map<String, String> srtFilePathes = new HashMap<String, String>();
-    List<File> tvFolders = null;
+
+    // 两个音频间的播放延迟
+    final int VOICE_PLAY_DELAY = 200;
 
     public SrtPlayService(SrtActivity srtActivity)
     {
@@ -59,33 +47,6 @@ public class SrtPlayService
         {
             ToastUtil.showLongToast(srtActivity, "收藏失败!");
         }
-    }
-
-    public String getThumbPicPath()
-    {
-        String filePath = THUMB_PICFOLDER
-                + getCurFile().replace(SRT_FOLDER, "");
-        int i = filePath.lastIndexOf(".");
-        filePath = filePath.substring(0, i);
-        File picFolder = new File(filePath);
-        if (picFolder.exists())
-        {
-            filePath = filePath + File.separator
-                    + TextFormatUtil.getFileNameNoExtend(getCurFile())
-                    + "_p1.pic";
-            if (!BasicFileUtil.isExistFile(filePath))
-            {
-                if (picFolder.listFiles().length > 0)
-                {
-                    filePath = picFolder.listFiles()[0].getAbsolutePath();
-                }
-            }
-        }
-        else
-        {
-            filePath = "";
-        }
-        return filePath;
     }
 
     public SrtInfo getSrtInfo(SRT_VIEW_TYPE view_type)
@@ -114,7 +75,7 @@ public class SrtPlayService
 
     public String getPleyProgress()
     {
-        final List<SrtInfo> list = DataHolder.map.get(getCurFile());
+        final List<SrtInfo> list = DataHolder.srtInfoMap.get(getCurFile());
         if (list == null)
         {
             return "";
@@ -136,17 +97,19 @@ public class SrtPlayService
     {
         return BasicDateUtil.getCurrentDateTimeString() + " \""
                 + getCurFile().replace(SRT_FOLDER, "") + "\" "
-                + getCurrentPlaySrtInfo() + "\r\n";
+                + getCurrentPlaySrtInfos() + "\r\n";
     }
 
     public void showNewSrtFile(String srtFile)
     {
+        this.setReplayCtrl(false);
+        this.setReplayIndex(-1, -1);
         System.out.println("srtFile:" + srtFile);
         if (BasicFileUtil.isExistFile(srtFile))
         {
             srtActivity.stopSrtPlay();
             DataHolder.switchFile(srtFile);
-            if (!DataHolder.map.containsKey(srtFile))
+            if (!DataHolder.srtInfoMap.containsKey(srtFile))
             {
                 SrtFileDataHelper.dataEntity(getCurFile());
                 srtActivity.getSrtInfoAndPlay(SRT_VIEW_TYPE.VIEW_RIGHT);
@@ -220,28 +183,40 @@ public class SrtPlayService
 
     public void playSrt()
     {
+        stopPlayThread();
         // 每次播放,先设置自动播放控制为true
         autoPlayNextCtrl = true;
         // 停止原有的播放线程,播放新字幕
-        stopSrtPlayThread();
-        autoPlayThread = new Thread(new Runnable()
+        playThread = new Thread(new Runnable()
         {
             @Override
             public void run()
             {
                 Message msg = new Message();
-                long time = TimeHelper.getTime(DataHolder.getCurrent()
-                        .getToTime())
+                long time = VOICE_PLAY_DELAY
+                        + TimeHelper.getTime(DataHolder.getCurrent()
+                                .getToTime())
                         - TimeHelper.getTime(DataHolder.getCurrent()
                                 .getFromTime());
                 try
                 {
                     if (SrtSetting.isPlayVoice())
                     {
-                        String voicePath = SrtTextHelper.getSrtVoiceLocation();
+                        final String voicePath = SrtTextHelper
+                                .getSrtVoiceLocation(DataHolder.getFileKey(),
+                                        DataHolder.getCurrent().getFromTime()
+                                                .toString());
                         if (BasicFileUtil.isExistFile(voicePath))
                         {
-                            SrtVoiceHelper.play(voicePath);
+                            new Thread(new Runnable()
+                            {
+                                @Override
+                                public void run()
+                                {
+                                    SrtVoiceHelper.play(voicePath);
+                                }
+                            }).start();
+
                         }
                     }
                     Thread.sleep(time);
@@ -258,25 +233,25 @@ public class SrtPlayService
 
             }
         });
-        getAutoPlayThread().start();
+        playThread.start();
     }
 
     public void stopSrt()
     {
-        stopSrtPlayThread();
-        autoPlayThread = null;
+        stopPlayThread();
         autoPlayNextCtrl = false;
     }
 
     /**
      * 停止原来的字幕自动播放
      */
-    private void stopSrtPlayThread()
+    private void stopPlayThread()
     {
-        if (getAutoPlayThread() != null)
+        if (playThread != null)
         {
-            getAutoPlayThread().interrupt();
+            playThread.interrupt();
         }
+        playThread = null;
     }
 
     public boolean isAutoPlayModel()
@@ -294,9 +269,9 @@ public class SrtPlayService
         return false;
     }
 
-    public Thread getAutoPlayThread()
+    public boolean isRunning()
     {
-        return autoPlayThread;
+        return playThread != null;
     }
 
     public boolean isReplayCtrl()
@@ -329,77 +304,7 @@ public class SrtPlayService
         this.beginReplayIndex = beginReplayIndex;
     }
 
-    public String[] getDirs()
-    {
-        if (tvFolders == null)
-        {
-            tvFolders = getFolderFiles();
-        }
-        int tvs = tvFolders.size();
-        final String[] leftArr = new String[tvs];
-        int i = 0;
-        for (File folder : tvFolders)
-        {
-            leftArr[i++] = BasicStringUtil.subString(folder.getName(), 0,
-                    FOLDER_NAME_MAXLEN);
-        }
-        return leftArr;
-    }
-
-    public String[][] getDirsFiles()
-    {
-        if (tvFolders == null)
-        {
-            tvFolders = getFolderFiles();
-        }
-        int tvs = tvFolders.size();
-        String[][] rightArr = new String[tvs][];
-        int i = 0;
-        for (File folder : tvFolders)
-        {
-            File[] listFiles = folder.listFiles();
-            List<File> fileList = MyFileUtil.getSortFiles(listFiles);
-            List<String> srtList = new ArrayList<String>();
-            int j = 0;
-            for (File f2 : fileList)
-            {
-                if (SrtTextHelper.isSrtfile(f2))
-                {
-                    srtFilePathes.put(String.format(DELTA_UNIQUE, i, j),
-                            f2.getAbsolutePath());
-                    // 文件名最大只取8位
-                    srtList.add(BasicStringUtil.subString(
-                            TextFormatUtil.getFileNameNoExtend(f2.getName()),
-                            0, FILE_NAME_MAXLEN));
-                    j++;
-                }
-            }
-            rightArr[i] = srtList.toArray(new String[srtList.size()]);
-            i++;
-        }
-        return rightArr;
-    }
-
-    private List<File> getFolderFiles()
-    {
-        tvFolders = new ArrayList<File>();
-        File srtFolderFile = new File(SRT_FOLDER);
-        for (File f : MyFileUtil.getSortFiles(srtFolderFile.listFiles()))
-        {
-            if (f.isDirectory())
-            {
-                tvFolders.add(f);
-            }
-        }
-        return tvFolders;
-    }
-
-    public String getSrtFileByArrIndex(int dIndex, int fIndex)
-    {
-        return srtFilePathes.get(String.format(DELTA_UNIQUE, dIndex, fIndex));
-    }
-
-    public List<SrtInfo> getCurrentPlaySrtInfo()
+    public List<SrtInfo> getCurrentPlaySrtInfos()
     {
         if (isReplayRunning())
         {
@@ -426,7 +331,7 @@ public class SrtPlayService
     public List<SrtInfo> getSrtInfos(int bIndex, int eIndex)
     {
         List<SrtInfo> list = new ArrayList<SrtInfo>();
-        List<SrtInfo> currentSrtInfos = DataHolder.getCurrentSrtInfos();
+        List<SrtInfo> currentSrtInfos = DataHolder.getAllSrtInfos();
         if (currentSrtInfos != null)
         {
             for (int i = bIndex; i <= eIndex; i++)

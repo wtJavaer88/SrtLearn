@@ -1,5 +1,7 @@
 package srt;
 
+import java.util.List;
+
 import srt.picker.Picker;
 
 import com.wnc.basic.BasicFileUtil;
@@ -11,6 +13,8 @@ public class SrtFileDataHelper
 
     public static void dataEntity(final String curFile)
     {
+        leftTimelineArr = null;
+        rightTimelineArr = null;
         picker = srt.picker.PickerFactory.getPicker(curFile);
         DataHolder.appendData(curFile, picker.getSrtInfos(0, countsPerPage));
         // 新进程去跑分页数据
@@ -23,6 +27,9 @@ public class SrtFileDataHelper
             }
         }).start();
     }
+
+    public static String[] leftTimelineArr;
+    public static String[] rightTimelineArr;
 
     private static void getDataByPage(String curFile)
     {
@@ -37,10 +44,27 @@ public class SrtFileDataHelper
                             * (curPage + 1)));
             curPage++;
         }
-        if (DataHolder.map.containsKey(curFile))
+        if (DataHolder.srtInfoMap.containsKey(curFile))
         {
+            initTimeLineArr(DataHolder.getAllSrtInfos());
             System.out.println(BasicFileUtil.getFileName(curFile) + "字幕结果数:"
-                    + DataHolder.map.get(curFile).size());
+                    + DataHolder.srtInfoMap.get(curFile).size());
+        }
+    }
+
+    private static void initTimeLineArr(List<SrtInfo> currentSrtInfos)
+    {
+        if (leftTimelineArr == null || rightTimelineArr == null)
+        {
+            int size = currentSrtInfos.size();
+            leftTimelineArr = new String[size];
+            rightTimelineArr = new String[size];
+            for (int i = 0; i < size; i++)
+            {
+                SrtInfo srtInfo = currentSrtInfos.get(i);
+                leftTimelineArr[i] = srtInfo.getFromTime().toString();
+                rightTimelineArr[i] = srtInfo.getToTime().toString();
+            }
         }
     }
 

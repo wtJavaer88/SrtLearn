@@ -23,12 +23,10 @@ public class SrtTextHelper
                 + common.utils.TextFormatUtil.getFileNameNoExtend(srtFilePath);
     }
 
-    public static String getSrtVoiceLocation()
+    public static String getSrtVoiceLocation(String srtFile, String voiceTimeStr)
     {
-        return getSrtVoiceFolder(DataHolder.getFileKey())
-                + File.separator
-                + DataHolder.getCurrent().getFromTime().toString()
-                        .replace(":", "") + ".mp3";
+        return getSrtVoiceFolder(srtFile) + File.separator
+                + voiceTimeStr.replace(":", "") + ".mp3";
     }
 
     public static boolean isSrtfile(File f)

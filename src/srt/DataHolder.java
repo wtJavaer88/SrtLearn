@@ -12,18 +12,23 @@ public class DataHolder
     private static String fileKey = "";
     private static int srtIndex = -1;// 正常的浏览从0开始
 
-    public static Map<String, List<SrtInfo>> map = new HashMap<String, List<SrtInfo>>();
+    public static Map<String, List<SrtInfo>> srtInfoMap = new HashMap<String, List<SrtInfo>>();
     public static Map<String, Integer> indexMap = new HashMap<String, Integer>();
 
     public static Map<String, Boolean> completeMap = new HashMap<String, Boolean>();
 
-    public static List<SrtInfo> getCurrentSrtInfos()
+    /**
+     * 获取当前字幕的所有SrtInfo
+     * 
+     * @return
+     */
+    public static List<SrtInfo> getAllSrtInfos()
     {
         if (BasicStringUtil.isNullString(fileKey))
         {
             return null;
         }
-        return map.get(fileKey);
+        return srtInfoMap.get(fileKey);
     }
 
     public static int getCurrentSrtIndex()
@@ -73,7 +78,7 @@ public class DataHolder
     public static SrtInfo getLast()
     {
         checkExist();
-        List<SrtInfo> list = map.get(fileKey);
+        List<SrtInfo> list = srtInfoMap.get(fileKey);
         srtIndex = list.size() - 1;
         return getSrtByIndex();
     }
@@ -82,7 +87,7 @@ public class DataHolder
     {
         checkExist();
         indexMap.put(fileKey, srtIndex);
-        List<SrtInfo> list = map.get(fileKey);
+        List<SrtInfo> list = srtInfoMap.get(fileKey);
         if (srtIndex == -1)
         {
             srtIndex = 0;
@@ -110,7 +115,7 @@ public class DataHolder
 
     private static void checkExist()
     {
-        if (!map.containsKey(fileKey))
+        if (!srtInfoMap.containsKey(fileKey))
         {
             throw new RuntimeException("找不到该文件的字幕!");
         }
@@ -120,7 +125,7 @@ public class DataHolder
     {
         checkExist();
         long l = TimeHelper.getTime(hour, minute, second, 0);
-        List<SrtInfo> list = map.get(fileKey);
+        List<SrtInfo> list = srtInfoMap.get(fileKey);
         SrtInfo srtInfo = null;
         for (int i = 0; i < list.size(); i++)
         {
@@ -150,15 +155,15 @@ public class DataHolder
 
     public static void appendData(String srtFile, List<SrtInfo> srtInfos)
     {
-        if (!map.containsKey(srtFile))
+        if (!srtInfoMap.containsKey(srtFile))
         {
-            map.put(srtFile, srtInfos);
+            srtInfoMap.put(srtFile, srtInfos);
         }
         else if (!srtInfos.isEmpty())
         {
             if (!completeMap.get(srtFile))
             {
-                map.get(srtFile).addAll(srtInfos);
+                srtInfoMap.get(srtFile).addAll(srtInfos);
             }
         }
         else
@@ -175,7 +180,7 @@ public class DataHolder
      */
     private static void resortList(String srtFile)
     {
-        List<SrtInfo> list = map.get(srtFile);
+        List<SrtInfo> list = srtInfoMap.get(srtFile);
         Collections.sort(list, new java.util.Comparator<SrtInfo>()
         {
             @Override

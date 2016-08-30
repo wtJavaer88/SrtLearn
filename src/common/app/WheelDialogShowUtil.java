@@ -273,7 +273,7 @@ public class WheelDialogShowUtil
             public void onChanged(WheelView wheel, int oldValue, int newValue)
             {
                 ToastUtil.showShortToast(context, DataHolder
-                        .getCurrentSrtInfos().get(newValue).getChs());
+                        .getAllSrtInfos().get(newValue).getChs());
             }
         };
         wheelview1.addChangingListener(onWheelChangedListener);

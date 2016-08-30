@@ -16,7 +16,6 @@ import android.widget.Gallery;
 import com.wnc.basic.BasicStringUtil;
 import com.wnc.srtlearn.R;
 import com.wnc.srtlearn.bihua.SwfPlayMgr;
-import common.app.BasicPhoneUtil;
 import common.app.GalleryUtil;
 import common.app.ToastUtil;
 import common.uihelper.AfterGalleryChooseListener;
@@ -66,9 +65,9 @@ public class BihuaActivity extends Activity implements OnClickListener,
     @Override
     public void onClick(View v)
     {
-        System.out.println("web:" + BasicPhoneUtil.isNetworkAvailable(this));
-        System.out.println("wifi:" + BasicPhoneUtil.isWifiConnect(this));
-        System.out.println("ping:" + BasicPhoneUtil.ping());
+        // System.out.println("web:" + BasicPhoneUtil.isNetworkAvailable(this));
+        // System.out.println("wifi:" + BasicPhoneUtil.isWifiConnect(this));
+        // System.out.println("ping:" + BasicPhoneUtil.ping());
         if (v.getId() == R.id.btnBihua)
         {
             String string = et.getText().toString().trim();
