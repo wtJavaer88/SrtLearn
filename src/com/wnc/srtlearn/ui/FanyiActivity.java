@@ -6,7 +6,6 @@ import translate.abs.ITranslate;
 import translate.site.baidu.BaiduPrographTranslate;
 import translate.site.dict.DictTranslate;
 import translate.site.iciba.CibaTranslate;
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,7 +20,7 @@ import com.wnc.srtlearn.R;
 import common.app.BasicPhoneUtil;
 import common.app.ToastUtil;
 
-public class FanyiActivity extends Activity implements OnClickListener,
+public class FanyiActivity extends BaseActivity implements OnClickListener,
         UncaughtExceptionHandler
 {
 

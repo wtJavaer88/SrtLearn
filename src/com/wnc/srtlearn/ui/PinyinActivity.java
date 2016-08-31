@@ -3,7 +3,6 @@ package com.wnc.srtlearn.ui;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.Arrays;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -25,7 +24,7 @@ import common.uihelper.AfterWheelChooseListener;
 import common.utils.PinYinUtil;
 import common.utils.PinyinStructUtil;
 
-public class PinyinActivity extends Activity implements OnClickListener,
+public class PinyinActivity extends BaseActivity implements OnClickListener,
         UncaughtExceptionHandler, AfterGalleryChooseListener
 {
     private Gallery gallery;

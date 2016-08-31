@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import android.os.Message;
 import android.util.Log;
 
 import com.wnc.basic.BasicDateUtil;
@@ -17,11 +16,10 @@ import common.uihelper.MyAppParams;
 
 public class SrtPlayService
 {
-    private Thread playThread;
+    private PlayThread playThread;
     private boolean replayCtrl = false;// 复读模式
     boolean autoPlayNextCtrl = true;// 如果播放过程出异常,就不能单靠系统设置的值控制自动播放下一个了,
-    volatile boolean threadRunning = false;// 控制单次的线程播放
-    private SrtActivity srtActivity;
+    public SrtActivity srtActivity;
     private int beginReplayIndex = -1;
     private int endReplayIndex = -1;
 
@@ -182,64 +180,21 @@ public class SrtPlayService
     {
         // 停止原有的播放线程,播放新字幕
         stopSrt();
-        playThread = new Thread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                Message msg = new Message();
-                long voiceDuration = VOICE_PLAY_DELAY
-                        + TimeHelper.getTime(DataHolder.getCurrent()
-                                .getToTime())
-                        - TimeHelper.getTime(DataHolder.getCurrent()
-                                .getFromTime());
-                // 每次播放,先设置自动播放控制为true
-                autoPlayNextCtrl = true;
-                threadRunning = true;
-                try
-                {
-
-                    final String voicePath = SrtTextHelper.getSrtVoiceLocation(
-                            DataHolder.getFileKey(), DataHolder.getCurrent()
-                                    .getFromTime().toString());
-                    if (BasicFileUtil.isExistFile(voicePath))
-                    {
-                        SrtVoiceHelper.play(voicePath);
-                    }
-                    long beginTime = System.currentTimeMillis();
-                    while (threadRunning)
-                    {
-                        if (System.currentTimeMillis() - beginTime >= voiceDuration)
-                        {
-                            // 正常结束
-                            threadRunning = false;
-                            msg.what = 1;
-                            srtActivity.getHanlder().sendMessage(msg);
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                    threadRunning = false;
-                    // 出现异常, 自动播放停止
-                    autoPlayNextCtrl = false;
-                    // 通知UI,停止播放
-                    msg.what = 2;
-                    srtActivity.getHanlder().sendMessage(msg);
-                }
-
-            }
-        });
+        // 每次播放,先设置自动播放控制为true
+        autoPlayNextCtrl = true;
+        playThread = new PlayThread(this);
         playThread.start();
     }
 
     public void stopSrt()
     {
         SrtVoiceHelper.stop();
-        threadRunning = false;
+        if (playThread != null)
+        {
+            playThread.threadRunning = false;
+            playThread = null;
+        }
         autoPlayNextCtrl = false;
-        playThread = null;
     }
 
     public boolean isAutoPlayModel()
@@ -258,7 +213,7 @@ public class SrtPlayService
         {
             return true;
         }
-        ToastUtil.showShortToast(srtActivity, "没有选择任何剧集");
+        ToastUtil.showShortToast(srtActivity, "请先选择一部剧集");
         return false;
     }
 

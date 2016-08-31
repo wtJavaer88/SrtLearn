@@ -2,7 +2,6 @@ package com.wnc.srtlearn.ui;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,7 +19,7 @@ import common.app.GalleryUtil;
 import common.app.ToastUtil;
 import common.uihelper.AfterGalleryChooseListener;
 
-public class BihuaActivity extends Activity implements OnClickListener,
+public class BihuaActivity extends BaseActivity implements OnClickListener,
         UncaughtExceptionHandler, AfterGalleryChooseListener
 {
 

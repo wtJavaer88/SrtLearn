@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -12,6 +15,25 @@ import android.util.Log;
 
 public class BasicPhoneUtil
 {
+    /**
+     * 判断Activity是否在最前端
+     * 
+     * @param activity
+     * @return
+     */
+    public static boolean isTopActivity(Activity activity)
+    {
+        boolean isTop = false;
+        ActivityManager am = (ActivityManager) activity
+                .getSystemService(activity.ACTIVITY_SERVICE);
+        ComponentName cn = am.getRunningTasks(1).get(0).topActivity;
+        if (cn.getClassName().contains(activity.getClass().getName()))
+        {
+            isTop = true;
+        }
+        return isTop;
+    }
+
     /**
      * 判断wifi是否已经连接
      * 

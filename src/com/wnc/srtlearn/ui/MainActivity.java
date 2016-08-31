@@ -2,7 +2,6 @@ package com.wnc.srtlearn.ui;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -13,7 +12,7 @@ import android.widget.Button;
 import com.wnc.srtlearn.R;
 import common.utils.PinYinUtil;
 
-public class MainActivity extends Activity implements OnClickListener,
+public class MainActivity extends BaseActivity implements OnClickListener,
         UncaughtExceptionHandler
 {
 

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import srt.FavoriteSrtInfo;
-import android.app.Activity;
+import srt.ReadFavoriteSrt;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -23,7 +23,7 @@ import common.uihelper.HorGestureDetectorListener;
 import common.uihelper.MyGestureDetector;
 import common.uihelper.VerGestureDetectorListener;
 
-public class FavoriteSrtActivity extends Activity implements
+public class FavoriteSrtActivity extends BaseActivity implements
         UncaughtExceptionHandler, OnClickListener, VerGestureDetectorListener,
         HorGestureDetectorListener
 {
@@ -39,7 +39,7 @@ public class FavoriteSrtActivity extends Activity implements
         setContentView(R.layout.activity_srtview);
         // 设置未捕获异常UncaughtExceptionHandler的处理方法
         Thread.setDefaultUncaughtExceptionHandler(this);
-        list = TestReadSrt.getFSInfos();
+        list = ReadFavoriteSrt.getFSInfos();
         System.out.println(list.size());
         initView();
         setContent();

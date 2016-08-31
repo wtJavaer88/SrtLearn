@@ -1,5 +1,6 @@
 package common.app;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
@@ -43,7 +44,7 @@ public class ToastUtil
         Log.i("TOAST", "info:" + toastMsg);
         if (context == null)
         {
-            Log.i("err", "请不要传NULL的context");
+            Log.e("TOAST", "请不要传NULL的context");
             return false;
         }
         else if (toastMsg == null)
@@ -51,7 +52,11 @@ public class ToastUtil
             Toast.makeText(context, "请不要传NULL的msg", Toast.LENGTH_SHORT).show();
             return false;
         }
-
+        if (context instanceof Activity
+                && !BasicPhoneUtil.isTopActivity((Activity) context))
+        {
+            return false;
+        }
         return true;
     }
 

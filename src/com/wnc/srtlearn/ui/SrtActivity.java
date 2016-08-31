@@ -10,13 +10,11 @@ import srt.SrtFileDataHelper;
 import srt.SrtFilesAchieve;
 import srt.SrtInfo;
 import srt.SrtPlayService;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -52,7 +50,7 @@ import common.uihelper.MyGestureDetector;
 import common.uihelper.VerGestureDetectorListener;
 import common.utils.TextFormatUtil;
 
-public class SrtActivity extends Activity implements OnClickListener,
+public class SrtActivity extends BaseActivity implements OnClickListener,
         OnLongClickListener, HorGestureDetectorListener,
         VerGestureDetectorListener, UncaughtExceptionHandler
 {
@@ -62,11 +60,11 @@ public class SrtActivity extends Activity implements OnClickListener,
     final int PINYIN_RESULT = 100;
 
     // 组件设置成静态, 防止屏幕旋转的时候内存地址会变
-    private static Button btnPlay;
-    private static TextView movieTv;
-    private static TextView chsTv;
-    private static TextView engTv;
-    private static TextView timelineTv;
+    private Button btnPlay;
+    private TextView movieTv;
+    private TextView chsTv;
+    private TextView engTv;
+    private TextView timelineTv;
 
     private GestureDetector gestureDetector;
     AlertDialog alertDialog;
@@ -103,16 +101,15 @@ public class SrtActivity extends Activity implements OnClickListener,
         initEngMenuDialog();
         initSettingDialog();
         initMoreDialog();
-
+        if (srtPlayService.isSrtShowing())
+        {
+            play(DataHolder.getCurrent());
+        }
         autoPlayHandler = new AutoPlayHandler(this);
 
-        if (srtPlayService.isRunning())
-        {
-            btnPlay.setText(SRT_STOP_TEXT);
-        }
         // 因为是横屏,所以设置的滑屏比例低一些
         this.gestureDetector = new GestureDetector(this, new MyGestureDetector(
-                0.1, 0.2, this));
+                0.1, 0.25, this));
     }
 
     @SuppressWarnings("deprecation")
@@ -649,24 +646,25 @@ public class SrtActivity extends Activity implements OnClickListener,
         {
             alertDialog.hide();
         }
+
+        if (srt != null)
+        {
+            setContentAndPlay(srt);
+        }
+    }
+
+    public void getSrtInfoAndPlay(SRT_VIEW_TYPE view_type)
+    {
         try
         {
-            if (srt != null)
-            {
-                setContentAndPlay(srt);
-            }
+            SrtInfo srt = srtPlayService.getSrtInfo(view_type);
+            play(srt);
         }
         catch (Exception ex)
         {
             stopSrtPlay();
             ToastUtil.showLongToast(this, ex.getMessage());
         }
-    }
-
-    public void getSrtInfoAndPlay(SRT_VIEW_TYPE view_type)
-    {
-        SrtInfo srt = srtPlayService.getSrtInfo(view_type);
-        play(srt);
     }
 
     private void setContentAndPlay(SrtInfo srt)
@@ -873,25 +871,6 @@ public class SrtActivity extends Activity implements OnClickListener,
         getSrtInfoAndPlay(SRT_VIEW_TYPE.VIEW_RIGHT);
     }
 
-    // 重载此方法即可避免横竖屏切换时的数据丢失问题
-    @Override
-    public void onConfigurationChanged(Configuration newConfig)
-    {
-        super.onConfigurationChanged(newConfig);
-        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
-        {
-            // land
-            System.out.println("ORIENTATION_LANDSCAPE");
-
-        }
-        else if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
-        {
-            // port
-            System.out.println("ORIENTATION_PORTRAIT");
-
-        }
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -899,7 +878,7 @@ public class SrtActivity extends Activity implements OnClickListener,
         if (requestCode == this.PINYIN_RESULT && data != null)
         {
             String retPY = data.getStringExtra("pinyin");
-            System.out.println("返回:" + retPY);
+            System.out.println("返回拼音:" + retPY);
             SrtInfo srtInfo = DataHolder.getCurrent();
             srtInfo.setEng(retPY);
             setContent(srtInfo);

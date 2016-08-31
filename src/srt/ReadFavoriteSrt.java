@@ -1,17 +1,15 @@
-package com.wnc.srtlearn.ui;
+package srt;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import srt.FavoriteSrtInfo;
-import srt.TimeInfo;
 
 import com.wnc.basic.BasicNumberUtil;
 import com.wnc.string.PatternUtil;
 import com.wnc.tools.FileOp;
 import common.uihelper.MyAppParams;
 
-public class TestReadSrt
+public class ReadFavoriteSrt
 {
     public static List<FavoriteSrtInfo> getFSInfos()
     {
