@@ -17,6 +17,8 @@ public class SrtSetting
     private final static String AUTOPLAYNEXT = "S002";
     // 是否启动音量键翻页的监控
     private final static String VOLKEYLISTEN = "S003";
+    // 是否播放背景声音
+    private final static String PLAYBGVOICE = "S004";
 
     public static boolean isVolKeyListen()
     {
@@ -49,5 +51,16 @@ public class SrtSetting
     public static void setAutoPlayNext(boolean flag)
     {
         SharedPreferenceUtil.changeValue(AUTOPLAYNEXT, flag + "");
+    }
+
+    public static void setPlayBgVoice(boolean flag)
+    {
+        SharedPreferenceUtil.changeValue(PLAYBGVOICE, flag + "");
+    }
+
+    public static boolean isPlayBgVoice()
+    {
+        return Boolean.valueOf(SharedPreferenceUtil.getShareDataByKey(
+                PLAYBGVOICE, "true"));
     }
 }

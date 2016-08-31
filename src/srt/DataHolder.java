@@ -83,6 +83,21 @@ public class DataHolder
         return getSrtByIndex();
     }
 
+    public static SrtInfo getSrtInfoByIndex(int selIndex)
+    {
+        checkExist();
+        List<SrtInfo> list = srtInfoMap.get(fileKey);
+        if (selIndex == -1)
+        {
+            throw new RuntimeException("已经是第一条了!");
+        }
+        if (selIndex == list.size())
+        {
+            throw new RuntimeException("已经读完了!");
+        }
+        return list.get(selIndex);
+    }
+
     private static SrtInfo getSrtByIndex()
     {
         checkExist();

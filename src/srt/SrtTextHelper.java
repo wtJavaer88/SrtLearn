@@ -1,6 +1,8 @@
 package srt;
 
 import java.io.File;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import com.wnc.basic.BasicFileUtil;
 
@@ -27,6 +29,28 @@ public class SrtTextHelper
     {
         return getSrtVoiceFolder(srtFile) + File.separator
                 + voiceTimeStr.replace(":", "") + ".mp3";
+    }
+
+    public static Queue<String> getSrtVoicesInRange(String srtFile,
+            String voiceTimeStr1, String voiceTimeStr2)
+    {
+        System.out.println(voiceTimeStr1 + " / " + voiceTimeStr2);
+        Queue<String> queue = new LinkedList<String>();
+        final String folder = getSrtVoiceFolder(srtFile);
+        String m1 = folder + File.separator + voiceTimeStr1.replace(":", "")
+                + ".mp3";
+        String m2 = folder + File.separator + voiceTimeStr2.replace(":", "")
+                + ".mp3";
+        if (BasicFileUtil.isExistFile(m1))
+        {
+            queue.offer(m1);
+        }
+        if (BasicFileUtil.isExistFile(m2))
+        {
+            queue.offer(m2);
+        }
+
+        return queue;
     }
 
     public static boolean isSrtfile(File f)
