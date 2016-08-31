@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import android.os.Environment;
 import android.os.Message;
 import android.util.Log;
 
@@ -14,19 +13,17 @@ import com.wnc.srtlearn.srt.SrtSetting;
 import com.wnc.srtlearn.srt.SrtVoiceHelper;
 import com.wnc.srtlearn.ui.SrtActivity;
 import common.app.ToastUtil;
+import common.uihelper.MyAppParams;
 
 public class SrtPlayService
 {
     private Thread playThread;
     private boolean replayCtrl = false;// 复读模式
     boolean autoPlayNextCtrl = true;// 如果播放过程出异常,就不能单靠系统设置的值控制自动播放下一个了,
+    volatile boolean threadRunning = false;// 控制单次的线程播放
     private SrtActivity srtActivity;
     private int beginReplayIndex = -1;
     private int endReplayIndex = -1;
-    final String FAVORITE_TXT = Environment.getExternalStorageDirectory()
-            .getPath() + "/wnc/app/srtlearn/favorite.txt";
-    final String SRT_FOLDER = Environment.getExternalStorageDirectory()
-            .getPath() + "/wnc/res/srt/";
 
     // 两个音频间的播放延迟
     final int VOICE_PLAY_DELAY = 200;
@@ -38,7 +35,7 @@ public class SrtPlayService
 
     public void favorite()
     {
-        if (BasicFileUtil.writeFileString(FAVORITE_TXT,
+        if (BasicFileUtil.writeFileString(MyAppParams.FAVORITE_TXT,
                 getFavoriteCurrContent(), "UTF-8", true))
         {
             ToastUtil.showLongToast(srtActivity, "收藏成功!");
@@ -96,7 +93,7 @@ public class SrtPlayService
     public String getFavoriteCurrContent()
     {
         return BasicDateUtil.getCurrentDateTimeString() + " \""
-                + getCurFile().replace(SRT_FOLDER, "") + "\" "
+                + getCurFile().replace(MyAppParams.SRT_FOLDER, "") + "\" "
                 + getCurrentPlaySrtInfos() + "\r\n";
     }
 
@@ -112,11 +109,11 @@ public class SrtPlayService
             if (!DataHolder.srtInfoMap.containsKey(srtFile))
             {
                 SrtFileDataHelper.dataEntity(getCurFile());
-                srtActivity.getSrtInfoAndPlay(SRT_VIEW_TYPE.VIEW_RIGHT);
+                srtActivity.play(getSrtInfo(SRT_VIEW_TYPE.VIEW_RIGHT));
             }
             else
             {
-                srtActivity.getSrtInfoAndPlay(SRT_VIEW_TYPE.VIEW_CURRENT);
+                srtActivity.play(getSrtInfo(SRT_VIEW_TYPE.VIEW_CURRENT));
             }
         }
         else
@@ -183,52 +180,53 @@ public class SrtPlayService
 
     public void playSrt()
     {
-        stopPlayThread();
-        // 每次播放,先设置自动播放控制为true
-        autoPlayNextCtrl = true;
         // 停止原有的播放线程,播放新字幕
+        stopSrt();
         playThread = new Thread(new Runnable()
         {
             @Override
             public void run()
             {
                 Message msg = new Message();
-                long time = VOICE_PLAY_DELAY
+                long voiceDuration = VOICE_PLAY_DELAY
                         + TimeHelper.getTime(DataHolder.getCurrent()
                                 .getToTime())
                         - TimeHelper.getTime(DataHolder.getCurrent()
                                 .getFromTime());
+                // 每次播放,先设置自动播放控制为true
+                autoPlayNextCtrl = true;
+                threadRunning = true;
                 try
                 {
-                    if (SrtSetting.isPlayVoice())
-                    {
-                        final String voicePath = SrtTextHelper
-                                .getSrtVoiceLocation(DataHolder.getFileKey(),
-                                        DataHolder.getCurrent().getFromTime()
-                                                .toString());
-                        if (BasicFileUtil.isExistFile(voicePath))
-                        {
-                            new Thread(new Runnable()
-                            {
-                                @Override
-                                public void run()
-                                {
-                                    SrtVoiceHelper.play(voicePath);
-                                }
-                            }).start();
 
+                    final String voicePath = SrtTextHelper.getSrtVoiceLocation(
+                            DataHolder.getFileKey(), DataHolder.getCurrent()
+                                    .getFromTime().toString());
+                    if (BasicFileUtil.isExistFile(voicePath))
+                    {
+                        SrtVoiceHelper.play(voicePath);
+                    }
+                    long beginTime = System.currentTimeMillis();
+                    while (threadRunning)
+                    {
+                        if (System.currentTimeMillis() - beginTime >= voiceDuration)
+                        {
+                            // 正常结束
+                            threadRunning = false;
+                            msg.what = 1;
+                            srtActivity.getHanlder().sendMessage(msg);
                         }
                     }
-                    Thread.sleep(time);
-                    srtActivity.reveiveMsg(msg);
-                }
-                catch (InterruptedException e)
-                {
-                    // e.printStackTrace();
                 }
                 catch (Exception e)
                 {
                     e.printStackTrace();
+                    threadRunning = false;
+                    // 出现异常, 自动播放停止
+                    autoPlayNextCtrl = false;
+                    // 通知UI,停止播放
+                    msg.what = 2;
+                    srtActivity.getHanlder().sendMessage(msg);
                 }
 
             }
@@ -238,19 +236,9 @@ public class SrtPlayService
 
     public void stopSrt()
     {
-        stopPlayThread();
+        SrtVoiceHelper.stop();
+        threadRunning = false;
         autoPlayNextCtrl = false;
-    }
-
-    /**
-     * 停止原来的字幕自动播放
-     */
-    private void stopPlayThread()
-    {
-        if (playThread != null)
-        {
-            playThread.interrupt();
-        }
         playThread = null;
     }
 
@@ -259,6 +247,11 @@ public class SrtPlayService
         return autoPlayNextCtrl && SrtSetting.isAutoPlayNext();
     }
 
+    /**
+     * 是否已经选择了字幕文件
+     * 
+     * @return
+     */
     public boolean isSrtShowing()
     {
         if (BasicFileUtil.isExistFile(getCurFile()))

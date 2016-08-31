@@ -1,32 +1,24 @@
 package com.wnc.srtlearn.bihua;
 
 import android.content.Context;
-import android.os.Environment;
 
 import com.wnc.basic.BasicFileUtil;
 import com.wnc.srtlearn.srt.DownPicTask;
 import common.app.BasicPhoneUtil;
 import common.app.ToastUtil;
+import common.uihelper.MyAppParams;
 import common.utils.TextFormatUtil;
 
 public class SwfPlayMgr
 {
-    public final static String SWF_FOLDER = Environment
-            .getExternalStorageDirectory().getPath() + "/wnc/res/swf/";
-    public final static String SWF_HTML = SWF_FOLDER + "swfplayer.htm";
-    private final static String SWF_API = "http://zd.diyifanwen.com/Files/WordSwf/%s.swf";
 
-    static
-    {
-        if (!BasicFileUtil.isExistFolder(SWF_FOLDER))
-        {
-            BasicFileUtil.makeDirectory(SWF_FOLDER);
-        }
-    }
+    public final static String SWF_HTML = MyAppParams.SWF_FOLDER
+            + "swfplayer.htm";
+    private final static String SWF_API = "http://zd.diyifanwen.com/Files/WordSwf/%s.swf";
 
     public static void reCreateHtml(String hanzi, Context context)
     {
-        final String localSwfFile = SWF_FOLDER + hanzi + ".swf";
+        final String localSwfFile = MyAppParams.SWF_FOLDER + hanzi + ".swf";
         if (BasicFileUtil.isExistFile(localSwfFile)
                 && BasicFileUtil.getFileSize(localSwfFile) > 0)
         {
@@ -48,7 +40,7 @@ public class SwfPlayMgr
 
     private static void downLoadSwf(String hanzi)
     {
-        String destSave = SWF_FOLDER + hanzi + ".swf";
+        String destSave = MyAppParams.SWF_FOLDER + hanzi + ".swf";
         String swfUrl = getSwfUrl(TextFormatUtil.getUrlEncodeStr(hanzi));
         new Thread(new DownPicTask(destSave, swfUrl)).start();
     }

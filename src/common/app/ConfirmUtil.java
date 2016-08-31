@@ -46,7 +46,7 @@ public class ConfirmUtil
             @Override
             public void onClick(View v)
             {
-                event.onPositive();
+                event.onConfirmPositive();
                 dlg.dismiss();
             }
         });

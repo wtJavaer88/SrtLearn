@@ -6,10 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.os.Environment;
-
 import com.wnc.basic.BasicFileUtil;
 import com.wnc.basic.BasicStringUtil;
+import common.uihelper.MyAppParams;
 import common.utils.MyFileUtil;
 import common.utils.TextFormatUtil;
 
@@ -21,10 +20,7 @@ import common.utils.TextFormatUtil;
  */
 public class SrtFilesAchieve
 {
-    private static final String SRT_FOLDER = Environment
-            .getExternalStorageDirectory().getPath() + "/wnc/res/srt/";
-    final static String THUMB_PICFOLDER = Environment
-            .getExternalStorageDirectory().getPath() + "/wnc/res/srtpic/";
+
     private static Map<String, String> srtFilePathes = new HashMap<String, String>();
     private static List<File> tvFolders = null;
     static String[] sleftArr;
@@ -90,7 +86,7 @@ public class SrtFilesAchieve
     private static List<File> getFolderFiles()
     {
         tvFolders = new ArrayList<File>();
-        File srtFolderFile = new File(SRT_FOLDER);
+        File srtFolderFile = new File(MyAppParams.SRT_FOLDER);
         for (File f : MyFileUtil.getSortFiles(srtFolderFile.listFiles()))
         {
             if (f.isDirectory())
@@ -114,7 +110,8 @@ public class SrtFilesAchieve
      */
     public static String getThumbPicPath(String srtFile)
     {
-        String filePath = THUMB_PICFOLDER + srtFile.replace(SRT_FOLDER, "");
+        String filePath = MyAppParams.THUMB_PICFOLDER
+                + srtFile.replace(MyAppParams.SRT_FOLDER, "");
         int i = filePath.lastIndexOf(".");
         filePath = filePath.substring(0, i);
         File picFolder = new File(filePath);

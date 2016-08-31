@@ -2,5 +2,5 @@ package common.uihelper;
 
 public interface PositiveEvent
 {
-    public void onPositive();
+    public void onConfirmPositive();
 }

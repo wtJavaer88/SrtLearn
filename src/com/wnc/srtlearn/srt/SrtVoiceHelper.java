@@ -39,32 +39,31 @@ public class SrtVoiceHelper
         {
             stop();
 
-            if (!isPlaying)
+            System.out.println(voicePath);
+            File file = new File(voicePath);
+            FileInputStream fis = new FileInputStream(file);
+            player = new MediaPlayer();
+            player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            player.setDataSource(fis.getFD());
+            player.prepare();
+            player.start();
+            isPlaying = true;
+            player.setOnCompletionListener(new OnCompletionListener()
             {
-                // System.out.println(voicePath);
-                File file = new File(voicePath);
-                FileInputStream fis = new FileInputStream(file);
-                player = new MediaPlayer();
-                player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                player.setDataSource(fis.getFD());
-                player.prepare();
-                player.start();
-                isPlaying = true;
-                player.setOnCompletionListener(new OnCompletionListener()
+                @Override
+                public void onCompletion(MediaPlayer mp)
                 {
-                    @Override
-                    public void onCompletion(MediaPlayer mp)
-                    {
-                    }
-                });
-            }
+                }
+            });
         }
         catch (Exception e)
         {
+            System.out.println("player:" + player);
             player = null;
             isPlaying = false;
             System.out.println("voicePlayEx." + e.getMessage());
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            throw new RuntimeException();
         }
     }
 }

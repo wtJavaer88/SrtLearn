@@ -10,13 +10,19 @@ public class MyAppParams
     private String packageName;
     private Resources resources;
     private String appPath;
-    private String workPath = Environment.getExternalStorageDirectory()
-            .getPath() + "/wnc/app/money/";
+    private final static String workPath = Environment
+            .getExternalStorageDirectory().getPath() + "/wnc/app/srtlearn/";
     private String localLogPath;
+    public final static String SWF_FOLDER = Environment
+            .getExternalStorageDirectory().getPath() + "/wnc/res/swf/";
+    public static final String SRT_FOLDER = Environment
+            .getExternalStorageDirectory().getPath() + "/wnc/res/srt/";
+    public final static String THUMB_PICFOLDER = Environment
+            .getExternalStorageDirectory().getPath() + "/wnc/res/srtpic/";
+    public final static String FAVORITE_TXT = workPath + "favorite.txt";
+
     private String backupDbPath;
-    private String tmpPicPath;
-    private String tmpVoicePath;
-    private String tmpVideoPath;
+
     private String zipPath;
 
     private static int screenWidth;
@@ -28,19 +34,14 @@ public class MyAppParams
     {
         this.localLogPath = this.workPath + "log/";
         this.backupDbPath = this.workPath + "backupdb/";
-        this.tmpPicPath = this.workPath + "tempimg/";
 
-        this.tmpVoicePath = this.workPath + "tempamr/";
-        this.tmpVideoPath = this.workPath + "tempMP4/";
         this.zipPath = this.workPath + "zip/";
 
         BasicFileUtil.makeDirectory(this.localLogPath);
         BasicFileUtil.makeDirectory(this.backupDbPath);
-
-        BasicFileUtil.makeDirectory(this.tmpPicPath);
-        BasicFileUtil.makeDirectory(this.tmpVoicePath);
-        BasicFileUtil.makeDirectory(this.tmpVideoPath);
-
+        BasicFileUtil.makeDirectory(SWF_FOLDER);
+        BasicFileUtil.makeDirectory(SRT_FOLDER);
+        BasicFileUtil.makeDirectory(THUMB_PICFOLDER);
         BasicFileUtil.makeDirectory(this.zipPath);
     }
 
@@ -135,23 +136,9 @@ public class MyAppParams
         return this.localLogPath;
     }
 
-    public String getTmpPicPath()
-    {
-        return this.tmpPicPath;
-    }
-
-    public String getTmpVoicePath()
-    {
-        return this.tmpVoicePath;
-    }
-
     public String getAppPath()
     {
         return this.appPath;
     }
 
-    public String getTmpVideoPath()
-    {
-        return this.tmpVideoPath;
-    }
 }

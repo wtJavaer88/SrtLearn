@@ -2,7 +2,6 @@ package com.wnc.srtlearn.ui;
 
 import java.io.File;
 import java.lang.Thread.UncaughtExceptionHandler;
-import java.util.Arrays;
 import java.util.List;
 
 import srt.DataHolder;
@@ -21,7 +20,6 @@ import android.content.res.Configuration;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -40,7 +38,7 @@ import com.wnc.srtlearn.R;
 import com.wnc.srtlearn.srt.HeadSetUtil;
 import com.wnc.srtlearn.srt.HeadSetUtil.OnHeadSetListener;
 import com.wnc.srtlearn.srt.SrtSetting;
-import com.wnc.srtlearn.srt.SrtVoiceHelper;
+import com.wnc.srtlearn.ui.handler.AutoPlayHandler;
 import common.app.ClickFileIntentFactory;
 import common.app.ClipBoardUtil;
 import common.app.ShareUtil;
@@ -49,6 +47,7 @@ import common.app.ToastUtil;
 import common.app.WheelDialogShowUtil;
 import common.uihelper.AfterWheelChooseListener;
 import common.uihelper.HorGestureDetectorListener;
+import common.uihelper.MyAppParams;
 import common.uihelper.MyGestureDetector;
 import common.uihelper.VerGestureDetectorListener;
 import common.utils.TextFormatUtil;
@@ -59,7 +58,7 @@ public class SrtActivity extends Activity implements OnClickListener,
 {
     private final String SRT_PLAY_TEXT = "播放";
     private final String SRT_STOP_TEXT = "停止";
-
+    public Handler autoPlayHandler;
     final int PINYIN_RESULT = 100;
 
     // 组件设置成静态, 防止屏幕旋转的时候内存地址会变
@@ -81,7 +80,7 @@ public class SrtActivity extends Activity implements OnClickListener,
     { "自动下一条", "播放声音", "打开复读", "音量调节", "隐藏中文", "音量键-翻页" };
     String[] moreItems = new String[]
     { "自主跟读", "笔顺学习", "拼音修改" };
-    SrtPlayService srtPlayService;
+    private SrtPlayService srtPlayService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -99,10 +98,14 @@ public class SrtActivity extends Activity implements OnClickListener,
 
         srtPlayService = new SrtPlayService(this);
 
+        initAppParams();
         initView();
         initEngMenuDialog();
         initSettingDialog();
         initMoreDialog();
+
+        autoPlayHandler = new AutoPlayHandler(this);
+
         if (srtPlayService.isRunning())
         {
             btnPlay.setText(SRT_STOP_TEXT);
@@ -110,6 +113,18 @@ public class SrtActivity extends Activity implements OnClickListener,
         // 因为是横屏,所以设置的滑屏比例低一些
         this.gestureDetector = new GestureDetector(this, new MyGestureDetector(
                 0.1, 0.2, this));
+    }
+
+    @SuppressWarnings("deprecation")
+    private void initAppParams()
+    {
+        MyAppParams.getInstance().setPackageName(this.getPackageName());
+        MyAppParams.getInstance().setResources(this.getResources());
+        MyAppParams.getInstance().setAppPath(this.getFilesDir().getParent());
+        MyAppParams.setScreenWidth(this.getWindowManager().getDefaultDisplay()
+                .getWidth());
+        MyAppParams.setScreenHeight(this.getWindowManager().getDefaultDisplay()
+                .getHeight());
     }
 
     Builder alertDialogBuilder;
@@ -519,7 +534,6 @@ public class SrtActivity extends Activity implements OnClickListener,
     {
         String filePath = SrtFilesAchieve.getThumbPicPath(srtPlayService
                 .getCurFile());
-        System.out.println("filePath...");
         try
         {
             Intent intent = ClickFileIntentFactory.getIntentByFile(filePath);
@@ -557,50 +571,8 @@ public class SrtActivity extends Activity implements OnClickListener,
     public void stopSrtPlay()
     {
         btnPlay.setText(SRT_PLAY_TEXT);
-        SrtVoiceHelper.stop();
         srtPlayService.stopSrt();
     }
-
-    public Handler autoPlayHandler = new Handler()
-    {
-        @Override
-        public void handleMessage(android.os.Message msg)
-        {
-
-            if (srtPlayService.isReplayInvalid())
-            {
-                srtPlayService.stopReplayModel();
-            }
-            if (srtPlayService.isReplayCtrl())
-            {
-                // System.out.println("6:" + DataHolder.getCurrentSrtIndex() +
-                // " "
-                // + beginReplayIndex + " " + endReplayIndex);
-                // 复读结束时,回到复读开始的地方继续复读
-                if (srtPlayService.getCurIndex() == srtPlayService
-                        .getEndReplayIndex())
-                {
-                    DataHolder.setCurrentSrtIndex(srtPlayService
-                            .getBeginReplayIndex());
-                    getSrtInfoAndPlay(SRT_VIEW_TYPE.VIEW_CURRENT);
-                }
-                else
-                {
-                    // 复读模式下,也会自动播放下一条,但是临时性的
-                    doRight();
-                }
-            }
-            else if (srtPlayService.isAutoPlayModel())
-            {
-                // 在自动播放模式下,播放下一条
-                doRight();
-            }
-            else
-            {
-                stopSrtPlay();
-            }
-        }
-    };
 
     private void showSkipWheel()
     {
@@ -644,9 +616,7 @@ public class SrtActivity extends Activity implements OnClickListener,
         try
         {
             final String[] leftArr = SrtFilesAchieve.getDirs();
-            System.out.println(Arrays.toString(leftArr));
             final String[][] rightArr = SrtFilesAchieve.getDirsFiles();
-            System.out.println(Arrays.toString(rightArr));
             WheelDialogShowUtil.showRelativeDialog(this, "选择剧集", leftArr,
                     rightArr, defaultMoviePoint[0], defaultMoviePoint[1], 8,
                     new AfterWheelChooseListener()
@@ -673,7 +643,7 @@ public class SrtActivity extends Activity implements OnClickListener,
         }
     }
 
-    public void getSrtInfoAndPlay(SRT_VIEW_TYPE view_type)
+    public void play(SrtInfo srt)
     {
         if (alertDialog != null)
         {
@@ -681,7 +651,6 @@ public class SrtActivity extends Activity implements OnClickListener,
         }
         try
         {
-            SrtInfo srt = srtPlayService.getSrtInfo(view_type);
             if (srt != null)
             {
                 setContentAndPlay(srt);
@@ -692,6 +661,12 @@ public class SrtActivity extends Activity implements OnClickListener,
             stopSrtPlay();
             ToastUtil.showLongToast(this, ex.getMessage());
         }
+    }
+
+    public void getSrtInfoAndPlay(SRT_VIEW_TYPE view_type)
+    {
+        SrtInfo srt = srtPlayService.getSrtInfo(view_type);
+        play(srt);
     }
 
     private void setContentAndPlay(SrtInfo srt)
@@ -886,11 +861,6 @@ public class SrtActivity extends Activity implements OnClickListener,
         ToastUtil.showShortToast(this, "播放出现异常");
     }
 
-    public void reveiveMsg(Message msg)
-    {
-        autoPlayHandler.sendMessage(msg);
-    }
-
     @Override
     public void doUp()
     {
@@ -935,4 +905,15 @@ public class SrtActivity extends Activity implements OnClickListener,
             setContent(srtInfo);
         }
     }
+
+    public Handler getHanlder()
+    {
+        return this.autoPlayHandler;
+    }
+
+    public SrtPlayService getSrtPlayService()
+    {
+        return srtPlayService;
+    }
+
 }
