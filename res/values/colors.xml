@@ -25,4 +25,6 @@
     <color name="float_text_aligntop_toast_textcolor">#ff461400</color>
     <color name="memo_line_et_linecolor">#ffd1c1a2</color>
     <color name="textColor">#15C0C9</color>
+    <color name="purple">#820072</color>
+    <color name="yellow">#fa800a</color>
 </resources>

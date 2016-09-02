@@ -192,7 +192,7 @@
         android:layout_marginTop="3dp"
         android:maxLines="2"
         android:singleLine="false"
-        android:textColor="#820072"
+        android:textColor="@color/purple"
         android:textSize="40dp" />
 
     <TextView
@@ -203,7 +203,7 @@
         android:layout_marginTop="3dp"
         android:maxLines="2"
         android:singleLine="false"
-        android:textColor="#820072"
+        android:textColor="@color/purple"
         android:textSize="40dp" />
 
 </LinearLayout>

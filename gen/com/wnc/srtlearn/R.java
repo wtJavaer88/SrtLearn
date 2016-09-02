@@ -32,6 +32,7 @@ public final class R {
         public static final int gray=0x7f060008;
         public static final int grey=0x7f060007;
         public static final int memo_line_et_linecolor=0x7f060017;
+        public static final int purple=0x7f060019;
         public static final int red=0x7f060000;
         public static final int textColor=0x7f060018;
         public static final int transaction_blance_amount=0x7f06000f;
@@ -44,6 +45,7 @@ public final class R {
         public static final int white_25=0x7f060005;
         public static final int white_50=0x7f060006;
         public static final int widget_wheel_datepicker_currentitem_textcolor=0x7f060014;
+        public static final int yellow=0x7f06001a;
     }
     public static final class dimen {
         /** 
@@ -620,11 +622,11 @@ public final class R {
         public static final int yy=0x7f020011;
     }
     public static final class id {
-        public static final int actSrtSearch=0x7f0c0032;
-        public static final int add_tag_dialg_content=0x7f0c003d;
-        public static final int add_tag_dialg_no=0x7f0c003e;
-        public static final int add_tag_dialg_ok=0x7f0c003f;
-        public static final int add_tag_dialg_title=0x7f0c003c;
+        public static final int actSrtSearch=0x7f0c0033;
+        public static final int add_tag_dialg_content=0x7f0c0043;
+        public static final int add_tag_dialg_no=0x7f0c0044;
+        public static final int add_tag_dialg_ok=0x7f0c0045;
+        public static final int add_tag_dialg_title=0x7f0c0042;
         public static final int author_book=0x7f0c0002;
         public static final int btnBDFanyi=0x7f0c000a;
         public static final int btnBihua=0x7f0c0006;
@@ -634,13 +636,13 @@ public final class R {
         public static final int btnHCFanyi=0x7f0c000c;
         public static final int btnLast=0x7f0c0029;
         public static final int btnMore=0x7f0c002c;
-        public static final int btnNext=0x7f0c0037;
+        public static final int btnNext=0x7f0c0039;
         public static final int btnPlay=0x7f0c002b;
-        public static final int btnPre=0x7f0c0036;
+        public static final int btnPre=0x7f0c0038;
         public static final int btnSetting=0x7f0c0025;
         public static final int btnSkip=0x7f0c002a;
-        public static final int btnSpeakCh=0x7f0c0038;
-        public static final int btnSpeakEn=0x7f0c0039;
+        public static final int btnSpeakCh=0x7f0c003a;
+        public static final int btnSpeakEn=0x7f0c003b;
         public static final int btn_bihua=0x7f0c000d;
         public static final int btn_fanyi=0x7f0c0012;
         public static final int btn_favsrt=0x7f0c0011;
@@ -652,20 +654,22 @@ public final class R {
         public static final int btn_speaklocal=0x7f0c001b;
         public static final int btn_speakonline=0x7f0c001a;
         public static final int btn_srt=0x7f0c0010;
-        public static final int btn_srtsearch=0x7f0c0033;
+        public static final int btn_srtsearch=0x7f0c0034;
         public static final int btn_tts=0x7f0c0013;
-        public static final int chs_text=0x7f0c0034;
+        public static final int chs_text=0x7f0c0036;
         public static final int chs_tv=0x7f0c0031;
         public static final int edt_content=0x7f0c0019;
-        public static final int eng_text=0x7f0c0035;
+        public static final int eng_text=0x7f0c0037;
         public static final int eng_tv=0x7f0c0030;
         public static final int etFanyi=0x7f0c0009;
         public static final int etHanzi_bh=0x7f0c0007;
         public static final int et_recresult=0x7f0c0023;
+        public static final int evChs=0x7f0c0041;
         public static final int file_tv=0x7f0c0027;
         public static final int gallery=0x7f0c0008;
         public static final int id_book=0x7f0c0000;
-        public static final int imageview=0x7f0c003a;
+        public static final int imageview=0x7f0c003e;
+        public static final int lvSrtSearch=0x7f0c0035;
         public static final int myact=0x7f0c0005;
         public static final int name_book=0x7f0c0001;
         public static final int pinyin_cancel=0x7f0c0014;
@@ -680,9 +684,13 @@ public final class R {
         public static final int recword_gallery=0x7f0c0024;
         public static final int sayBtn=0x7f0c001e;
         public static final int starBtn=0x7f0c002d;
-        public static final int text=0x7f0c003b;
+        public static final int text=0x7f0c003f;
         public static final int timeline_tv=0x7f0c002e;
+        public static final int tvEng=0x7f0c0040;
+        public static final int tvEpidoseInfo=0x7f0c003c;
+        public static final int tvSearchDialog=0x7f0c0032;
         public static final int tvSearchEng=0x7f0c0004;
+        public static final int tvTimeLine=0x7f0c003d;
         public static final int tv_rectip=0x7f0c0022;
     }
     public static final class integer {
@@ -713,8 +721,10 @@ public final class R {
         public static final int activity_srt=0x7f03000a;
         public static final int activity_srtsearch=0x7f03000b;
         public static final int activity_srtview=0x7f03000c;
-        public static final int gallery_item=0x7f03000d;
-        public static final int setting_add_tags_dialg=0x7f03000e;
+        public static final int common_wdailog=0x7f03000d;
+        public static final int gallery_item=0x7f03000e;
+        public static final int lv_srtsearch=0x7f03000f;
+        public static final int setting_add_tags_dialg=0x7f030010;
     }
     public static final class raw {
         public static final int bdspeech_recognition_cancel=0x7f050000;
@@ -765,6 +775,7 @@ public final class R {
  All customizations that are NOT specific to a particular API-level can go here. 
          */
         public static final int AppTheme=0x7f0b0001;
+        public static final int CustomDialogStyle=0x7f0b0003;
         public static final int MymoneyTheme=0x7f0b0002;
     }
     public static final class xml {

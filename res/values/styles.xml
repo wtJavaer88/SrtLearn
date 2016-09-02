@@ -22,4 +22,30 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:textSize">@dimen/dimen_14_dip</item>
     </style>
+    
+     <style name="CustomDialogStyle" parent="@android:style/Theme.Dialog">
+        <!-- 边框 -->
+        <item name="android:windowFrame">@null</item>
+
+        <!-- 背景透明 -->
+        <item name="android:windowBackground">@color/transparent</item>
+
+        <!-- 无标题 -->
+        <item name="android:windowNoTitle">true</item>
+
+        <!-- 是否浮现在activity之上 -->
+        <item name="android:windowIsFloating">true</item>
+
+        <!-- 半透明 -->
+        <item name="android:windowIsTranslucent">false</item>
+
+        <!-- 背景模糊 -->
+        <item name="android:windowContentOverlay">@null</item>
+
+        <!-- 允许对话框的背景变暗 -->
+        <item name="android:backgroundDimEnabled">true</item>
+
+        <!-- 字体颜色 -->
+        <item name="android:textColor">@color/yellow</item>
+    </style>
 </resources>
