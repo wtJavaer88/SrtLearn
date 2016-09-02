@@ -9,7 +9,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.util.Log;
 
 import com.wnc.basic.BasicFileUtil;
@@ -36,12 +35,12 @@ public class MoveDbUtil
             }
         }
 
-        AssetManager assetManager = context.getAssets();
         Log.i("moveDb", ASSERT_DB_NAME + "数据初始完毕!");
         Log.i("moveDb", "开始移动Assert数据库" + ASSERT_DB_NAME + "!!!!");
         try
         {
-            return copy(DB_PATH, assetManager.open(ASSERT_DB_NAME));
+            return copy(DB_PATH,
+                    AssertsUtil.getInputStream(context, ASSERT_DB_NAME));
         }
         catch (IOException e)
         {

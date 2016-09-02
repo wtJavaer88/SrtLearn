@@ -1,4 +1,4 @@
-package com.wnc.srtlearn.srt;
+package com.wnc.srtlearn.modules.srt;
 
 import java.io.File;
 import java.io.FileInputStream;

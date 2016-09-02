@@ -15,9 +15,10 @@ import android.widget.TextView;
 
 import com.baidu.voicerecognition.android.ui.BaiduASRDigitalDialog;
 import com.wnc.srtlearn.R;
-import com.wnc.srtlearn.tts.Config;
-import com.wnc.srtlearn.tts.RecCallBack;
-import com.wnc.srtlearn.tts.RecDialogUtil;
+import com.wnc.srtlearn.modules.tts.Config;
+import com.wnc.srtlearn.modules.tts.RecCallBack;
+import com.wnc.srtlearn.modules.tts.RecDialogUtil;
+
 import common.app.GalleryUtil;
 import common.app.ToastUtil;
 import common.app.VoicePlayerUtil;

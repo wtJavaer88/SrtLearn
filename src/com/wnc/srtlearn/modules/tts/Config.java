@@ -1,5 +1,5 @@
 
-package com.wnc.srtlearn.tts;
+package com.wnc.srtlearn.modules.tts;
 
 import com.baidu.voicerecognition.android.VoiceRecognitionConfig;
 import com.baidu.voicerecognition.android.ui.BaiduASRDigitalDialog;

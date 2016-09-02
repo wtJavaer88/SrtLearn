@@ -1,4 +1,4 @@
-package com.wnc.srtlearn.srt;
+package com.wnc.srtlearn.modules.srt;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -10,7 +10,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.KeyEvent;
 
-import com.wnc.srtlearn.srt.HeadSetUtil.OnHeadSetListener;
+import com.wnc.srtlearn.modules.srt.HeadSetUtil.OnHeadSetListener;
 
 /**
  * MEDIA_BUTTON耳机媒体按键广播接收器

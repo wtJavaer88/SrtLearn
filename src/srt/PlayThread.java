@@ -4,8 +4,9 @@ import java.util.Queue;
 
 import android.os.Message;
 
-import com.wnc.srtlearn.srt.SrtSetting;
-import com.wnc.srtlearn.srt.SrtVoiceHelper;
+import com.wnc.srtlearn.modules.srt.SrtSetting;
+import com.wnc.srtlearn.modules.srt.SrtVoiceHelper;
+
 import common.utils.Mp3Utils;
 
 public class PlayThread extends Thread

@@ -1,4 +1,4 @@
-package com.wnc.srtlearn.tts;
+package com.wnc.srtlearn.modules.tts;
 
 import com.baidu.tts.client.SpeechSynthesizer;
 

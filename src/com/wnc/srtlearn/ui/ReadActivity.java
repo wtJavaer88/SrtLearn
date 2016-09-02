@@ -10,9 +10,9 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.wnc.srtlearn.R;
-import com.wnc.srtlearn.tts.BdTextToOfflineSpeech;
-import com.wnc.srtlearn.tts.BdTextToOnlineSpeech;
-import com.wnc.srtlearn.tts.BdTextToSpeech;
+import com.wnc.srtlearn.modules.tts.BdTextToOfflineSpeech;
+import com.wnc.srtlearn.modules.tts.BdTextToOnlineSpeech;
+import com.wnc.srtlearn.modules.tts.BdTextToSpeech;
 
 public class ReadActivity extends Activity implements UncaughtExceptionHandler
 {

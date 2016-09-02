@@ -14,7 +14,8 @@ import android.widget.Gallery;
 
 import com.wnc.basic.BasicStringUtil;
 import com.wnc.srtlearn.R;
-import com.wnc.srtlearn.bihua.SwfPlayMgr;
+import com.wnc.srtlearn.modules.bihua.SwfPlayMgr;
+
 import common.app.GalleryUtil;
 import common.app.ToastUtil;
 import common.uihelper.AfterGalleryChooseListener;

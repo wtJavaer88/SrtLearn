@@ -1,9 +1,10 @@
-package com.wnc.srtlearn.bihua;
+package com.wnc.srtlearn.modules.bihua;
 
 import android.content.Context;
 
 import com.wnc.basic.BasicFileUtil;
-import com.wnc.srtlearn.srt.DownPicTask;
+import com.wnc.srtlearn.modules.srt.DownPicTask;
+
 import common.app.BasicPhoneUtil;
 import common.app.ToastUtil;
 import common.uihelper.MyAppParams;

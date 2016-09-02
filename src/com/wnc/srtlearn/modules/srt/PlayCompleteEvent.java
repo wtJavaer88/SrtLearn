@@ -1,4 +1,4 @@
-package com.wnc.srtlearn.srt;
+package com.wnc.srtlearn.modules.srt;
 
 public interface PlayCompleteEvent
 {

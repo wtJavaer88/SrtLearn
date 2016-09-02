@@ -1,4 +1,4 @@
-package com.wnc.srtlearn.srt;
+package com.wnc.srtlearn.modules.srt;
 
 import com.wnc.basic.BasicFileUtil;
 import common.utils.UrlPicDownloader;

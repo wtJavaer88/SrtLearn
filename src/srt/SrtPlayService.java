@@ -8,8 +8,8 @@ import android.util.Log;
 
 import com.wnc.basic.BasicDateUtil;
 import com.wnc.basic.BasicFileUtil;
-import com.wnc.srtlearn.srt.SrtSetting;
-import com.wnc.srtlearn.srt.SrtVoiceHelper;
+import com.wnc.srtlearn.modules.srt.SrtSetting;
+import com.wnc.srtlearn.modules.srt.SrtVoiceHelper;
 import com.wnc.srtlearn.ui.SrtActivity;
 import common.app.ToastUtil;
 import common.uihelper.MyAppParams;
@@ -90,9 +90,21 @@ public class SrtPlayService
 
     public String getFavoriteCurrContent()
     {
+        String tag = "tag<";
+        if (isReplayRunning())
+        {
+            tag += "replay";
+        }
+        else
+        {
+            tag += "normal";
+        }
+
+        tag += ">";
+        List<SrtInfo> currentPlaySrtInfos = getCurrentPlaySrtInfos();
         return BasicDateUtil.getCurrentDateTimeString() + " \""
                 + getCurFile().replace(MyAppParams.SRT_FOLDER, "") + "\" "
-                + getCurrentPlaySrtInfos() + "\r\n";
+                + tag + " " + currentPlaySrtInfos + "\r\n";
     }
 
     public void showNewSrtFile(String srtFile)

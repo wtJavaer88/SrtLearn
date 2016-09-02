@@ -62,7 +62,7 @@
          <activity android:name="net.widget.act.sample.ActTestActivity"/>
          
          <!-- 线控的广播 -->
-         <receiver android:name="com.wnc.srtlearn.srt.MediaButtonReceiver" >
+         <receiver android:name="com.wnc.srtlearn.modules.srt.MediaButtonReceiver" >
             <intent-filter android:priority="1000">
                 <action android:name="android.intent.action.MEDIA_BUTTON" >
                 </action>

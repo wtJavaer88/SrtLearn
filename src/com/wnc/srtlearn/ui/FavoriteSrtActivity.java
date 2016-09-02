@@ -16,9 +16,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.wnc.srtlearn.R;
-import com.wnc.srtlearn.tts.BdTextToOfflineSpeech;
-import com.wnc.srtlearn.tts.BdTextToOnlineSpeech;
-import com.wnc.srtlearn.tts.BdTextToSpeech;
+import com.wnc.srtlearn.modules.tts.BdTextToOfflineSpeech;
+import com.wnc.srtlearn.modules.tts.BdTextToOnlineSpeech;
+import com.wnc.srtlearn.modules.tts.BdTextToSpeech;
+
 import common.uihelper.HorGestureDetectorListener;
 import common.uihelper.MyGestureDetector;
 import common.uihelper.VerGestureDetectorListener;
