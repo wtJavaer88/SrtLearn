@@ -102,7 +102,6 @@ public class SemicolonTokenizer implements Tokenizer
         }
         else
         {
-            System.out.println(" not expect..");
             if (text instanceof Spanned)
             {
                 SpannableString sp = new SpannableString(text + mSTring);

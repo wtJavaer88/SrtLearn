@@ -31,7 +31,7 @@ public class BookAutoAdapter extends net.widget.act.abs.MyActAdapter
         if (convertView == null)
         {
             viewHolder = new BookViewHolder();
-            convertView = View.inflate(context, R.layout.act_item, null);
+            convertView = View.inflate(context, R.layout.act_book_item, null);
             viewHolder.id = (TextView) convertView.findViewById(R.id.id_book);
             viewHolder.name = (TextView) convertView
                     .findViewById(R.id.name_book);

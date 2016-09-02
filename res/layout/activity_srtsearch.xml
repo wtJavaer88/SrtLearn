@@ -1,0 +1,37 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_15_dip"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <MultiAutoCompleteTextView
+            android:id="@+id/actSrtSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="请输入单词进行搜索       " />
+
+        <Button
+            android:id="@+id/btn_srtsearch"
+            android:layout_width="70dp"
+            android:layout_height="@dimen/dimen_60_dip"
+            android:layout_gravity="center"
+            android:background="@drawable/main_add_expense_quickly_new"
+            android:gravity="center"
+            android:shadowColor="@color/black"
+            android:shadowDx="0.0"
+            android:shadowDy="2.0"
+            android:shadowRadius="1.0"
+            android:text="查询"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dimen_15_dip"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</LinearLayout>

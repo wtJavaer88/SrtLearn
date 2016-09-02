@@ -1,9 +1,7 @@
 package com.wnc.srtlearn.ui;
 
 import java.lang.Thread.UncaughtExceptionHandler;
-import java.util.List;
 
-import srt.SearchSrtInfo;
 import translate.abs.ITranslate;
 import translate.site.baidu.BaiduPrographTranslate;
 import translate.site.dict.DictTranslate;
@@ -19,7 +17,6 @@ import android.widget.EditText;
 
 import com.wnc.basic.BasicStringUtil;
 import com.wnc.srtlearn.R;
-import com.wnc.srtlearn.dao.SrtDao;
 import common.app.BasicPhoneUtil;
 import common.app.ToastUtil;
 
@@ -88,9 +85,6 @@ public class FanyiActivity extends BaseActivity implements OnClickListener,
             switch (v.getId())
             {
             case R.id.btnBDFanyi:
-                SrtDao.openDatabase(FanyiActivity.this);
-                List<SearchSrtInfo> searchResult = SrtDao.search(word);
-                System.out.println(searchResult);
                 engTranslate = new BaiduPrographTranslate(word);
                 break;
             case R.id.btnCBFanyi:

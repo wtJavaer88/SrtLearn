@@ -18,13 +18,13 @@ import com.wnc.srtlearn.R;
 import com.wnc.srtlearn.modules.tts.Config;
 import com.wnc.srtlearn.modules.tts.RecCallBack;
 import com.wnc.srtlearn.modules.tts.RecDialogUtil;
-
 import common.app.GalleryUtil;
 import common.app.ToastUtil;
 import common.app.VoicePlayerUtil;
 import common.app.WheelDialogShowUtil;
 import common.uihelper.AfterGalleryChooseListener;
 import common.uihelper.AfterWheelChooseListener;
+import common.utils.TextFormatUtil;
 
 public class RecWordActivity extends BaseActivity implements OnClickListener,
         UncaughtExceptionHandler, AfterGalleryChooseListener, RecCallBack,
@@ -190,12 +190,8 @@ public class RecWordActivity extends BaseActivity implements OnClickListener,
     {
         System.out.println("READ_MODE:" + READ_MODE);
         System.out.println(paramStr1 + " " + paramStr2);
-        return getTextNoSymbol(paramStr1).equals(getTextNoSymbol(paramStr2));
-    }
-
-    public String getTextNoSymbol(String s)
-    {
-        return s.trim().replaceAll("[,\\.!?，。！？、\\s]", "");
+        return TextFormatUtil.getTextNoSymbol(paramStr1).equals(
+                TextFormatUtil.getTextNoSymbol(paramStr2));
     }
 
     /**

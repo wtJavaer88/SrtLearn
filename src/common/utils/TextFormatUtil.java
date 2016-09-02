@@ -256,4 +256,15 @@ public class TextFormatUtil
         return java.net.URLEncoder.encode(str);
     }
 
+    /**
+     * 去掉标点符号
+     * 
+     * @param s
+     * @return
+     */
+    public static String getTextNoSymbol(String s)
+    {
+        return s.trim().replaceAll("[,\\.!?，。！？、\\s]\"", "");
+    }
+
 }

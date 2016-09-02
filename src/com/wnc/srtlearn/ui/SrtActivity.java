@@ -34,8 +34,8 @@ import com.wnc.basic.BasicFileUtil;
 import com.wnc.basic.BasicStringUtil;
 import com.wnc.srtlearn.R;
 import com.wnc.srtlearn.modules.srt.HeadSetUtil;
-import com.wnc.srtlearn.modules.srt.SrtSetting;
 import com.wnc.srtlearn.modules.srt.HeadSetUtil.OnHeadSetListener;
+import com.wnc.srtlearn.modules.srt.SrtSetting;
 import com.wnc.srtlearn.ui.handler.AutoPlayHandler;
 import common.app.ClickFileIntentFactory;
 import common.app.ClipBoardUtil;
@@ -77,7 +77,7 @@ public class SrtActivity extends BaseActivity implements OnClickListener,
     String[] settingItems = new String[]
     { "自动下一条", "播放声音", "打开复读", "音量调节", "隐藏中文", "音量键-翻页" };
     String[] moreItems = new String[]
-    { "自主跟读", "笔顺学习", "拼音修改" };
+    { "自主跟读", "笔顺学习", "拼音修改", "字幕查询" };
     private SrtPlayService srtPlayService;
 
     @Override
@@ -157,15 +157,11 @@ public class SrtActivity extends BaseActivity implements OnClickListener,
                                 break;
                             case 2:
                                 srtPlayService.stopSrt();
-                                Intent intent = new Intent(SrtActivity.this,
-                                        PinyinActivity.class).putExtra(
-                                        "dialog",
-                                        DataHolder.getCurrent().getChs())
-                                        .putExtra(
-                                                "pinyin",
-                                                DataHolder.getCurrent()
-                                                        .getEng());
-                                startActivityForResult(intent, PINYIN_RESULT);
+                                intoPinyin();
+                                break;
+                            case 3:
+                                srtPlayService.stopSrt();
+                                intoSearch();
                                 break;
                             default:
                                 break;
@@ -177,6 +173,23 @@ public class SrtActivity extends BaseActivity implements OnClickListener,
                                     "操作失败!");
                             e.printStackTrace();
                         }
+                    }
+
+                    private void intoSearch()
+                    {
+                        Intent intent = new Intent(SrtActivity.this,
+                                SrtSearchActivity.class).putExtra("dialog",
+                                engTv.getText().toString());
+                        startActivity(intent);
+                    }
+
+                    private void intoPinyin()
+                    {
+                        Intent intent = new Intent(SrtActivity.this,
+                                PinyinActivity.class).putExtra("dialog",
+                                DataHolder.getCurrent().getChs()).putExtra(
+                                "pinyin", DataHolder.getCurrent().getEng());
+                        startActivityForResult(intent, PINYIN_RESULT);
                     }
 
                 })
@@ -676,7 +689,8 @@ public class SrtActivity extends BaseActivity implements OnClickListener,
     private void setContent(SrtInfo srt)
     {
         // 对于字幕里英文与中文颠倒的,用这种方法
-        if (TextFormatUtil.containsChinese(srt.getEng()))
+        if (TextFormatUtil.containsChinese(srt.getEng())
+                && !TextFormatUtil.containsChinese(srt.getChs()))
         {
             chsTv.setText(srt.getEng() == null ? "NULL" : srt.getEng());
             engTv.setText(srt.getChs() == null ? "NULL" : srt.getChs());
