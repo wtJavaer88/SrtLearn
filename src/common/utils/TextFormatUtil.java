@@ -275,7 +275,7 @@ public class TextFormatUtil
 	 */
 	public static String getTextNoSymbol(String s)
 	{
-		return s.trim().replaceAll("[,\\.!?，。！？、\\s]\"", "");
+		return s.trim().replaceAll("[\",\\.!?，。！？、\\s]", "");
 	}
 
 }

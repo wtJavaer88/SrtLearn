@@ -37,6 +37,8 @@ import com.wnc.srtlearn.R;
 import com.wnc.srtlearn.modules.srt.HeadSetUtil;
 import com.wnc.srtlearn.modules.srt.HeadSetUtil.OnHeadSetListener;
 import com.wnc.srtlearn.modules.srt.SrtSetting;
+import com.wnc.srtlearn.monitor.StudyMonitor;
+import com.wnc.srtlearn.monitor.WORKTYPE;
 import com.wnc.srtlearn.ui.handler.AutoPlayHandler;
 import common.app.BasicPhoneUtil;
 import common.app.ClickFileIntentFactory;
@@ -95,10 +97,9 @@ public class SrtActivity extends BaseActivity implements OnClickListener, OnLong
 		srtPlayService = new SrtPlayService(this);
 
 		initAppParams();
+		initMonitor();
 		initView();
-		initEngMenuDialog();
-		initSettingDialog();
-		initMoreDialog();
+		initDialogs();
 		if (srtPlayService.isSrtShowing())
 		{
 			play(DataHolder.getCurrent());
@@ -107,6 +108,18 @@ public class SrtActivity extends BaseActivity implements OnClickListener, OnLong
 
 		// 因为是横屏,所以设置的滑屏比例低一些
 		this.gestureDetector = new GestureDetector(this, new MyCtrlableGestureDetector(this, 0.1, 0.25, this, this));
+	}
+
+	private void initDialogs()
+	{
+		initEngMenuDialog();
+		initSettingDialog();
+		initMoreDialog();
+	}
+
+	private void initMonitor()
+	{
+		StudyMonitor.runMonitor();
 	}
 
 	@SuppressWarnings("deprecation")
@@ -715,7 +728,15 @@ public class SrtActivity extends BaseActivity implements OnClickListener, OnLong
 			alertDialog.dismiss();
 		}
 		HeadSetUtil.getInstance().close(this);
+		System.out.println("运行总时间: " + StudyMonitor.getRunTime());
+		printResult();
 		super.onDestroy();
+	}
+
+	private void printResult()
+	{
+		System.out.println("runtime: " + StudyMonitor.getRunTime());
+		System.out.println("srt Count:" + StudyMonitor.getWorkCount(WORKTYPE.SRT));
 	}
 
 	OnHeadSetListener headSetListener = new OnHeadSetListener()

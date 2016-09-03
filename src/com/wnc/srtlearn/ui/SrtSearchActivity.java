@@ -36,6 +36,7 @@ import com.wnc.srtlearn.dao.SrtDao;
 import com.wnc.srtlearn.modules.search.ActSrtWord;
 import com.wnc.srtlearn.modules.search.SrtWordAutoAdapter;
 import common.app.BasicPhoneUtil;
+import common.app.ToastUtil;
 import common.utils.TextFormatUtil;
 
 public class SrtSearchActivity extends Activity implements OnClickListener, UncaughtExceptionHandler
@@ -96,7 +97,6 @@ public class SrtSearchActivity extends Activity implements OnClickListener, Unca
 			{
 				ListView lv = (ListView) parent;
 				ActSrtWord word = (ActSrtWord) lv.getItemAtPosition(position);
-				System.out.println("clickWord:" + word);
 				// act.append(word.getWord() + " ");
 			}
 		});
@@ -113,7 +113,6 @@ public class SrtSearchActivity extends Activity implements OnClickListener, Unca
 			SrtDao.openDatabase(this);
 			final String keyword = this.act.getText().toString();
 			List<SearchSrtInfo> searchResult = SrtDao.search(keyword);
-			System.out.println(searchResult);
 			setLv(searchResult);
 			break;
 		}
@@ -132,7 +131,6 @@ public class SrtSearchActivity extends Activity implements OnClickListener, Unca
 				HashMap map = (HashMap) ((ListView) arg0).getItemAtPosition(arg2);
 				showDialog(map);
 				// show(map);
-				System.out.println("item map:" + map);
 			}
 		});
 	}
@@ -177,7 +175,7 @@ public class SrtSearchActivity extends Activity implements OnClickListener, Unca
 
 	private List<Map<String, Object>> getData(List<SearchSrtInfo> searchResult)
 	{
-		System.out.println("searchResult.size():" + searchResult.size());
+		ToastUtil.showLongToast(this, "搜索到" + searchResult.size() + "个字幕");
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		Map<String, Object> map = new HashMap<String, Object>();
 		int i = 0;

@@ -55,12 +55,13 @@ public class FanyiActivity extends BaseActivity implements OnClickListener,
 
     private void initView()
     {
-        ((Button) findViewById(R.id.btnBDFanyi))
-                .setOnClickListener(new TransListener());
+        TransListener transListener = new TransListener();
+		((Button) findViewById(R.id.btnBDFanyi))
+                .setOnClickListener(transListener);
         ((Button) findViewById(R.id.btnCBFanyi))
-                .setOnClickListener(new TransListener());
+                .setOnClickListener(transListener);
         ((Button) findViewById(R.id.btnHCFanyi))
-                .setOnClickListener(new TransListener());
+                .setOnClickListener(transListener);
         et = ((EditText) findViewById(R.id.etFanyi));
         et.setText(dialog);
     }
