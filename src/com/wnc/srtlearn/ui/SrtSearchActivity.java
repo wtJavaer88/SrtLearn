@@ -12,8 +12,10 @@ import net.widget.act.token.SemicolonTokenizer;
 import srt.SearchSrtInfo;
 import srt.SrtTextHelper;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,7 +35,7 @@ import com.wnc.srtlearn.R;
 import com.wnc.srtlearn.dao.SrtDao;
 import com.wnc.srtlearn.modules.search.ActSrtWord;
 import com.wnc.srtlearn.modules.search.SrtWordAutoAdapter;
-import common.uihelper.MyAppParams;
+import common.app.BasicPhoneUtil;
 import common.utils.TextFormatUtil;
 
 public class SrtSearchActivity extends Activity implements OnClickListener, UncaughtExceptionHandler
@@ -129,6 +131,8 @@ public class SrtSearchActivity extends Activity implements OnClickListener, Unca
 			{
 				HashMap map = (HashMap) ((ListView) arg0).getItemAtPosition(arg2);
 				showDialog(map);
+				// show(map);
+				System.out.println("item map:" + map);
 			}
 		});
 	}
@@ -137,22 +141,43 @@ public class SrtSearchActivity extends Activity implements OnClickListener, Unca
 	{
 		SearchSrtInfo ssrt = (SearchSrtInfo) map.get("obj");
 		int index = BasicNumberUtil.getNumber(String.valueOf(map.get("index")));
+
 		Dialog dialog = new Dialog(this, R.style.CustomDialogStyle);
 		dialog.setContentView(R.layout.common_wdailog);
 		dialog.setCanceledOnTouchOutside(true);
 		Window window = dialog.getWindow();
 
 		WindowManager.LayoutParams lp = window.getAttributes();
-		int width = MyAppParams.getScreenWidth();
-		lp.width = (int) (0.6 * width);
+		int width = BasicPhoneUtil.getScreenWidth(this);
+		lp.width = (int) (0.8 * width);
 
-		((TextView) dialog.findViewById(R.id.tvTimeLine)).setText(SrtTextHelper.concatTimeline(ssrt.getFromTime(), ssrt.getToTime()));
-		((TextView) dialog.findViewById(R.id.tvEpidoseInfo)).setText("(" + index + ") " + ssrt.getSrtFile());
+		String epStr = "(" + index + ") \n" + TextFormatUtil.removeFileExtend(ssrt.getSrtFile());
+		((TextView) dialog.findViewById(R.id.tvEpidoseInfo)).setText(epStr);
+		String timelineStr = SrtTextHelper.concatTimeline(ssrt.getFromTime(), ssrt.getToTime());
+		((TextView) dialog.findViewById(R.id.tvTimeLine)).setText(timelineStr);
 		dialog.show();
+	}
+
+	private void show(HashMap map)
+	{
+		SearchSrtInfo ssrt = (SearchSrtInfo) map.get("obj");
+		int index = BasicNumberUtil.getNumber(String.valueOf(map.get("index")));
+		final String items[] = { "(" + index + ") " + ssrt.getSrtFile(), SrtTextHelper.concatTimeline(ssrt.getFromTime(), ssrt.getToTime()) };
+		// dialog参数设置
+		AlertDialog.Builder builder = new AlertDialog.Builder(this); // 先得到构造器
+		TextView tv = new TextView(this);
+		tv.setText("(" + index + ") \n" + TextFormatUtil.getFileNameNoExtend(ssrt.getSrtFile()).replace("/", "\n") + "\n" + SrtTextHelper.concatTimeline(ssrt.getFromTime(), ssrt.getToTime())); // 内容
+		tv.setTextSize(20);// 字体大小
+		tv.setPadding(30, 20, 10, 10);// 位置
+
+		tv.setTextColor(Color.parseColor("#fa800a"));// 颜色
+		builder.setCustomTitle(tv);// 不是setTitle()
+		builder.create().show();
 	}
 
 	private List<Map<String, Object>> getData(List<SearchSrtInfo> searchResult)
 	{
+		System.out.println("searchResult.size():" + searchResult.size());
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		Map<String, Object> map = new HashMap<String, Object>();
 		int i = 0;

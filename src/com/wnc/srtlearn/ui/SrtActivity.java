@@ -38,6 +38,7 @@ import com.wnc.srtlearn.modules.srt.HeadSetUtil;
 import com.wnc.srtlearn.modules.srt.HeadSetUtil.OnHeadSetListener;
 import com.wnc.srtlearn.modules.srt.SrtSetting;
 import com.wnc.srtlearn.ui.handler.AutoPlayHandler;
+import common.app.BasicPhoneUtil;
 import common.app.ClickFileIntentFactory;
 import common.app.ClipBoardUtil;
 import common.app.ShareUtil;
@@ -45,13 +46,15 @@ import common.app.SharedPreferenceUtil;
 import common.app.ToastUtil;
 import common.app.WheelDialogShowUtil;
 import common.uihelper.AfterWheelChooseListener;
-import common.uihelper.HorGestureDetectorListener;
 import common.uihelper.MyAppParams;
-import common.uihelper.MyGestureDetector;
-import common.uihelper.VerGestureDetectorListener;
+import common.uihelper.gesture.CtrlableHorGestureDetectorListener;
+import common.uihelper.gesture.CtrlableVerGestureDetectorListener;
+import common.uihelper.gesture.EmptyFlingPoint;
+import common.uihelper.gesture.FlingPoint;
+import common.uihelper.gesture.MyCtrlableGestureDetector;
 import common.utils.TextFormatUtil;
 
-public class SrtActivity extends BaseActivity implements OnClickListener, OnLongClickListener, HorGestureDetectorListener, VerGestureDetectorListener, UncaughtExceptionHandler
+public class SrtActivity extends BaseActivity implements OnClickListener, OnLongClickListener, CtrlableHorGestureDetectorListener, CtrlableVerGestureDetectorListener, UncaughtExceptionHandler
 {
 	private final String SRT_PLAY_TEXT = "播放";
 	private final String SRT_STOP_TEXT = "停止";
@@ -103,7 +106,7 @@ public class SrtActivity extends BaseActivity implements OnClickListener, OnLong
 		autoPlayHandler = new AutoPlayHandler(this);
 
 		// 因为是横屏,所以设置的滑屏比例低一些
-		this.gestureDetector = new GestureDetector(this, new MyGestureDetector(0.1, 0.25, this));
+		this.gestureDetector = new GestureDetector(this, new MyCtrlableGestureDetector(this, 0.1, 0.25, this, this));
 	}
 
 	@SuppressWarnings("deprecation")
@@ -112,8 +115,8 @@ public class SrtActivity extends BaseActivity implements OnClickListener, OnLong
 		MyAppParams.getInstance().setPackageName(this.getPackageName());
 		MyAppParams.getInstance().setResources(this.getResources());
 		MyAppParams.getInstance().setAppPath(this.getFilesDir().getParent());
-		MyAppParams.setScreenWidth(this.getWindowManager().getDefaultDisplay().getWidth());
-		MyAppParams.setScreenHeight(this.getWindowManager().getDefaultDisplay().getHeight());
+		MyAppParams.setScreenWidth(BasicPhoneUtil.getScreenWidth(this));
+		MyAppParams.setScreenHeight(BasicPhoneUtil.getScreenHeight(this));
 	}
 
 	Builder alertDialogBuilder;
@@ -685,13 +688,13 @@ public class SrtActivity extends BaseActivity implements OnClickListener, OnLong
 	}
 
 	@Override
-	public void doLeft()
+	public void doLeft(FlingPoint p1, FlingPoint p2)
 	{
 		getSrtInfoAndPlay(SRT_VIEW_TYPE.VIEW_LEFT);
 	}
 
 	@Override
-	public void doRight()
+	public void doRight(FlingPoint p1, FlingPoint p2)
 	{
 		getSrtInfoAndPlay(SRT_VIEW_TYPE.VIEW_RIGHT);
 	}
@@ -750,7 +753,7 @@ public class SrtActivity extends BaseActivity implements OnClickListener, OnLong
 			case KeyEvent.KEYCODE_BACK:
 				return super.onKeyDown(keyCode, event);
 			case KeyEvent.KEYCODE_VOLUME_DOWN:
-				doRight();
+				doRight(new EmptyFlingPoint(), new EmptyFlingPoint());
 				try
 				{
 					Thread.sleep(100);
@@ -762,7 +765,7 @@ public class SrtActivity extends BaseActivity implements OnClickListener, OnLong
 				return true;
 
 			case KeyEvent.KEYCODE_VOLUME_UP:
-				doLeft();
+				doLeft(new EmptyFlingPoint(), new EmptyFlingPoint());
 				try
 				{
 					Thread.sleep(100);
@@ -809,15 +812,29 @@ public class SrtActivity extends BaseActivity implements OnClickListener, OnLong
 	}
 
 	@Override
-	public void doUp()
+	public void doUp(FlingPoint p1, FlingPoint p2)
 	{
-		getSrtInfoAndPlay(SRT_VIEW_TYPE.VIEW_LEFT);
+		if (canVerScroll(p1.getY()))
+			getSrtInfoAndPlay(SRT_VIEW_TYPE.VIEW_LEFT);
 	}
 
 	@Override
-	public void doDown()
+	public void doDown(FlingPoint p1, FlingPoint p2)
 	{
-		getSrtInfoAndPlay(SRT_VIEW_TYPE.VIEW_RIGHT);
+		if (canVerScroll(p1.getY()))
+			getSrtInfoAndPlay(SRT_VIEW_TYPE.VIEW_RIGHT);
+	}
+
+	/**
+	 * 判断是否可以竖向滚动
+	 * 
+	 * @param p1
+	 * @return
+	 */
+	private boolean canVerScroll(float y)
+	{
+		// 也可以调整为只要是英文大于2行,就不监听
+		return engTv.getLineCount() <= 2 || y < this.engTv.getTop() || y > this.engTv.getBottom();
 	}
 
 	@Override
