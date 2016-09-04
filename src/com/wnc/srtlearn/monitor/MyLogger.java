@@ -16,6 +16,6 @@ public class MyLogger
 
 	private static String getLogFilePath()
 	{
-		return BasicFileUtil.getMakeFilePath(logFolder, BasicDateUtil.getCurrentDateFormatString(logFileFormat), ".txt");
+		return BasicFileUtil.getMakeFilePath(logFolder, BasicDateUtil.getCurrentDateFormatString(logFileFormat) + ".txt");
 	}
 }

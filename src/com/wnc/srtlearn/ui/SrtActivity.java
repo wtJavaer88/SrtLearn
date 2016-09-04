@@ -2,6 +2,7 @@ package com.wnc.srtlearn.ui;
 
 import java.io.File;
 import java.lang.Thread.UncaughtExceptionHandler;
+import java.util.Arrays;
 import java.util.List;
 
 import srt.DataHolder;
@@ -31,20 +32,24 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.wnc.basic.BasicDateUtil;
 import com.wnc.basic.BasicFileUtil;
 import com.wnc.basic.BasicStringUtil;
 import com.wnc.srtlearn.R;
+import com.wnc.srtlearn.dao.SrtDao;
 import com.wnc.srtlearn.modules.srt.HeadSetUtil;
 import com.wnc.srtlearn.modules.srt.HeadSetUtil.OnHeadSetListener;
 import com.wnc.srtlearn.modules.srt.SrtSetting;
+import com.wnc.srtlearn.monitor.ActiveWork;
 import com.wnc.srtlearn.monitor.StudyMonitor;
 import com.wnc.srtlearn.monitor.WORKTYPE;
+import com.wnc.srtlearn.monitor.WorkMgr;
 import com.wnc.srtlearn.ui.handler.AutoPlayHandler;
-import common.app.BasicPhoneUtil;
 import common.app.ClickFileIntentFactory;
 import common.app.ClipBoardUtil;
 import common.app.ShareUtil;
 import common.app.SharedPreferenceUtil;
+import common.app.SysInit;
 import common.app.ToastUtil;
 import common.app.WheelDialogShowUtil;
 import common.uihelper.AfterWheelChooseListener;
@@ -96,7 +101,8 @@ public class SrtActivity extends BaseActivity implements OnClickListener, OnLong
 
 		srtPlayService = new SrtPlayService(this);
 
-		initAppParams();
+		SysInit.init(this);
+
 		initMonitor();
 		initView();
 		initDialogs();
@@ -122,16 +128,6 @@ public class SrtActivity extends BaseActivity implements OnClickListener, OnLong
 		StudyMonitor.runMonitor();
 	}
 
-	@SuppressWarnings("deprecation")
-	private void initAppParams()
-	{
-		MyAppParams.getInstance().setPackageName(this.getPackageName());
-		MyAppParams.getInstance().setResources(this.getResources());
-		MyAppParams.getInstance().setAppPath(this.getFilesDir().getParent());
-		MyAppParams.setScreenWidth(BasicPhoneUtil.getScreenWidth(this));
-		MyAppParams.setScreenHeight(BasicPhoneUtil.getScreenHeight(this));
-	}
-
 	Builder alertDialogBuilder;
 	Builder settingDialogBuilder;
 	Builder moreDialogBuilder;
@@ -149,11 +145,11 @@ public class SrtActivity extends BaseActivity implements OnClickListener, OnLong
 					{
 					case 0:
 						stopSrtPlay();
-						SrtActivity.this.startActivity(new Intent(SrtActivity.this, RecWordActivity.class).putExtra("dialog", DataHolder.getCurrent().getChs()));
+						SrtActivity.this.startActivity(new Intent(SrtActivity.this, RecWordActivity.class).putExtra("dialog", chsTv.getText().toString()));
 						break;
 					case 1:
 						stopSrtPlay();
-						SrtActivity.this.startActivity(new Intent(SrtActivity.this, BihuaActivity.class).putExtra("dialog", DataHolder.getCurrent().getChs()));
+						SrtActivity.this.startActivity(new Intent(SrtActivity.this, BihuaActivity.class).putExtra("dialog", chsTv.getText().toString()));
 						break;
 					case 2:
 						srtPlayService.stopSrt();
@@ -728,8 +724,24 @@ public class SrtActivity extends BaseActivity implements OnClickListener, OnLong
 			alertDialog.dismiss();
 		}
 		HeadSetUtil.getInstance().close(this);
+
 		System.out.println("运行总时间: " + StudyMonitor.getRunTime());
-		printResult();
+		try
+		{
+			SrtDao.initDb(getApplicationContext());
+			ActiveWork applicationActiveWork = StudyMonitor.getApplicationActiveWork();
+			int runId = WorkMgr.insertRunRecord(applicationActiveWork.getEntertime(), applicationActiveWork.getExitTime());
+			WorkMgr.insertWork(WORKTYPE.SRT, runId);
+			WorkMgr.insertWork(WORKTYPE.TTS_REC, runId);
+			SrtDao.closeDb();
+			backupDatabase(this);
+			printResult();
+		}
+		catch (RuntimeException e)
+		{
+			e.printStackTrace();
+		}
+
 		super.onDestroy();
 	}
 
@@ -737,6 +749,26 @@ public class SrtActivity extends BaseActivity implements OnClickListener, OnLong
 	{
 		System.out.println("runtime: " + StudyMonitor.getRunTime());
 		System.out.println("srt Count:" + StudyMonitor.getWorkCount(WORKTYPE.SRT));
+	}
+
+	public String backupDatabase(Context context)
+	{
+		String subjectdb = "srtlearn.db";
+		File dbFile = context.getDatabasePath(subjectdb);
+		String newFilePath = BasicFileUtil.getMakeFilePath(MyAppParams.getInstance().getBackupDbPath(), BasicDateUtil.getCurrentDateTimeString() + "_" + subjectdb);
+		File[] files = new File(MyAppParams.getInstance().getBackupDbPath()).listFiles();
+		Arrays.sort(files);
+
+		if (BasicFileUtil.CopyFile(dbFile, new File(newFilePath)))
+		{
+			ToastUtil.showLongToast(context, "复制数据库成功");
+		}
+		else
+		{
+			ToastUtil.showShortToast(context, "复制" + subjectdb + "文件到<" + newFilePath + ">失败!");
+		}
+
+		return newFilePath;
 	}
 
 	OnHeadSetListener headSetListener = new OnHeadSetListener()

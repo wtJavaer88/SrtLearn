@@ -31,7 +31,6 @@ public class SrtTextHelper
 
 	public static Queue<String> getSrtVoicesInRange(String srtFile, String voiceTimeStr1, String voiceTimeStr2)
 	{
-		System.out.println(voiceTimeStr1 + " / " + voiceTimeStr2);
 		Queue<String> queue = new LinkedList<String>();
 		final String folder = getSrtVoiceFolder(srtFile);
 		String m1 = folder + File.separator + voiceTimeStr1.replace(":", "") + ".mp3";

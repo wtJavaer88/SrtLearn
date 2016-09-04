@@ -11,25 +11,29 @@ import java.util.List;
  */
 public class StudyMonitor
 {
+	private static ApplicationActiveWork appwork;
 	static List<ActiveWork> activeWorks = new ArrayList<ActiveWork>();
 
 	// 封装监控
 	public static void runMonitor()
 	{
-		StudyMonitor.addActiveWork(new ApplicationActiveWork());
+		appwork = new ApplicationActiveWork();
 		new MonitorThread().start();
+	}
+
+	public static ActiveWork getApplicationActiveWork()
+	{
+		return appwork;
 	}
 
 	public static long getRunTime()
 	{
-		for (ActiveWork work : activeWorks)
+		if (appwork == null)
 		{
-			if (work.getType() == WORKTYPE.APPLICATION)
-			{
-				return System.currentTimeMillis() - work.getEntertime();
-			}
+			return 0;
 		}
-		return 0;
+		appwork.setExitTime(System.currentTimeMillis());
+		return appwork.getExitTime() - appwork.getEntertime();
 	}
 
 	// 传入监控类型,返回一个监控对象给客户端
@@ -75,7 +79,7 @@ public class StudyMonitor
 	}
 
 	/**
-	 * 获取某类监控的数目
+	 * 获取某类业务监控的数目
 	 * 
 	 * @param type
 	 * @return

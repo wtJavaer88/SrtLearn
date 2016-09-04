@@ -3,73 +3,213 @@ package com.wnc.srtlearn.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import srt.SearchSrtInfo;
-import srt.TimeHelper;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
+import com.wnc.basic.BasicDateUtil;
 import com.wnc.basic.BasicNumberUtil;
-import common.uihelper.MyAppParams;
+import com.wnc.srtlearn.monitor.WORKTYPE;
 
 public class SrtDao
 {
-    static SQLiteDatabase database;
+	private static SQLiteDatabase db = null;
 
-    public static void openDatabase(Context context)
-    {
-        try
-        {
-            String databaseFilename = MyAppParams.SRT_DB;
-            database = SQLiteDatabase.openOrCreateDatabase(databaseFilename,
-                    null);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
+	public static void initDb(Context context)
+	{
+		db = context.openOrCreateDatabase("srtlearn.db", Context.MODE_PRIVATE, null);
+	}
 
-    public static void closeDatabase()
-    {
-        if (database != null)
-        {
-            database.close();
-            database = null;
-        }
-    }
+	public static boolean insertWorkMgr(int run_id, WORKTYPE work_type, int work_count, long work_time) throws RuntimeException
+	{
+		int type = 0;
+		switch (work_type)
+		{
+		case APPLICATION:
+			type = 1;
+			break;
+		case SRT:
+			type = 2;
+			break;
+		case TTS_REC:
+			type = 3;
+			break;
+		case SRT_SEARCH:
+			type = 4;
+			break;
+		case PINYIN:
+			type = 5;
+			break;
 
-    public static boolean isConnect()
-    {
-        return database != null && database.isOpen();
-    }
+		}
+		if (db == null)
+		{
+			Log.e("dao", "Not opened Db !");
+			return false;
+		}
+		try
+		{
+			db.execSQL("INSERT INTO WORKMGR(DAY,RUN_ID,WORK_TYPE,WORK_COUNT ,WORK_TIME) VALUES (?,?,?,?,?)", new Object[] { BasicDateUtil.getCurrentDateString(), run_id, type, work_count, work_time });
+			// trigger();
+		}
+		catch (Exception ex)
+		{
+			throw new RuntimeException(ex.getMessage());
+		}
+		return true;
+	}
 
-    public static List<SearchSrtInfo> search(String keyWord)
-    {
-        List<SearchSrtInfo> list = new ArrayList<SearchSrtInfo>();
-        if (isConnect())
-        {
-            String sql = "select s.*,t.*,e.name from srtinfo s left join episode e on s.episode_id=e.id left join timeline t on s.id=t.id where chs like '%"
-                    + keyWord + "%' or eng like '%" + keyWord + "%'";
-            Cursor c = database.rawQuery(sql, null);
-            c.moveToFirst();
-            while (!c.isAfterLast())
-            {
-                SearchSrtInfo srtInfo = new SearchSrtInfo();
-                srtInfo.setSrtFile(c.getString(c.getColumnIndex("name")));
+	public static int insertRunRecord(String entertime, String exittime, String duration) throws RuntimeException
+	{
+		int runId = 0;
+		if (db == null)
+		{
+			Log.e("dao", "Not opened Db !");
+			return runId;
+		}
+		try
+		{
+			db.execSQL("INSERT INTO RUN_RECORD(ENTER_TIME, EXIT_TIME,DURATION) VALUES (?,?,?)", new Object[] { entertime, exittime, duration });
+			Cursor c = db.rawQuery("SELECT MAX(ID) MAXID FROM RUN_RECORD", null);// 注意大小写
+			if (c.moveToNext())
+			{
+				runId = BasicNumberUtil.getNumber(getStrValue(c, "MAXID"));
+			}
+			c.close();
+			// trigger();
+		}
+		catch (Exception ex)
+		{
+			throw new RuntimeException(ex.getMessage());
+		}
+		return runId;
+	}
 
-                srtInfo.setChs(c.getString(c.getColumnIndex("chs")));
-                srtInfo.setEng(c.getString(c.getColumnIndex("eng")));
-                srtInfo.setFromTime(TimeHelper.parseTimeInfo(c.getString(c
-                        .getColumnIndex("fromtime"))));
-                srtInfo.setToTime(TimeHelper.parseTimeInfo(c.getString(c
-                        .getColumnIndex("totime"))));
-                srtInfo.setSrtIndex(BasicNumberUtil.getNumber(c.getString(c
-                        .getColumnIndex("sindex"))));
-                list.add(srtInfo);
-                c.moveToNext();
-            }
-        }
-        return list;
-    }
+	private static boolean checkExist()
+	{
+		Cursor c = db.rawQuery("SELECT * FROM RUN_RECORD", new String[] {});
+		if (c.moveToNext())
+		{
+			return true;
+		}
+		c.close();
+		return false;
+	}
+
+	public static int getRunCounts()
+	{
+		Cursor c = db.rawQuery("SELECT * FROM RUN_RECORD", new String[] {});
+		int num = 0;
+		while (c.moveToNext())
+		{
+			num++;
+		}
+		c.close();
+		return num;
+	}
+
+	// private static void trigger()
+	// {
+	// BackUpDataUtil.canBackUpDb = true;
+	// }
+
+	private static String getStrValue(Cursor c, String columnName)
+	{
+		return c.getString(c.getColumnIndex(columnName));
+	}
+
+	public static List<String> getAllMembersForSearch()
+	{
+		List<String> searchMembers = new ArrayList<String>();
+		if (list != null)
+		{
+			searchMembers.clear();
+			searchMembers.add("全部成员");
+			for (String member : list)
+			{
+				searchMembers.add(member);
+			}
+		}
+		else
+		{
+			searchMembers.add("全部成员");
+		}
+
+		return searchMembers;
+	}
+
+	static List<String> list = null;
+
+	public static List<String> getAllMembers()
+	{
+		if (list != null)
+		{
+			return list;
+		}
+		if (db == null)
+		{
+			Log.e("dao", "Not opened Db !");
+			return list;
+		}
+		Cursor c = db.rawQuery("SELECT name FROM member WHERE ISDEL = 0 ORDER BY ITEM_ORDER ASC", null);
+		list = new ArrayList<String>();
+		while (c.moveToNext())
+		{
+			list.add(getStrValue(c, "NAME"));
+		}
+		c.close();
+		return list;
+	}
+
+	public static boolean deleteByName(String name)
+	{
+		if (db == null)
+		{
+			Log.e("dao", "Not opened Db !");
+			return false;
+		}
+
+		if (checkExistInTrasactions(name))
+		{
+			throw new RuntimeException("<" + name + ">该成员在消费表中已有引用!");
+		}
+
+		try
+		{
+			ContentValues cv = new ContentValues();
+			cv.put("isdel", 1);
+			if (db.update("member", cv, "name = ?", new String[] { String.valueOf(name) }) == 0)
+			{
+				return false;
+			}
+			list.remove(name);
+			// trigger();
+		}
+		catch (Exception ex)
+		{
+			throw new RuntimeException("修改成员表时异常," + ex.getMessage());
+		}
+		return true;
+	}
+
+	private static boolean checkExistInTrasactions(String name)
+	{
+		Cursor c = db.rawQuery("SELECT * FROM transactions WHERE ISDEL=0 AND member = ?", new String[] { name });
+		if (c.moveToNext())
+		{
+			return true;
+		}
+		c.close();
+		return false;
+	}
+
+	public static void closeDb()
+	{
+		if (db != null)
+		{
+			db.close();
+		}
+	}
 }

@@ -37,7 +37,7 @@ public class RecWordActivity extends BaseActivity implements OnClickListener, Un
 	private BaiduASRDigitalDialog recDialog = null;
 	String dialog;
 
-	int READ_MODE = 1;
+	int READ_MODE = 0;
 	String curWordContent = "";
 	String curSelContent = "";
 
@@ -65,7 +65,7 @@ public class RecWordActivity extends BaseActivity implements OnClickListener, Un
 		{
 			dialog = "武汉恒信,欢迎您的光临!".trim();
 		}
-		READ_MODE = 1;
+		System.out.println(dialog);
 		curWordContent = "";
 		curSelContent = "";
 	}
@@ -92,7 +92,8 @@ public class RecWordActivity extends BaseActivity implements OnClickListener, Un
 		@Override
 		public void onClick(View v)
 		{
-			activeWork = StudyMonitor.peekWork(WORKTYPE.TTS);
+
+			activeWork = StudyMonitor.peekWork(WORKTYPE.TTS_REC);
 			switch (v.getId())
 			{
 			case R.id.btn_recword:
@@ -114,6 +115,11 @@ public class RecWordActivity extends BaseActivity implements OnClickListener, Un
 				WheelDialogShowUtil.showHanziDialog(RecWordActivity.this, dialog, 0, 0, RecWordActivity.this);
 				break;
 			case R.id.btn_recrepeat:
+				if (READ_MODE == 0)
+				{
+					ToastUtil.showShortToast(getApplicationContext(), "还没有选择要识别的字词!");
+					return;
+				}
 				et.setVisibility(View.INVISIBLE);
 				speakChs_Baidu();
 				break;

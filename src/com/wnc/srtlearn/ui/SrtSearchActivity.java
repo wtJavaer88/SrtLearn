@@ -32,7 +32,7 @@ import android.widget.TextView;
 import com.wnc.basic.BasicNumberUtil;
 import com.wnc.basic.BasicStringUtil;
 import com.wnc.srtlearn.R;
-import com.wnc.srtlearn.dao.SrtDao;
+import com.wnc.srtlearn.dao.SrtInfoDao;
 import com.wnc.srtlearn.modules.search.ActSrtWord;
 import com.wnc.srtlearn.modules.search.SrtWordAutoAdapter;
 import common.app.BasicPhoneUtil;
@@ -110,9 +110,9 @@ public class SrtSearchActivity extends Activity implements OnClickListener, Unca
 		switch (v.getId())
 		{
 		case R.id.btn_srtsearch:
-			SrtDao.openDatabase(this);
+			SrtInfoDao.openDatabase(this);
 			final String keyword = this.act.getText().toString();
-			List<SearchSrtInfo> searchResult = SrtDao.search(keyword);
+			List<SearchSrtInfo> searchResult = SrtInfoDao.search(keyword);
 			setLv(searchResult);
 			break;
 		}
