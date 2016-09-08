@@ -1,4 +1,4 @@
-package com.wnc.srtlearn.modules.srt;
+package net.headset;
 
 import android.content.ComponentName;
 import android.content.Context;

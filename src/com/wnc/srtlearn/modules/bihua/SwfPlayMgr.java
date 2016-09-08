@@ -3,7 +3,7 @@ package com.wnc.srtlearn.modules.bihua;
 import android.content.Context;
 
 import com.wnc.basic.BasicFileUtil;
-import com.wnc.srtlearn.modules.srt.DownPicTask;
+import com.wnc.srtlearn.modules.srt.DownSwfTask;
 
 import common.app.BasicPhoneUtil;
 import common.app.ToastUtil;
@@ -43,7 +43,7 @@ public class SwfPlayMgr
     {
         String destSave = MyAppParams.SWF_FOLDER + hanzi + ".swf";
         String swfUrl = getSwfUrl(TextFormatUtil.getUrlEncodeStr(hanzi));
-        new Thread(new DownPicTask(destSave, swfUrl)).start();
+        new Thread(new DownSwfTask(destSave, swfUrl)).start();
     }
 
     private static void writeSwfData(String hanzi, boolean isLocal)

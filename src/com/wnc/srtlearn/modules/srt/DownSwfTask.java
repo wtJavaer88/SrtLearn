@@ -3,12 +3,12 @@ package com.wnc.srtlearn.modules.srt;
 import com.wnc.basic.BasicFileUtil;
 import common.utils.UrlPicDownloader;
 
-public class DownPicTask implements Runnable
+public class DownSwfTask implements Runnable
 {
     String saveFilePath;
     String resUrl;
 
-    public DownPicTask(String saveFilePath, String swfUrl)
+    public DownSwfTask(String saveFilePath, String swfUrl)
     {
         this.saveFilePath = saveFilePath;
         this.resUrl = swfUrl;

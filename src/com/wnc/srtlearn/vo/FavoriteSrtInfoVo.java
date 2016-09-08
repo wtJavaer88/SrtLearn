@@ -1,6 +1,14 @@
-package srt;
+package com.wnc.srtlearn.vo;
 
-public class FavoriteSrtInfo extends SrtInfo
+import srt.SrtInfo;
+
+/**
+ * 该类综合了数据库里的两个收藏表的结果
+ * 
+ * @author cpr216
+ * 
+ */
+public class FavoriteSrtInfoVo extends SrtInfo
 {
     private String favoriteTime;// 收藏的时间
     private String srtFile;// 字幕文件: 剧名/集数

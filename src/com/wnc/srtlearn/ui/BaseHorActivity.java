@@ -5,7 +5,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
-public class BaseActivity extends Activity
+public class BaseHorActivity extends Activity
 {
 
     @Override

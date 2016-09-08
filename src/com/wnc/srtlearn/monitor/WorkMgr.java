@@ -3,14 +3,15 @@ package com.wnc.srtlearn.monitor;
 import java.text.SimpleDateFormat;
 
 import com.wnc.basic.BasicDateUtil;
-import com.wnc.srtlearn.dao.SrtDao;
+import com.wnc.srtlearn.dao.WorkDao;
+import com.wnc.srtlearn.monitor.work.WORKTYPE;
 
 public class WorkMgr
 {
 
 	public static void insertWork(WORKTYPE type, int runId)
 	{
-		SrtDao.insertWorkMgr(runId, type, StudyMonitor.getWorkCount(type), StudyMonitor.getWorkTime(type));
+		WorkDao.insertWorkMgr(runId, type, StudyMonitor.getWorkCount(type), StudyMonitor.getWorkTime(type));
 	}
 
 	public static String getDateTimeStr(long time)
@@ -20,7 +21,7 @@ public class WorkMgr
 
 	public static int insertRunRecord(long time1, long time2)
 	{
-		return SrtDao.insertRunRecord(getDateTimeStr(time1), getDateTimeStr(time2), getDuration(time2 - time1));
+		return WorkDao.insertRunRecord(getDateTimeStr(time1), getDateTimeStr(time2), getDuration(time2 - time1));
 	}
 
 	private static String getDuration(long l)

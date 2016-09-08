@@ -11,9 +11,9 @@ import android.util.Log;
 
 import com.wnc.basic.BasicDateUtil;
 import com.wnc.basic.BasicNumberUtil;
-import com.wnc.srtlearn.monitor.WORKTYPE;
+import com.wnc.srtlearn.monitor.work.WORKTYPE;
 
-public class SrtDao
+public class WorkDao
 {
 	private static SQLiteDatabase db = null;
 

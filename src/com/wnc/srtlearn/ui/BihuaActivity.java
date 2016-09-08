@@ -20,7 +20,7 @@ import common.app.GalleryUtil;
 import common.app.ToastUtil;
 import common.uihelper.AfterGalleryChooseListener;
 
-public class BihuaActivity extends BaseActivity implements OnClickListener,
+public class BihuaActivity extends BaseHorActivity implements OnClickListener,
         UncaughtExceptionHandler, AfterGalleryChooseListener
 {
 

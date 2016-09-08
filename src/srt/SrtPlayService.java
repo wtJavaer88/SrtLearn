@@ -8,8 +8,11 @@ import android.util.Log;
 
 import com.wnc.basic.BasicDateUtil;
 import com.wnc.basic.BasicFileUtil;
-import com.wnc.srtlearn.modules.srt.SrtSetting;
+import com.wnc.srtlearn.dao.FavDao;
 import com.wnc.srtlearn.modules.srt.SrtVoiceHelper;
+import com.wnc.srtlearn.pojo.FavoriteMultiSrt;
+import com.wnc.srtlearn.pojo.FavoriteSingleSrt;
+import com.wnc.srtlearn.setting.SrtSetting;
 import com.wnc.srtlearn.ui.SrtActivity;
 import common.app.ToastUtil;
 import common.uihelper.MyAppParams;
@@ -33,8 +36,10 @@ public class SrtPlayService
 
     public void favorite()
     {
-        if (BasicFileUtil.writeFileString(MyAppParams.FAVORITE_TXT,
-                getFavoriteCurrContent(), "UTF-8", true))
+        List<SrtInfo> currentPlaySrtInfos = getCurrentPlaySrtInfos();
+
+        if (writeFavoritetxt(currentPlaySrtInfos)
+                && saveFavDb(currentPlaySrtInfos))
         {
             ToastUtil.showLongToast(srtActivity, "收藏成功!");
         }
@@ -42,6 +47,35 @@ public class SrtPlayService
         {
             ToastUtil.showLongToast(srtActivity, "收藏失败!");
         }
+    }
+
+    private boolean saveFavDb(List<SrtInfo> currentPlaySrtInfos)
+    {
+        FavoriteMultiSrt mfav = new FavoriteMultiSrt();
+        mfav.setFavTime(BasicDateUtil.getCurrentDateTimeString());
+        mfav.setFromTimeStr(currentPlaySrtInfos.get(0).getFromTime().toString());
+        mfav.setToTimeStr(currentPlaySrtInfos
+                .get(currentPlaySrtInfos.size() - 1).getFromTime().toString());
+        mfav.setSrtFile(getCurFile().replace(MyAppParams.SRT_FOLDER, ""));
+        mfav.setHasChild(currentPlaySrtInfos.size());
+
+        List<FavoriteSingleSrt> sfavs = new ArrayList<FavoriteSingleSrt>();
+        for (SrtInfo srtInfo : currentPlaySrtInfos)
+        {
+            FavoriteSingleSrt sfav = new FavoriteSingleSrt();
+            sfav.setFromTimeStr(srtInfo.getFromTime().toString());
+            sfav.setToTimeStr(srtInfo.getToTime().toString());
+            sfav.setsIndex(srtInfo.getSrtIndex());
+            sfavs.add(sfav);
+        }
+        return FavDao.insertFavMulti(srtActivity, mfav, sfavs);
+    }
+
+    private boolean writeFavoritetxt(List<SrtInfo> currentPlaySrtInfos)
+    {
+        String favoriteCurrContent = getFavoriteCurrContent(currentPlaySrtInfos);
+        return BasicFileUtil.writeFileString(MyAppParams.FAVORITE_TXT,
+                favoriteCurrContent, "UTF-8", true);
     }
 
     public SrtInfo getSrtInfo(SRT_VIEW_TYPE view_type)
@@ -88,7 +122,7 @@ public class SrtPlayService
         return DataHolder.getFileKey();
     }
 
-    public String getFavoriteCurrContent()
+    public String getFavoriteCurrContent(List<SrtInfo> currentPlaySrtInfos)
     {
         String tag = "tag<";
         if (isReplayRunning())
@@ -101,7 +135,7 @@ public class SrtPlayService
         }
 
         tag += ">";
-        List<SrtInfo> currentPlaySrtInfos = getCurrentPlaySrtInfos();
+
         return BasicDateUtil.getCurrentDateTimeString() + " \""
                 + getCurFile().replace(MyAppParams.SRT_FOLDER, "") + "\" "
                 + tag + " " + currentPlaySrtInfos + "\r\n";

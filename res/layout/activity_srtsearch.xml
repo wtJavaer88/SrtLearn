@@ -9,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="15dip"
+        android:gravity="center"
         android:textColor="@color/black"
         android:layout_marginLeft="@dimen/dimen_5_dip"
         android:layout_marginTop="@dimen/dimen_10_dip" />
@@ -45,7 +46,7 @@
     
     <ListView 
          android:id="@+id/lvSrtSearch"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:dividerHeight="3dip"
         ></ListView>

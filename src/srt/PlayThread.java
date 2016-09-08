@@ -4,11 +4,12 @@ import java.util.Queue;
 
 import android.os.Message;
 
-import com.wnc.srtlearn.modules.srt.SrtSetting;
 import com.wnc.srtlearn.modules.srt.SrtVoiceHelper;
-import com.wnc.srtlearn.monitor.ActiveWork;
 import com.wnc.srtlearn.monitor.StudyMonitor;
-import com.wnc.srtlearn.monitor.WORKTYPE;
+import com.wnc.srtlearn.monitor.work.ActiveWork;
+import com.wnc.srtlearn.monitor.work.WORKTYPE;
+import com.wnc.srtlearn.setting.SrtSetting;
+
 import common.utils.Mp3Utils;
 
 public class PlayThread extends Thread

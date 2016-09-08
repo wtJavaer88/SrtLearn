@@ -44,13 +44,26 @@ public class SrtInfoDao
         return database != null && database.isOpen();
     }
 
-    public static List<SearchSrtInfo> search(String keyWord)
+    public static List<SearchSrtInfo> searchByLan(boolean isEng, String keyWord)
     {
         List<SearchSrtInfo> list = new ArrayList<SearchSrtInfo>();
         if (isConnect())
         {
-            String sql = "select s.*,t.*,e.name from srtinfo s left join episode e on s.episode_id=e.id left join timeline t on s.id=t.id where chs like '%"
-                    + keyWord + "%' or eng like '%" + keyWord + "%'";
+            final String engOrchs = isEng ? "eng" : "chs";
+            final String engOrchs2 = !isEng ? "eng" : "chs";
+            String sql = "select s.*,t.fromtime,t.totime,e.name from (select min(id) id,min(episode_id) episode_id, min("
+                    + engOrchs2
+                    + ") "
+                    + engOrchs2
+                    + ", min(sindex) sindex, "
+                    + engOrchs
+                    + " from srtinfo group by "
+                    + engOrchs
+                    + ") s  left join episode e on s.episode_id=e.id left join timeline t on s.id=t.id where  "
+                    + engOrchs
+                    + " like '%"
+                    + keyWord
+                    + "%' order by s.episode_id,s.id asc";
             Cursor c = database.rawQuery(sql, null);
             c.moveToFirst();
             while (!c.isAfterLast())

@@ -1,4 +1,4 @@
-package com.wnc.srtlearn.monitor;
+package com.wnc.srtlearn.monitor.work;
 
 public enum WORKTYPE
 {

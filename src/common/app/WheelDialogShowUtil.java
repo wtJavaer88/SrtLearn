@@ -9,7 +9,6 @@ import java.util.Map;
 import net.widget.kankan.wheel.OnWheelChangedListener;
 import net.widget.kankan.wheel.WheelView;
 import net.widget.kankan.wheel.adapters.ArrayWheelAdapter;
-
 import srt.DataHolder;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -272,8 +271,8 @@ public class WheelDialogShowUtil
             @Override
             public void onChanged(WheelView wheel, int oldValue, int newValue)
             {
-                ToastUtil.showShortToast(context, DataHolder
-                        .getAllSrtInfos().get(newValue).getChs());
+                ToastUtil.showShortToast(context, DataHolder.getAllSrtInfos()
+                        .get(newValue).getChs());
             }
         };
         wheelview1.addChangingListener(onWheelChangedListener);
@@ -306,11 +305,11 @@ public class WheelDialogShowUtil
         dialog.show();
     }
 
-    public static void showHanziDialog(final Context context, String dialogStr,
-            int beginIndex, int endIndex,
+    public static void showCustomHanziDialog(final Context context,
+            String dialogStr, int beginIndex, int endIndex,
             final AfterWheelChooseListener listener)
     {
-        String[] hanziArr = new String[dialogStr.length()];
+        final String[] hanziArr = new String[dialogStr.length()];
         for (int i = 0; i < dialogStr.length(); i++)
         {
             hanziArr[i] = dialogStr.substring(i, i + 1);
@@ -343,6 +342,22 @@ public class WheelDialogShowUtil
         wheelview2.setCurrentItem(endIndex);
         llContent.addView(wheelview2, new LinearLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
+
+        wheelview1.addChangingListener(new OnWheelChangedListener()
+        {
+            @Override
+            public void onChanged(WheelView wheel, int oldValue, int newValue)
+            {
+                if (newValue < hanziArr.length - 1)
+                {
+                    wheelview2.setCurrentItem(newValue + 1);
+                }
+                else
+                {
+                    wheelview2.setCurrentItem(newValue);
+                }
+            }
+        });
         // 设置对话框点击事件 积极
         dialog.setButton(AlertDialog.BUTTON_POSITIVE, "确定",
                 new DialogInterface.OnClickListener()
@@ -587,7 +602,8 @@ public class WheelDialogShowUtil
                 {
 
                     @Override
-                    public void onChanged(net.widget.kankan.wheel.WheelView wheel,
+                    public void onChanged(
+                            net.widget.kankan.wheel.WheelView wheel,
                             int oldValue, int newValue)
                     {
                         wheelRight

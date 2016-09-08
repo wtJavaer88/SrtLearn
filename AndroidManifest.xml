@@ -59,12 +59,12 @@
          <activity android:name="com.wnc.srtlearn.ui.FanyiActivity" android:configChanges="orientation|keyboardHidden|screenSize"/>
          <activity android:name="com.wnc.srtlearn.ui.FavoriteSrtActivity" android:configChanges="orientation|keyboardHidden|screenSize"/>
          <activity android:name="com.wnc.srtlearn.ui.ReadActivity"/>
-         <activity android:name="com.wnc.srtlearn.ui.SrtSearchActivity" />
+         <activity android:name="com.wnc.srtlearn.ui.SrtSearchActivity" android:configChanges="orientation|keyboardHidden|screenSize"/>
          
          <activity android:name="net.widget.act.sample.ActTestActivity"/>
          
          <!-- 线控的广播 -->
-         <receiver android:name="com.wnc.srtlearn.modules.srt.MediaButtonReceiver" >
+         <receiver android:name="net.headset.MediaButtonReceiver" >
             <intent-filter android:priority="1000">
                 <action android:name="android.intent.action.MEDIA_BUTTON" >
                 </action>

@@ -20,7 +20,7 @@ import com.wnc.srtlearn.R;
 import common.app.BasicPhoneUtil;
 import common.app.ToastUtil;
 
-public class FanyiActivity extends BaseActivity implements OnClickListener,
+public class FanyiActivity extends BaseHorActivity implements OnClickListener,
         UncaughtExceptionHandler
 {
 

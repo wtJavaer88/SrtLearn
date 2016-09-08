@@ -1,20 +1,23 @@
-package srt;
+package com.wnc.srtlearn.modules.srt;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import srt.TimeHelper;
+
 import com.wnc.basic.BasicNumberUtil;
+import com.wnc.srtlearn.vo.FavoriteSrtInfoVo;
 import com.wnc.string.PatternUtil;
 import com.wnc.tools.FileOp;
 import common.uihelper.MyAppParams;
 
 public class ReadFavoriteSrt
 {
-    public static List<FavoriteSrtInfo> getFSInfos()
+    public static List<FavoriteSrtInfoVo> getFSInfos()
     {
         List<String> readFrom = FileOp.readFrom(MyAppParams.FAVORITE_TXT,
                 "UTF-8");
-        List<FavoriteSrtInfo> list = new ArrayList<FavoriteSrtInfo>();
+        List<FavoriteSrtInfoVo> list = new ArrayList<FavoriteSrtInfoVo>();
         for (String info : readFrom)
         {
             list.addAll(getSrtInfos(info));
@@ -22,9 +25,9 @@ public class ReadFavoriteSrt
         return list;
     }
 
-    private static FavoriteSrtInfo getSrtInfo(String info)
+    private static FavoriteSrtInfoVo getSrtInfo(String info)
     {
-        FavoriteSrtInfo fsInfo = new FavoriteSrtInfo();
+        FavoriteSrtInfoVo fsInfo = new FavoriteSrtInfoVo();
         fsInfo.setChs(PatternUtil.getFirstPattern(info, "chs=.*?, eng")
                 .replace("chs=", "").replace("eng", "").replace(", ", ""));
         fsInfo.setEng(PatternUtil.getFirstPattern(info, "eng=.*?]")
@@ -49,9 +52,9 @@ public class ReadFavoriteSrt
      * @param info
      * @return
      */
-    private static List<FavoriteSrtInfo> getSrtInfos(String info)
+    private static List<FavoriteSrtInfoVo> getSrtInfos(String info)
     {
-        List<FavoriteSrtInfo> list = new ArrayList<FavoriteSrtInfo>();
+        List<FavoriteSrtInfoVo> list = new ArrayList<FavoriteSrtInfoVo>();
         String[] childs = info.split("]");
         String tag = PatternUtil.getFirstPattern(info, "tag<.*?>")
                 .replace("tag<", "").replace(">", "");
@@ -61,13 +64,13 @@ public class ReadFavoriteSrt
                 "\"", "");
         for (String child : childs)
         {
-            FavoriteSrtInfo fsInfo = getSrtInfo(child + "]");
+            FavoriteSrtInfoVo fsInfo = getSrtInfo(child + "]");
             fsInfo.setTag(tag);
             fsInfo.setFavoriteTime(ftime);
             fsInfo.setSrtFile(srtfile);
             list.add(fsInfo);
         }
-        for (FavoriteSrtInfo fsInfo : list)
+        for (FavoriteSrtInfoVo fsInfo : list)
         {
             fsInfo.setSublings(list.size());
             System.out.println(fsInfo);

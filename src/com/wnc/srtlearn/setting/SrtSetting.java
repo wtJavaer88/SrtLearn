@@ -1,4 +1,4 @@
-package com.wnc.srtlearn.modules.srt;
+package com.wnc.srtlearn.setting;
 
 import common.app.SharedPreferenceUtil;
 

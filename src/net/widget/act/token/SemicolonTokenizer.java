@@ -17,6 +17,11 @@ public class SemicolonTokenizer implements Tokenizer
         mSTring = String.valueOf(singleChar);
     }
 
+    /**
+     * 默认单词结尾为给定的第一个字符
+     * 
+     * @param chars
+     */
     public SemicolonTokenizer(String chars)
     {
         if (chars == null || chars.length() == 0)
@@ -25,6 +30,22 @@ public class SemicolonTokenizer implements Tokenizer
         }
         this.multiChars = chars;
         this.mSTring = String.valueOf(chars.charAt(0));
+    }
+
+    /**
+     * 自定义一个单词结尾
+     * 
+     * @param chars
+     * @param end
+     */
+    public SemicolonTokenizer(String chars, String end)
+    {
+        if (chars == null || chars.length() == 0)
+        {
+            throw new IllegalArgumentException("分隔符参数不合法......");
+        }
+        this.multiChars = chars;
+        this.mSTring = end;
     }
 
     @Override

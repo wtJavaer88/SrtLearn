@@ -3,6 +3,10 @@ package com.wnc.srtlearn.monitor;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.wnc.srtlearn.monitor.work.ActiveWork;
+import com.wnc.srtlearn.monitor.work.ApplicationActiveWork;
+import com.wnc.srtlearn.monitor.work.WORKTYPE;
+
 /**
  * 学习监控, 可以考虑加个读写的锁
  * 

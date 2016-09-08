@@ -24,7 +24,7 @@ import common.uihelper.AfterWheelChooseListener;
 import common.utils.PinYinUtil;
 import common.utils.PinyinStructUtil;
 
-public class PinyinActivity extends BaseActivity implements OnClickListener,
+public class PinyinActivity extends BaseHorActivity implements OnClickListener,
         UncaughtExceptionHandler, AfterGalleryChooseListener
 {
     private Gallery gallery;

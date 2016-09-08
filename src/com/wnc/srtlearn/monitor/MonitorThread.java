@@ -1,5 +1,7 @@
 package com.wnc.srtlearn.monitor;
 
+import com.wnc.srtlearn.monitor.work.WORKTYPE;
+
 public class MonitorThread extends Thread
 {
 	public void run()

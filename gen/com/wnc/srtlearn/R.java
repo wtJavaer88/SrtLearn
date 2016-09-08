@@ -724,7 +724,7 @@ public final class R {
         public static final int activity_srtview=0x7f03000c;
         public static final int common_wdailog=0x7f03000d;
         public static final int gallery_item=0x7f03000e;
-        public static final int lv_srtsearch=0x7f03000f;
+        public static final int lv_item_srtsearch=0x7f03000f;
         public static final int setting_add_tags_dialg=0x7f030010;
     }
     public static final class raw {
