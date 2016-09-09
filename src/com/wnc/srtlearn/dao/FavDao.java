@@ -2,6 +2,8 @@ package com.wnc.srtlearn.dao;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringEscapeUtils;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -49,7 +51,10 @@ public class FavDao
         {
             throw new RuntimeException(ex.getMessage());
         }
-        closeDb();
+        finally
+        {
+            closeDb();
+        }
         return true;
     }
 
@@ -62,7 +67,9 @@ public class FavDao
                     "INSERT INTO FAV_SINGLE(PID,SINDEX,FROM_TIME ,TO_TIME,ENG,CHS) VALUES (?,?,?,?,?,?)",
                     new Object[]
                     { mfav_Id, sfav.getsIndex(), sfav.getFromTimeStr(),
-                            sfav.getToTimeStr(), sfav.getEng(), sfav.getChs() });
+                            sfav.getToTimeStr(),
+                            StringEscapeUtils.escapeSql(sfav.getEng()),
+                            StringEscapeUtils.escapeSql(sfav.getChs()) });
         }
     }
 
