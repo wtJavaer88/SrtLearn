@@ -25,6 +25,11 @@ public class StudyMonitor
 		new MonitorThread().start();
 	}
 
+	/**
+	 * App活动记录
+	 * 
+	 * @return
+	 */
 	public static ActiveWork getApplicationActiveWork()
 	{
 		return appwork;
@@ -38,6 +43,26 @@ public class StudyMonitor
 		}
 		appwork.setExitTime(System.currentTimeMillis());
 		return appwork.getExitTime() - appwork.getEntertime();
+	}
+
+	public static synchronized void clearWork(WORKTYPE type)
+	{
+		for (int i = 0; i < activeWorks.size(); i++)
+		{
+			ActiveWork work = activeWorks.get(i);
+			if (work.getType() == type)
+			{
+				activeWorks.remove(i);
+			}
+		}
+	}
+
+	public static synchronized void clearAllWorks()
+	{
+		for (int i = 0; i < activeWorks.size(); i++)
+		{
+			activeWorks.clear();
+		}
 	}
 
 	// 传入监控类型,返回一个监控对象给客户端

@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.wnc.basic.BasicDateUtil;
 import com.wnc.basic.BasicNumberUtil;
+import com.wnc.srtlearn.monitor.WorkMgr;
 import com.wnc.srtlearn.monitor.work.WORKTYPE;
 
 public class WorkDao
@@ -22,28 +23,38 @@ public class WorkDao
 		db = context.openOrCreateDatabase("srtlearn.db", Context.MODE_PRIVATE, null);
 	}
 
+	public static boolean log(Context context, WORKTYPE worktype, String info)
+	{
+		int typeId = WorkMgr.getTypeId(worktype);
+		if (db == null)
+		{
+			initDb(context);
+		}
+		try
+		{
+			db.execSQL("INSERT INTO LOG(type, info,create_time) VALUES (?,?,?)", new Object[] { typeId, info, BasicDateUtil.getCurrentDateTimeString() });
+			closeDb();
+		}
+		catch (Exception ex)
+		{
+			throw new RuntimeException(ex.getMessage());
+		}
+		return true;
+	}
+
+	/**
+	 * 本次运行的各项工作记录
+	 * 
+	 * @param run_id
+	 * @param work_type
+	 * @param work_count
+	 * @param work_time
+	 * @return
+	 * @throws RuntimeException
+	 */
 	public static boolean insertWorkMgr(int run_id, WORKTYPE work_type, int work_count, long work_time) throws RuntimeException
 	{
-		int type = 0;
-		switch (work_type)
-		{
-		case APPLICATION:
-			type = 1;
-			break;
-		case SRT:
-			type = 2;
-			break;
-		case TTS_REC:
-			type = 3;
-			break;
-		case SRT_SEARCH:
-			type = 4;
-			break;
-		case PINYIN:
-			type = 5;
-			break;
-
-		}
+		int typeId = WorkMgr.getTypeId(work_type);
 		if (db == null)
 		{
 			Log.e("dao", "Not opened Db !");
@@ -51,7 +62,7 @@ public class WorkDao
 		}
 		try
 		{
-			db.execSQL("INSERT INTO WORKMGR(DAY,RUN_ID,WORK_TYPE,WORK_COUNT ,WORK_TIME) VALUES (?,?,?,?,?)", new Object[] { BasicDateUtil.getCurrentDateString(), run_id, type, work_count, work_time });
+			db.execSQL("INSERT INTO WORKMGR(DAY,RUN_ID,WORK_TYPE,WORK_COUNT ,WORK_TIME) VALUES (?,?,?,?,?)", new Object[] { BasicDateUtil.getCurrentDateString(), run_id, typeId, work_count, work_time });
 			// trigger();
 		}
 		catch (Exception ex)
@@ -61,6 +72,15 @@ public class WorkDao
 		return true;
 	}
 
+	/**
+	 * 每次运行记录
+	 * 
+	 * @param entertime
+	 * @param exittime
+	 * @param duration
+	 * @return
+	 * @throws RuntimeException
+	 */
 	public static int insertRunRecord(String entertime, String exittime, String duration) throws RuntimeException
 	{
 		int runId = 0;
