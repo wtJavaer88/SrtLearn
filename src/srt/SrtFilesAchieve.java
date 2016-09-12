@@ -10,6 +10,7 @@ import com.wnc.basic.BasicFileUtil;
 import com.wnc.basic.BasicStringUtil;
 import common.uihelper.MyAppParams;
 import common.utils.MyFileUtil;
+import common.utils.PinYinUtil;
 import common.utils.TextFormatUtil;
 
 /**
@@ -70,9 +71,8 @@ public class SrtFilesAchieve
                     {
                         srtFilePathes.put(String.format(DELTA_UNIQUE, i, j),
                                 f2.getAbsolutePath());
-                        srtList.add(BasicStringUtil.subString(TextFormatUtil
-                                .getFileNameNoExtend(f2.getName()), 0,
-                                FILE_NAME_MAXLEN));
+                        srtList.add(getFileName(TextFormatUtil
+                                .getFileNameNoExtend(f2.getName())));
                         j++;
                     }
                 }
@@ -81,6 +81,27 @@ public class SrtFilesAchieve
 
         }
         return srightArr;
+    }
+
+    private static String getFileName(String fileName)
+    {
+        float accumLen = 0;
+        for (int i = 0; i < fileName.length(); i++)
+        {
+            if (PinYinUtil.isChinese(fileName.charAt(i)))
+            {
+                accumLen += 1;
+            }
+            else
+            {
+                accumLen += 0.5;
+            }
+            if (accumLen >= FILE_NAME_MAXLEN)
+            {
+                return BasicStringUtil.subString(fileName, 0, i + 1);
+            }
+        }
+        return fileName;
     }
 
     private static List<File> getFolderFiles()
@@ -114,9 +135,19 @@ public class SrtFilesAchieve
                 + srtFile.replace(MyAppParams.SRT_FOLDER, "");
         int i = filePath.lastIndexOf(".");
         filePath = filePath.substring(0, i);
+
         File picFolder = new File(filePath);
         if (picFolder.exists())
         {
+            if (srtFile.endsWith(".lrc"))
+            {
+                // 如果有单词图片,则打开单词图片,否则打开剧集图片
+                final String wordPic = getWordPic(filePath);
+                if (BasicStringUtil.isNotNullString(wordPic))
+                {
+                    return wordPic;
+                }
+            }
             filePath = filePath + File.separator
                     + TextFormatUtil.getFileNameNoExtend(srtFile) + "_p1.pic";
             if (!BasicFileUtil.isExistFile(filePath))
@@ -132,5 +163,25 @@ public class SrtFilesAchieve
             filePath = "";
         }
         return filePath;
+    }
+
+    private static String getWordPic(String filePath)
+    {
+        SrtInfo current = DataHolder.getCurrent();
+        String pic1 = filePath + File.separator
+                + current.getChs().replace(" ", "") + ".pic";
+        System.out.println("getWordPic: " + pic1);
+        if (BasicFileUtil.isExistFile(pic1))
+        {
+            return pic1;
+        }
+        String pic2 = filePath + File.separator
+                + current.getChs().replace(" ", "") + ".gif";
+        System.out.println("getWordPic: " + pic2);
+        if (BasicFileUtil.isExistFile(pic2))
+        {
+            return pic2;
+        }
+        return "";
     }
 }

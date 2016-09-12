@@ -56,9 +56,11 @@ public class SrtTextHelper
     public static boolean isSrtfile(File f)
     {
         return f.isFile()
-                && (f.getName().endsWith("ass") || f.getName().endsWith("srt")
-                        || f.getName().endsWith("ssa") || f.getName().endsWith(
-                        "cnpy"));
+                && (f.getName().endsWith(".ass")
+                        || f.getName().endsWith(".srt")
+                        || f.getName().endsWith(".ssa")
+                        || f.getName().endsWith(".cnpy") || f.getName()
+                        .endsWith(".lrc"));
     }
 
     public static String concatTimeline(TimeInfo fTimeinfo, TimeInfo tTimeinfo)
