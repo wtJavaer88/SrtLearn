@@ -15,7 +15,7 @@ public class SrtVoiceHelper
     static MediaPlayer player;
     static boolean isPlaying = false;
 
-    public static void stop()
+    public synchronized static void stop()
     {
         try
         {
@@ -32,12 +32,12 @@ public class SrtVoiceHelper
             player = null;
             isPlaying = false;
             System.out.println("voiceStopEx." + e.getMessage());
-            throw new RuntimeException(e);
         }
     }
 
-    public static void play(String voicePath)
+    public synchronized static void play(String voicePath)
     {
+
         try
         {
             stop();
@@ -61,12 +61,10 @@ public class SrtVoiceHelper
         }
         catch (Exception e)
         {
-            System.out.println("player:" + player);
             player = null;
             isPlaying = false;
             System.out.println("voicePlayEx." + e.getMessage());
             e.printStackTrace();
-            throw new RuntimeException();
         }
     }
 

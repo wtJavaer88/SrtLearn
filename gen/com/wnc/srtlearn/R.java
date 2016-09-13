@@ -644,6 +644,7 @@ public final class R {
         public static final int btnSpeakCh=0x7f0c003a;
         public static final int btnSpeakEn=0x7f0c003b;
         public static final int btnSrtSrh=0x7f0c003c;
+        public static final int btnStar=0x7f0c002d;
         public static final int btn_bihua=0x7f0c000d;
         public static final int btn_fanyi=0x7f0c0012;
         public static final int btn_favsrt=0x7f0c0011;
@@ -684,7 +685,6 @@ public final class R {
         public static final int recbtn2=0x7f0c001d;
         public static final int recword_gallery=0x7f0c0024;
         public static final int sayBtn=0x7f0c001e;
-        public static final int starBtn=0x7f0c002d;
         public static final int text=0x7f0c0040;
         public static final int timeline_tv=0x7f0c002e;
         public static final int tvEng=0x7f0c0041;

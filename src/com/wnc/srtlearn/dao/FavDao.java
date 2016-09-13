@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
 
+import srt.SrtInfo;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.wnc.basic.BasicNumberUtil;
@@ -18,17 +20,76 @@ public class FavDao
 
     public static void initDb(Context context)
     {
-        db = context.openOrCreateDatabase("srtlearn.db", Context.MODE_PRIVATE,
-                null);
+        if (db == null)
+        {
+            db = context.openOrCreateDatabase("srtlearn.db",
+                    Context.MODE_PRIVATE, null);
+        }
     }
 
-    public static boolean insertFavMulti(Context context,
-            FavoriteMultiSrt mfav, List<FavoriteSingleSrt> sfavs)
-            throws RuntimeException
+    public static boolean isExistSingle(Context context, SrtInfo mfav,
+            String srtFile)
     {
         initDb(context);
         try
         {
+            Cursor c = db
+                    .rawQuery(
+                            "SELECT * FROM FAV_MULTI M LEFT JOIN FAV_SINGLE S ON M.ID=S.PID  WHERE SRTFILE=? AND S.FROM_TIME=? AND S.TO_TIME=?",
+                            new String[]
+                            { srtFile, mfav.getFromTime().toString(),
+                                    mfav.getToTime().toString() });// 注意大小写
+            if (c.moveToNext())
+            {
+                return true;
+            }
+            c.close();
+        }
+        catch (Exception ex)
+        {
+            throw new RuntimeException(ex.getMessage());
+        }
+        finally
+        {
+            closeDb();
+        }
+        return false;
+    }
+
+    public static boolean isExistMulti(Context context, FavoriteMultiSrt mfav)
+    {
+        initDb(context);
+        try
+        {
+            Cursor c = db
+                    .rawQuery(
+                            "SELECT * FROM FAV_MULTI WHERE SRTFILE=? AND FROM_TIME=? AND TO_TIME=?",
+                            new String[]
+                            { mfav.getSrtFile(), mfav.getFromTimeStr(),
+                                    mfav.getToTimeStr() });// 注意大小写
+            if (c.moveToNext())
+            {
+                return true;
+            }
+            c.close();
+        }
+        catch (Exception ex)
+        {
+            throw new RuntimeException(ex.getMessage());
+        }
+        finally
+        {
+            closeDb();
+        }
+        return false;
+    }
+
+    public static boolean insertFavMulti(Context context,
+            FavoriteMultiSrt mfav, List<FavoriteSingleSrt> sfavs)
+    {
+        try
+        {
+            initDb(context);
             db.execSQL(
                     "INSERT INTO FAV_MULTI(FAV_TIME,SRTFILE,FROM_TIME ,TO_TIME,HAS_CHILD,TAG) VALUES (?,?,?,?,?,?)",
                     new Object[]
@@ -44,12 +105,13 @@ public class FavDao
             c.close();
             if (mfav_Id > 0)
             {
-                insertFavChilds(mfav_Id, sfavs);
+                return insertFavChilds(mfav_Id, sfavs);
             }
         }
         catch (Exception ex)
         {
-            throw new RuntimeException(ex.getMessage());
+            ex.printStackTrace();
+            return false;
         }
         finally
         {
@@ -58,19 +120,30 @@ public class FavDao
         return true;
     }
 
-    private static void insertFavChilds(int mfav_Id,
+    private static boolean insertFavChilds(int mfav_Id,
             List<FavoriteSingleSrt> sfavs)
     {
-        for (FavoriteSingleSrt sfav : sfavs)
+        try
         {
-            db.execSQL(
-                    "INSERT INTO FAV_SINGLE(PID,SINDEX,FROM_TIME ,TO_TIME,ENG,CHS) VALUES (?,?,?,?,?,?)",
-                    new Object[]
-                    { mfav_Id, sfav.getsIndex(), sfav.getFromTimeStr(),
-                            sfav.getToTimeStr(),
-                            StringEscapeUtils.escapeSql(sfav.getEng()),
-                            StringEscapeUtils.escapeSql(sfav.getChs()) });
+            for (FavoriteSingleSrt sfav : sfavs)
+            {
+
+                db.execSQL(
+                        "INSERT INTO FAV_SINGLE(PID,SINDEX,FROM_TIME ,TO_TIME,ENG,CHS) VALUES (?,?,?,?,?,?)",
+                        new Object[]
+                        { mfav_Id, sfav.getsIndex(), sfav.getFromTimeStr(),
+                                sfav.getToTimeStr(),
+                                StringEscapeUtils.escapeSql(sfav.getEng()),
+                                StringEscapeUtils.escapeSql(sfav.getChs()) });
+
+            }
         }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     private static String getStrValue(Cursor c, String columnName)
@@ -83,6 +156,7 @@ public class FavDao
         if (db != null)
         {
             db.close();
+            db = null;
         }
     }
 }

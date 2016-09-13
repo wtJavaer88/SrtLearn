@@ -149,4 +149,12 @@ public class BasicPhoneUtil
         }
         return false;
     }
+
+    public static int getCurrentAPIVersion(Context context)
+    {
+        int version = android.provider.Settings.System.getInt(
+                context.getContentResolver(),
+                android.provider.Settings.System.SYS_PROP_SETTING_VERSION, 3);
+        return version;
+    }
 }

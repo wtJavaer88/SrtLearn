@@ -29,4 +29,20 @@ public class SharedPreferenceUtil
     {
         return sharedPreferences.getString(key, defaultValue);
     }
+
+    public static Boolean getShareDataByKey(String key, Boolean defaultValue)
+    {
+        return sharedPreferences.getBoolean(key, defaultValue);
+    }
+
+    public static void changeValue(String key, boolean value)
+    {
+        if (value == (getShareDataByKey(key, false)))
+        {
+            return;
+        }
+        Editor editor = sharedPreferences.edit();
+        editor.putBoolean(key, value);
+        editor.commit();
+    }
 }

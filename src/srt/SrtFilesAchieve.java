@@ -62,6 +62,7 @@ public class SrtFilesAchieve
             for (File folder : tvFolders)
             {
                 File[] listFiles = folder.listFiles();
+                // 对文件按文件名排序
                 List<File> fileList = MyFileUtil.getSortFiles(listFiles);
                 List<String> srtList = new ArrayList<String>();
                 int j = 0;

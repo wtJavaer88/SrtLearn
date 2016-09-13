@@ -13,7 +13,7 @@ import com.wnc.srtlearn.modules.srt.SrtVoiceHelper;
 import com.wnc.srtlearn.pojo.FavoriteMultiSrt;
 import com.wnc.srtlearn.pojo.FavoriteSingleSrt;
 import com.wnc.srtlearn.setting.SrtSetting;
-import com.wnc.srtlearn.ui.SrtActivity;
+import com.wnc.srtlearn.ui.SBaseLearnActivity;
 import common.app.ToastUtil;
 import common.uihelper.MyAppParams;
 
@@ -22,16 +22,16 @@ public class SrtPlayService
     private PlayThread playThread;
     private boolean replayCtrl = false;// 复读模式
     boolean autoPlayNextCtrl = true;// 如果播放过程出异常,就不能单靠系统设置的值控制自动播放下一个了,
-    public SrtActivity srtActivity;
+    public SBaseLearnActivity sBaseLearnActivity;
     private int beginReplayIndex = -1;
     private int endReplayIndex = -1;
 
     // 两个音频间的播放延迟
     final int VOICE_PLAY_DELAY = 200;
 
-    public SrtPlayService(SrtActivity srtActivity)
+    public SrtPlayService(SBaseLearnActivity sBaseLearnActivity)
     {
-        this.srtActivity = srtActivity;
+        this.sBaseLearnActivity = sBaseLearnActivity;
     }
 
     public void favorite()
@@ -41,11 +41,11 @@ public class SrtPlayService
         if (writeFavoritetxt(currentPlaySrtInfos)
                 && saveFavDb(currentPlaySrtInfos))
         {
-            ToastUtil.showLongToast(srtActivity, "收藏成功!");
+            ToastUtil.showLongToast(sBaseLearnActivity, "收藏成功!");
         }
         else
         {
-            ToastUtil.showLongToast(srtActivity, "收藏失败!");
+            ToastUtil.showLongToast(sBaseLearnActivity, "收藏失败!");
         }
     }
 
@@ -66,9 +66,15 @@ public class SrtPlayService
             sfav.setFromTimeStr(srtInfo.getFromTime().toString());
             sfav.setToTimeStr(srtInfo.getToTime().toString());
             sfav.setsIndex(srtInfo.getSrtIndex());
+            sfav.setEng(srtInfo.getEng());
+            sfav.setChs(srtInfo.getChs());
             sfavs.add(sfav);
         }
-        return FavDao.insertFavMulti(srtActivity, mfav, sfavs);
+        if (FavDao.isExistMulti(sBaseLearnActivity, mfav))
+        {
+            return true;
+        }
+        return FavDao.insertFavMulti(sBaseLearnActivity, mfav, sfavs);
     }
 
     private boolean writeFavoritetxt(List<SrtInfo> currentPlaySrtInfos)
@@ -148,16 +154,16 @@ public class SrtPlayService
         System.out.println("srtFile:" + srtFile);
         if (BasicFileUtil.isExistFile(srtFile))
         {
-            srtActivity.stopSrtPlay();
+            sBaseLearnActivity.stopSrtPlay();
             DataHolder.switchFile(srtFile);
             if (!DataHolder.srtInfoMap.containsKey(srtFile))
             {
                 SrtFileDataHelper.dataEntity(getCurFile());
-                srtActivity.play(getSrtInfo(SRT_VIEW_TYPE.VIEW_RIGHT));
+                sBaseLearnActivity.play(getSrtInfo(SRT_VIEW_TYPE.VIEW_RIGHT));
             }
             else
             {
-                srtActivity.play(getSrtInfo(SRT_VIEW_TYPE.VIEW_CURRENT));
+                sBaseLearnActivity.play(getSrtInfo(SRT_VIEW_TYPE.VIEW_CURRENT));
             }
         }
         else
@@ -176,7 +182,8 @@ public class SrtPlayService
         {
             setReplayIndex(getCurIndex(), getCurIndex());
         }
-        ToastUtil.showShortToast(srtActivity, isReplayCtrl() ? "复读" : "不复读");
+        ToastUtil.showShortToast(sBaseLearnActivity, isReplayCtrl() ? "复读"
+                : "不复读");
     }
 
     public void stopReplayModel()
@@ -189,7 +196,7 @@ public class SrtPlayService
     {
         if (bIndex > eIndex)
         {
-            ToastUtil.showLongToast(srtActivity, "结束时间不能小于开始时间!");
+            ToastUtil.showLongToast(sBaseLearnActivity, "结束时间不能小于开始时间!");
         }
         else
         {
@@ -259,7 +266,7 @@ public class SrtPlayService
         {
             return true;
         }
-        ToastUtil.showShortToast(srtActivity, "请先选择一部剧集");
+        ToastUtil.showShortToast(sBaseLearnActivity, "请先选择一部剧集");
         return false;
     }
 
