@@ -149,7 +149,24 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener,
     @SuppressLint("NewApi")
     private void hideVirtualBts()
     {
-        main.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+        // 普通
+        final int currentAPIVersion = BasicPhoneUtil
+                .getCurrentAPIVersion(getApplicationContext());
+        System.out.println("Level ........" + currentAPIVersion);
+        if (currentAPIVersion < 19)
+        {
+            main.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+        }
+        else
+        {
+            // 完全
+            main.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        }
     }
 
     private void initDialogs()
@@ -208,6 +225,7 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener,
                             default:
                                 break;
                             }
+                            hideVirtualBts();
                         }
                         catch (Exception e)
                         {
@@ -240,6 +258,7 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener,
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
+                        hideVirtualBts();
                     }
                 });
     }
@@ -281,6 +300,7 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener,
                             default:
                                 break;
                             }
+                            hideVirtualBts();
                         }
                         catch (Exception e)
                         {
@@ -326,6 +346,7 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener,
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
+                        hideVirtualBts();
                     }
                 });
     }
@@ -369,6 +390,7 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener,
                             default:
                                 break;
                             }
+                            hideVirtualBts();
                         }
                         catch (Exception e)
                         {
@@ -384,6 +406,7 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener,
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
+                        hideVirtualBts();
                     }
                 });
     }
@@ -445,6 +468,7 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener,
     @Override
     public void onClick(View v)
     {
+
         switch (v.getId())
         {
         case R.id.btnSetting:
@@ -495,6 +519,7 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener,
             alertDialog = moreDialogBuilder.show();
             break;
         }
+        hideVirtualBts();
     }
 
     private void setting()
@@ -683,7 +708,6 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener,
     @Override
     public void play(SrtInfo srt)
     {
-        virtualBtsToRadiu();
         if (alertDialog != null)
         {
             alertDialog.hide();

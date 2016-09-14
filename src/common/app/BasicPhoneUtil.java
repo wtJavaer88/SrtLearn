@@ -12,6 +12,7 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.util.Log;
 
 public class BasicPhoneUtil
@@ -152,9 +153,6 @@ public class BasicPhoneUtil
 
     public static int getCurrentAPIVersion(Context context)
     {
-        int version = android.provider.Settings.System.getInt(
-                context.getContentResolver(),
-                android.provider.Settings.System.SYS_PROP_SETTING_VERSION, 3);
-        return version;
+        return Build.VERSION.SDK_INT;
     }
 }
