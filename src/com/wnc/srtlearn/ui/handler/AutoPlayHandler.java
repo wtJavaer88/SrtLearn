@@ -1,19 +1,20 @@
 package com.wnc.srtlearn.ui.handler;
 
 import srt.DataHolder;
-import srt.SRT_VIEW_TYPE;
+import srt.SrtPlayService;
 import android.os.Handler;
 
-import com.wnc.srtlearn.ui.SrtActivity;
-import common.uihelper.gesture.EmptyFlingPoint;
+import com.wnc.srtlearn.ui.SBaseLearnActivity;
 
 public class AutoPlayHandler extends Handler
 {
-	SrtActivity activity;
+	SBaseLearnActivity activity;
+	SrtPlayService srtPlayService;
 
-	public AutoPlayHandler(SrtActivity activity)
+	public AutoPlayHandler(SBaseLearnActivity activity)
 	{
 		this.activity = activity;
+		srtPlayService = activity.getSrtPlayService();
 	}
 
 	@Override
@@ -21,28 +22,29 @@ public class AutoPlayHandler extends Handler
 	{
 		if (msg.what == 1)
 		{
-			if (activity.getSrtPlayService().isReplayInvalid())
+
+			if (srtPlayService.isReplayInvalid())
 			{
-				activity.getSrtPlayService().stopReplayModel();
+				srtPlayService.stopReplayModel();
 			}
-			if (activity.getSrtPlayService().isReplayCtrl())
+			if (srtPlayService.isReplayCtrl())
 			{
 				// 复读结束时,回到复读开始的地方继续复读
-				if (activity.getSrtPlayService().getCurIndex() == activity.getSrtPlayService().getEndReplayIndex())
+				if (srtPlayService.getCurIndex() == srtPlayService.getEndReplayIndex())
 				{
-					DataHolder.setCurrentSrtIndex(activity.getSrtPlayService().getBeginReplayIndex());
-					activity.getSrtInfoAndPlay(SRT_VIEW_TYPE.VIEW_CURRENT);
+					DataHolder.setCurrentSrtIndex(srtPlayService.getBeginReplayIndex());
+					activity.playCurrent();
 				}
 				else
 				{
 					// 复读模式下,也会自动播放下一条,但是临时性的
-					activity.doRight(new EmptyFlingPoint(), new EmptyFlingPoint());
+					activity.playNext();
 				}
 			}
-			else if (activity.getSrtPlayService().isAutoPlayModel())
+			else if (srtPlayService.isAutoPlayModel())
 			{
 				// 在自动播放模式下,播放下一条
-				activity.doRight(new EmptyFlingPoint(), new EmptyFlingPoint());
+				activity.playNext();
 			}
 			else
 			{

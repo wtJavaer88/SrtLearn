@@ -1,0 +1,209 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/btnSetting"
+            android:layout_width="60dp"
+            android:layout_height="@dimen/dimen_60_dip"
+            android:layout_gravity="center"
+            android:layout_marginRight="@dimen/dimen_5_dip"
+            android:background="@drawable/main_add_expense_quickly_new"
+            android:gravity="center"
+            android:paddingBottom="@dimen/dimen_6_dip"
+            android:shadowColor="@color/black"
+            android:shadowDx="0.0"
+            android:shadowDy="2.0"
+            android:shadowRadius="1.0"
+            android:text="设置"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dimen_15_dip"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnChoose"
+            android:layout_width="60dp"
+            android:layout_height="@dimen/dimen_60_dip"
+            android:layout_gravity="center"
+            android:layout_marginRight="@dimen/dimen_5_dip"
+            android:background="@drawable/main_add_expense_quickly_new"
+            android:gravity="center"
+            android:paddingBottom="@dimen/dimen_6_dip"
+            android:shadowColor="@color/black"
+            android:shadowDx="0.0"
+            android:shadowDy="2.0"
+            android:shadowRadius="1.0"
+            android:text="剧集"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dimen_15_dip"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/file_tv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:gravity="left"
+            android:text="疑犯追踪第1季第1集"
+            android:textColor="#b5e61e"
+            android:textSize="16dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/btnFirst"
+            android:layout_width="80dp"
+            android:layout_height="@dimen/dimen_60_dip"
+            android:layout_gravity="center"
+            android:layout_marginRight="@dimen/dimen_5_dip"
+            android:background="@drawable/main_add_expense_quickly_new"
+            android:gravity="center"
+            android:paddingBottom="@dimen/dimen_6_dip"
+            android:shadowColor="@color/black"
+            android:shadowDx="0.0"
+            android:shadowDy="2.0"
+            android:shadowRadius="1.0"
+            android:text="第一条"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dimen_15_dip"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnLast"
+            android:layout_width="100dp"
+            android:layout_height="@dimen/dimen_60_dip"
+            android:layout_gravity="center"
+            android:layout_marginRight="@dimen/dimen_5_dip"
+            android:background="@drawable/main_add_expense_quickly_new"
+            android:gravity="center"
+            android:paddingBottom="@dimen/dimen_6_dip"
+            android:shadowColor="@color/black"
+            android:shadowDx="0.0"
+            android:shadowDy="2.0"
+            android:shadowRadius="1.0"
+            android:text="最后一条"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dimen_15_dip"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnSkip"
+            android:layout_width="60dp"
+            android:layout_height="@dimen/dimen_60_dip"
+            android:layout_gravity="center"
+            android:layout_marginRight="@dimen/dimen_5_dip"
+            android:background="@drawable/main_add_expense_quickly_new"
+            android:gravity="center"
+            android:paddingBottom="@dimen/dimen_6_dip"
+            android:shadowColor="@color/black"
+            android:shadowDx="0.0"
+            android:shadowDy="2.0"
+            android:shadowRadius="1.0"
+            android:text="跳转"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dimen_15_dip"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnPlay"
+            android:layout_width="60dp"
+            android:layout_height="@dimen/dimen_60_dip"
+            android:layout_gravity="center"
+            android:layout_marginRight="@dimen/dimen_5_dip"
+            android:background="@drawable/main_add_expense_quickly_new"
+            android:gravity="center"
+            android:paddingBottom="@dimen/dimen_6_dip"
+            android:shadowColor="@color/black"
+            android:shadowDx="0.0"
+            android:shadowDy="2.0"
+            android:shadowRadius="1.0"
+            android:text="播放"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dimen_15_dip"
+            android:textStyle="bold" />
+        <Button
+            android:id="@+id/btnMore"
+            android:layout_width="60dp"
+            android:layout_height="@dimen/dimen_60_dip"
+            android:layout_gravity="center"
+            android:layout_marginRight="@dimen/dimen_5_dip"
+            android:background="@drawable/main_add_expense_quickly_new"
+            android:gravity="center"
+            android:paddingBottom="@dimen/dimen_6_dip"
+            android:shadowColor="@color/black"
+            android:shadowDx="0.0"
+            android:shadowDy="2.0"
+            android:shadowRadius="1.0"
+            android:text="更多"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dimen_15_dip"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" >
+
+        <ImageButton
+            android:id="@+id/btnStar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:src="@drawable/star2" />
+
+        <TextView
+            android:id="@+id/timeline_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="3dp"
+            android:text="00:00:00,000 --->  00:00:00,000"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/progress_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="3dp"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/eng_tv"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="3dp"
+        android:maxLines="2"
+        android:singleLine="false"
+        android:textColor="@color/purple"
+        android:textSize="40dp" />
+
+    <TextView
+        android:id="@+id/chs_tv"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="3dp"
+        android:maxLines="2"
+        android:singleLine="false"
+        android:textColor="@color/purple"
+        android:textSize="40dp" />
+
+</LinearLayout>

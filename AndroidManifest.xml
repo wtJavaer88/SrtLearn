@@ -40,7 +40,7 @@
         android:theme="@style/MymoneyTheme" >
         
         <activity
-            android:name="com.wnc.srtlearn.ui.MainActivity"
+            android:name="com.wnc.srtlearn.ui.JuniorChsLearnActivity"
             android:label="@string/app_name" 
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask"

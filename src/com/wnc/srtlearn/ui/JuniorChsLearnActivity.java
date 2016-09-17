@@ -61,7 +61,7 @@ import common.uihelper.gesture.FlingPoint;
 import common.uihelper.gesture.MyCtrlableGestureDetector;
 import common.utils.TextFormatUtil;
 
-public class SrtActivity extends SBaseLearnActivity implements OnClickListener, OnLongClickListener, CtrlableHorGestureDetectorListener, CtrlableVerGestureDetectorListener, UncaughtExceptionHandler
+public class JuniorChsLearnActivity extends SBaseLearnActivity implements OnClickListener, OnLongClickListener, CtrlableHorGestureDetectorListener, CtrlableVerGestureDetectorListener, UncaughtExceptionHandler
 {
 	private final String SRT_PLAY_TEXT = "播放";
 	private final String SRT_STOP_TEXT = "停止";
@@ -83,17 +83,15 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 	int[] defaultTimePoint = { 0, 0, 0 };
 	int[] defaultMoviePoint = { 0, -1 };// 初次使用请把右边序号设为-1,以便程序判断
 
-	String[] settingItems = new String[] { "自动下一条", "播放声音", "打开复读", "隐藏中文", "音量键-翻页" };
-	String[] moreItems = new String[] { "说一说", "写一写", "拼一拼", "查一查" };
+	String[] settingItems = new String[] { "自动下一条", "播放声音", "打开复读", "隐藏汉字", "音量键-翻页" };
+	String[] moreItems = new String[] { "说一说", "写一写" };
 
 	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		main = getLayoutInflater().from(this).inflate(R.layout.activity_srt, null);
-
-		hideVirtualBts();
+		main = getLayoutInflater().from(this).inflate(R.layout.activity_juniorchs, null);
 		setContentView(main);
 
 		// 引入线控监听
@@ -117,6 +115,17 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 
 		// 因为是横屏,所以设置的滑屏比例低一些
 		this.gestureDetector = new GestureDetector(this, new MyCtrlableGestureDetector(this, 0.15, 0.25, this, this));
+
+		enterView();
+	}
+
+	private void enterView()
+	{
+		String initFile = SrtFilesAchieve.getSrtFileByArrIndex(0, 0);
+		initFileTv(initFile);
+		srtPlayService.showNewSrtFile(initFile);
+		stopSrtPlay();
+		hideVirtualBts();
 	}
 
 	/**
@@ -183,19 +192,11 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 					{
 					case 0:
 						stopSrtPlay();
-						SrtActivity.this.startActivity(new Intent(SrtActivity.this, RecWordActivity.class).putExtra("dialog", chsTv.getText().toString()));
+						JuniorChsLearnActivity.this.startActivity(new Intent(JuniorChsLearnActivity.this, RecWordActivity.class).putExtra("dialog", chsTv.getText().toString()));
 						break;
 					case 1:
 						stopSrtPlay();
-						SrtActivity.this.startActivity(new Intent(SrtActivity.this, BihuaActivity.class).putExtra("dialog", chsTv.getText().toString()));
-						break;
-					case 2:
-						srtPlayService.stopSrt();
-						intoPinyin();
-						break;
-					case 3:
-						srtPlayService.stopSrt();
-						intoSearch();
+						JuniorChsLearnActivity.this.startActivity(new Intent(JuniorChsLearnActivity.this, BihuaActivity.class).putExtra("dialog", chsTv.getText().toString()));
 						break;
 					default:
 						break;
@@ -211,13 +212,13 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 
 			private void intoSearch()
 			{
-				Intent intent = new Intent(SrtActivity.this, SrtSearchActivity.class).putExtra("dialog", engTv.getText().toString());
+				Intent intent = new Intent(JuniorChsLearnActivity.this, SrtSearchActivity.class).putExtra("dialog", engTv.getText().toString());
 				startActivity(intent);
 			}
 
 			private void intoPinyin()
 			{
-				Intent intent = new Intent(SrtActivity.this, PinyinActivity.class).putExtra("dialog", DataHolder.getCurrent().getChs()).putExtra("pinyin", DataHolder.getCurrent().getEng());
+				Intent intent = new Intent(JuniorChsLearnActivity.this, PinyinActivity.class).putExtra("dialog", DataHolder.getCurrent().getChs()).putExtra("pinyin", DataHolder.getCurrent().getEng());
 				startActivityForResult(intent, PINYIN_RESULT);
 			}
 
@@ -244,11 +245,11 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 					switch (which)
 					{
 					case 0:
-						ClipBoardUtil.setNormalContent(SrtActivity.this, getEng());
+						ClipBoardUtil.setNormalContent(JuniorChsLearnActivity.this, getEng());
 						ToastUtil.showLongToast(getApplicationContext(), "复制成功!");
 						break;
 					case 1:
-						ClipBoardUtil.setNormalContent(SrtActivity.this, getEngChs());
+						ClipBoardUtil.setNormalContent(JuniorChsLearnActivity.this, getEngChs());
 						ToastUtil.showLongToast(getApplicationContext(), "复制成功!");
 						break;
 					case 2:
@@ -295,7 +296,7 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 
 			private void shareSrt()
 			{
-				ShareUtil.shareText(SrtActivity.this, getEngChs());
+				ShareUtil.shareText(JuniorChsLearnActivity.this, getEngChs());
 			}
 
 		}).setNegativeButton("取消", new DialogInterface.OnClickListener()
@@ -520,6 +521,7 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 						DataHolder.setCurrentSrtIndex(srtPlayService.getBeginReplayIndex());
 						// 选择完毕立即开始播放
 						beginSrtPlay();
+						hideVirtualBts();
 					}
 				});
 			}
@@ -586,6 +588,7 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 				@Override
 				public void afterWheelChoose(Object... objs)
 				{
+					hideVirtualBts();
 					try
 					{
 						int h = Integer.parseInt(objs[0].toString());
@@ -599,7 +602,7 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 					catch (Exception e)
 					{
 						e.printStackTrace();
-						ToastUtil.showShortToast(SrtActivity.this, e.getMessage());
+						ToastUtil.showShortToast(JuniorChsLearnActivity.this, e.getMessage());
 					}
 				}
 
@@ -627,6 +630,7 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 					String srtFilePath = SrtFilesAchieve.getSrtFileByArrIndex(defaultMoviePoint[0], defaultMoviePoint[1]);
 					initFileTv(srtFilePath);
 					srtPlayService.showNewSrtFile(srtFilePath);
+					hideVirtualBts();
 				}
 
 			});
@@ -795,7 +799,7 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 			WorkMgr.insertWork(WORKTYPE.TTS_REC, runId);
 			WorkMgr.insertWork(WORKTYPE.SRT_SEARCH, runId);
 			WorkDao.closeDb();
-			backupDatabase(this);
+			// backupDatabase(this);
 		}
 		catch (RuntimeException e)
 		{
@@ -887,7 +891,7 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 		}
 		else
 		{
-			BasicPhoneUtil.showMediaVolume(SrtActivity.this);
+			BasicPhoneUtil.showMediaVolume(JuniorChsLearnActivity.this);
 		}
 		return super.onKeyDown(keyCode, event);
 	}
