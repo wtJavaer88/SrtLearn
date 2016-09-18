@@ -105,4 +105,16 @@ public class LrcPicker implements Picker
         }
         return srtInfos;
     }
+
+    @Override
+    public String getSrtFile()
+    {
+        return srtFile;
+    }
+
+    @Override
+    public int getSrtLineCounts()
+    {
+        return segments.size();
+    }
 }

@@ -7,7 +7,6 @@ import srt.SrtInfo;
 import srt.SrtTextHelper;
 import srt.TimeInfo;
 
-
 import com.wnc.basic.BasicNumberUtil;
 import com.wnc.string.PatternUtil;
 import com.wnc.tools.FileOp;
@@ -129,5 +128,17 @@ public class SrtPicker implements Picker
             }
         }
         return srtInfos;
+    }
+
+    @Override
+    public String getSrtFile()
+    {
+        return srtFile;
+    }
+
+    @Override
+    public int getSrtLineCounts()
+    {
+        return segments.size();
     }
 }

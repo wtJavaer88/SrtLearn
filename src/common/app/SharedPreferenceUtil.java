@@ -37,10 +37,6 @@ public class SharedPreferenceUtil
 
     public static void changeValue(String key, boolean value)
     {
-        if (value == (getShareDataByKey(key, false)))
-        {
-            return;
-        }
         Editor editor = sharedPreferences.edit();
         editor.putBoolean(key, value);
         editor.commit();

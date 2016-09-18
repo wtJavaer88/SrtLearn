@@ -15,7 +15,17 @@ public class DataHolder
     public static Map<String, List<SrtInfo>> srtInfoMap = new HashMap<String, List<SrtInfo>>();
     public static Map<String, Integer> indexMap = new HashMap<String, Integer>();
 
-    public static Map<String, Boolean> completeMap = new HashMap<String, Boolean>();
+    public static Map<String, SrtTimeArr> srtTimesMap = new HashMap<String, SrtTimeArr>();
+
+    public static boolean isExist(String file)
+    {
+        return srtInfoMap.containsKey(file);
+    }
+
+    public static SrtTimeArr getSrtTimeArr(String file)
+    {
+        return srtTimesMap.get(file);
+    }
 
     /**
      * 获取当前字幕的所有SrtInfo
@@ -122,10 +132,6 @@ public class DataHolder
     {
         fileKey = file;
         srtIndex = indexMap.get(fileKey) == null ? -1 : indexMap.get(fileKey);
-        if (!completeMap.containsKey(file))
-        {
-            completeMap.put(file, false);
-        }
     }
 
     private static void checkExist()
@@ -176,14 +182,10 @@ public class DataHolder
         }
         else if (!srtInfos.isEmpty())
         {
-            if (!completeMap.get(srtFile))
-            {
-                srtInfoMap.get(srtFile).addAll(srtInfos);
-            }
+            srtInfoMap.get(srtFile).addAll(srtInfos);
         }
         else
         {
-            completeMap.put(srtFile, true);
             resortList(srtFile);
         }
     }

@@ -1,18 +1,17 @@
 package common.app;
 
 import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 
 import common.uihelper.MyAppParams;
 
 public class SysInit
 {
-    static Activity context;
 
     public static void init(Activity context2)
     {
-        context = context2;
-        SharedPreferenceUtil.init(context);
+        SharedPreferenceUtil.init(context2);
 
         MyAppParams.getInstance().setPackageName(context2.getPackageName());
         MyAppParams.getInstance().setResources(context2.getResources());
@@ -23,14 +22,14 @@ public class SysInit
 
         if (isFirstRun())
         {
-            createDbAndFullData();
+            createDbAndFullData(context2);
         }
     }
 
-    private static void createDbAndFullData()
+    private static void createDbAndFullData(Context context2)
     {
         boolean moveAssertDb = MoveDbUtil.moveAssertDb("srtlearn.db",
-                "srtlearn.db", context);
+                "srtlearn.db", context2);
         System.out.println("移动成功标志: " + moveAssertDb);
     }
 
@@ -42,13 +41,13 @@ public class SysInit
                 true);
         if (isFirstRun)
         {
-            Log.d("Sysinit", "第一次运行");
+            Log.i("Sysinit", "第一次运行");
             SharedPreferenceUtil.changeValue(FIRST_RUN, false);
             return true;
         }
         else
         {
-            Log.d("Sysinit", "不是第一次运行");
+            Log.i("Sysinit", "不是第一次运行");
         }
         return false;
     }

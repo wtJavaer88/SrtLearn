@@ -3,6 +3,7 @@ package srt;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import android.util.Log;
 
@@ -158,7 +159,20 @@ public class SrtPlayService
             DataHolder.switchFile(srtFile);
             if (!DataHolder.srtInfoMap.containsKey(srtFile))
             {
-                SrtFileDataHelper.dataEntity(getCurFile());
+                new DataParseThread(getCurFile()).start();
+                while (DataHolder.getAllSrtInfos() == null
+                        || DataHolder.getAllSrtInfos().size() == 0)
+                {
+                    try
+                    {
+                        TimeUnit.MILLISECONDS.sleep(50);
+                    }
+                    catch (InterruptedException e)
+                    {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
                 sBaseLearnActivity.play(getSrtInfo(SRT_VIEW_TYPE.VIEW_RIGHT));
             }
             else
