@@ -42,7 +42,8 @@ public class PlayThread extends Thread
                     threadRunning = false;
                     Message msg = new Message();
                     msg.what = 1;
-                    srtPlayService.sBaseLearnActivity.getHanlder().sendMessage(msg);
+                    srtPlayService.sBaseLearnActivity.getHanlder().sendMessage(
+                            msg);
                 }
                 else
                 {
@@ -87,59 +88,68 @@ public class PlayThread extends Thread
         {
             if (!SrtSetting.isPlayVoice())
             {
+                if (srtVoicesWithBg.size() == 1)
+                {
+                    SrtVoiceHelper.play(srtVoicesWithBg.peek());
+                }
                 return voiceDuration;
             }
-            else if (!SrtSetting.isPlayBgVoice() || srtVoicesWithBg.size() == 1)
+
+            if (!SrtSetting.isPlayBgVoice())
             {
                 SrtVoiceHelper.play(srtVoicesWithBg.peek());
                 return voiceDuration;
             }
 
-            if (srtVoicesWithBg.size() >= 2)
-            {
-                SrtInfo nextSrtInfo;
-                String secondPath = "";
-                for (String q : srtVoicesWithBg)
-                {
-                    secondPath = q;
-                }
-                try
-                {
-                    nextSrtInfo = DataHolder.getSrtInfoByIndex(DataHolder
-                            .getCurrentSrtIndex() + 1);
+            SrtVoiceHelper.playInList(srtVoicesWithBg);
 
-                    // 如果第二段是背景声音,则播放并累加时间
-                    if (!secondPath.contains(nextSrtInfo.getFromTime()
-                            .toString().replace(":", "")))
-                    {
-                        final long l = TimeHelper.getTime(nextSrtInfo
-                                .getFromTime())
-                                - TimeHelper
-                                        .getTime(currentSrtInfo.getToTime());
-                        voiceDuration += l;
-                    }
-                    else
-                    {
-                        // 否则剔除,不要把下一段字幕的声音加进来了
-                        srtVoicesWithBg.remove(1);
-                    }
-                }
-                catch (RuntimeException ex)
-                {
-                    voiceDuration += 1000 * Mp3Utils.getTime(secondPath);
-                }
-
-            }
-
-            if (SrtSetting.isPlayVoice())
-            {
-                SrtVoiceHelper.playInList(srtVoicesWithBg);
-            }
+            voiceDuration += getVoiceDuration(currentSrtInfo, srtVoicesWithBg);
         }
         catch (Exception e)
         {
         }
 
         return voiceDuration;
+    }
+
+    private long getVoiceDuration(final SrtInfo currentSrtInfo,
+            Queue<String> srtVoicesWithBg)
+    {
+        if (srtVoicesWithBg.size() < 2)
+        {
+            return 0;
+        }
+
+        long addTime = 0;
+        SrtInfo nextSrtInfo;
+        String secondPath = "";
+        for (String q : srtVoicesWithBg)
+        {
+            secondPath = q;
+        }
+        try
+        {
+            nextSrtInfo = DataHolder.getSrtInfoByIndex(DataHolder
+                    .getCurrentSrtIndex() + 1);
+
+            // 如果第二段是背景声音,则播放并累加时间
+            if (!secondPath.contains(nextSrtInfo.getFromTime().toString()
+                    .replace(":", "")))
+            {
+                final long l = TimeHelper.getTime(nextSrtInfo.getFromTime())
+                        - TimeHelper.getTime(currentSrtInfo.getToTime());
+                addTime = l;
+            }
+            else
+            {
+                // 否则剔除,不要把下一段字幕的声音加进来了
+                srtVoicesWithBg.remove(1);
+            }
+        }
+        catch (RuntimeException ex)
+        {
+            addTime = 1000 * Mp3Utils.getTime(secondPath);
+        }
+        return addTime;
     }
 }

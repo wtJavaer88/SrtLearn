@@ -39,9 +39,9 @@ public class SrtPlayService
     {
         List<SrtInfo> currentPlaySrtInfos = getCurrentPlaySrtInfos();
 
-        if (writeFavoritetxt(currentPlaySrtInfos)
-                && saveFavDb(currentPlaySrtInfos))
+        if (saveFavDb(currentPlaySrtInfos))
         {
+            writeFavoritetxt(currentPlaySrtInfos);
             ToastUtil.showLongToast(sBaseLearnActivity, "收藏成功!");
         }
         else
@@ -59,6 +59,7 @@ public class SrtPlayService
                 .get(currentPlaySrtInfos.size() - 1).getFromTime().toString());
         mfav.setSrtFile(getCurFile().replace(MyAppParams.SRT_FOLDER, ""));
         mfav.setHasChild(currentPlaySrtInfos.size());
+        mfav.setTag(getTag().replace("tag<", "").replace(">", ""));
 
         List<FavoriteSingleSrt> sfavs = new ArrayList<FavoriteSingleSrt>();
         for (SrtInfo srtInfo : currentPlaySrtInfos)
@@ -131,6 +132,15 @@ public class SrtPlayService
 
     public String getFavoriteCurrContent(List<SrtInfo> currentPlaySrtInfos)
     {
+        String tag = getTag();
+
+        return BasicDateUtil.getCurrentDateTimeString() + " \""
+                + getCurFile().replace(MyAppParams.SRT_FOLDER, "") + "\" "
+                + tag + " " + currentPlaySrtInfos + "\r\n";
+    }
+
+    private String getTag()
+    {
         String tag = "tag<";
         if (isReplayRunning())
         {
@@ -142,10 +152,7 @@ public class SrtPlayService
         }
 
         tag += ">";
-
-        return BasicDateUtil.getCurrentDateTimeString() + " \""
-                + getCurFile().replace(MyAppParams.SRT_FOLDER, "") + "\" "
-                + tag + " " + currentPlaySrtInfos + "\r\n";
+        return tag;
     }
 
     public void showNewSrtFile(String srtFile)
@@ -169,7 +176,6 @@ public class SrtPlayService
                     }
                     catch (InterruptedException e)
                     {
-                        // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
                 }

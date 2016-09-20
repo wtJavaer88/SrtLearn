@@ -36,7 +36,8 @@ public class DataParseThread extends Thread
         final BasicRunTimeUtil basicRunTimeUtil = new BasicRunTimeUtil(
                 "DataParseThread");
         basicRunTimeUtil.beginRun();
-        int curPage = 0;
+        new Task(0).run();
+        int curPage = 1;
         while (picker.getSrtLineCounts() - curPage * COUNTS_PER_PAGE > 0)
         {
             executor.execute(new Task(curPage));
@@ -56,6 +57,7 @@ public class DataParseThread extends Thread
         }
 
         initTimeLineArr(DataHolder.getAllSrtInfos());
+        DataHolder.resortList(curFile);
         System.out.println(BasicFileUtil.getFileName(curFile) + "字幕结果数:"
                 + DataHolder.srtInfoMap.get(curFile).size());
         System.out

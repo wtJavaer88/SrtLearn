@@ -184,10 +184,7 @@ public class DataHolder
         {
             srtInfoMap.get(srtFile).addAll(srtInfos);
         }
-        else
-        {
-            resortList(srtFile);
-        }
+
     }
 
     /**
@@ -195,7 +192,7 @@ public class DataHolder
      * 
      * @param srtFile
      */
-    private static void resortList(String srtFile)
+    public static void resortList(String srtFile)
     {
         List<SrtInfo> list = srtInfoMap.get(srtFile);
         Collections.sort(list, new java.util.Comparator<SrtInfo>()
