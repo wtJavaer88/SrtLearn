@@ -10,6 +10,7 @@ import android.util.Log;
 import com.wnc.basic.BasicDateUtil;
 import com.wnc.basic.BasicFileUtil;
 import com.wnc.srtlearn.dao.FavDao;
+import com.wnc.srtlearn.ex.SrtException;
 import com.wnc.srtlearn.modules.srt.SrtVoiceHelper;
 import com.wnc.srtlearn.pojo.FavoriteMultiSrt;
 import com.wnc.srtlearn.pojo.FavoriteSingleSrt;
@@ -35,7 +36,7 @@ public class SrtPlayService
         this.sBaseLearnActivity = sBaseLearnActivity;
     }
 
-    public void favorite()
+    public void favorite() throws SrtException
     {
         List<SrtInfo> currentPlaySrtInfos = getCurrentPlaySrtInfos();
 
@@ -86,7 +87,7 @@ public class SrtPlayService
                 favoriteCurrContent, "UTF-8", true);
     }
 
-    public SrtInfo getSrtInfo(SRT_VIEW_TYPE view_type)
+    public SrtInfo getSrtInfo(SRT_VIEW_TYPE view_type) throws SrtException
     {
         SrtInfo srt = null;
         switch (view_type)
@@ -155,7 +156,7 @@ public class SrtPlayService
         return tag;
     }
 
-    public void showNewSrtFile(String srtFile)
+    public void showNewSrtFile(String srtFile) throws SrtException
     {
         this.setReplayCtrl(false);
         this.setReplayIndex(-1, -1);
@@ -325,7 +326,7 @@ public class SrtPlayService
         this.beginReplayIndex = beginReplayIndex;
     }
 
-    public List<SrtInfo> getCurrentPlaySrtInfos()
+    public List<SrtInfo> getCurrentPlaySrtInfos() throws SrtException
     {
         if (isReplayRunning())
         {

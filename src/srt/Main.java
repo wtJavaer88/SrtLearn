@@ -2,9 +2,11 @@ package srt;
 
 import java.util.List;
 
+import com.wnc.srtlearn.ex.SrtException;
+
 public class Main
 {
-    public static void main(String[] args)
+    public static void main(String[] args) throws SrtException
     {
         String srtFile = "C:\\Users\\cpr216\\Downloads\\字幕\\[zmk.tw]Person.of.Interest.S01.720p.HDTV.x264-TvT[chs&amp;amp;eng]"
                 + "\\Person.of.Interest.S01E01.720p.HDTV.x264-IMMERSE.chs&eng.srt";

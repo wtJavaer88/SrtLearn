@@ -38,6 +38,7 @@ import com.wnc.basic.BasicStringUtil;
 import com.wnc.srtlearn.R;
 import com.wnc.srtlearn.dao.FavDao;
 import com.wnc.srtlearn.dao.WorkDao;
+import com.wnc.srtlearn.ex.SrtException;
 import com.wnc.srtlearn.monitor.StudyMonitor;
 import com.wnc.srtlearn.monitor.WorkMgr;
 import com.wnc.srtlearn.monitor.work.ActiveWork;
@@ -116,7 +117,15 @@ public class JuniorChsLearnActivity extends SBaseLearnActivity implements
         initDialogs();
         if (srtPlayService.isSrtShowing())
         {
-            play(DataHolder.getCurrent());
+            try
+            {
+                play(DataHolder.getCurrent());
+            }
+            catch (SrtException e)
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
         autoPlayHandler = new AutoPlayHandler(this);
 
@@ -127,7 +136,7 @@ public class JuniorChsLearnActivity extends SBaseLearnActivity implements
         // enterView();
     }
 
-    private void enterView()
+    private void enterView() throws SrtException
     {
         String initFile = SrtFilesAchieve.getSrtFileByArrIndex(0, 0);
         initFileTv(initFile);
@@ -245,7 +254,7 @@ public class JuniorChsLearnActivity extends SBaseLearnActivity implements
                         startActivity(intent);
                     }
 
-                    private void intoPinyin()
+                    private void intoPinyin() throws SrtException
                     {
                         Intent intent = new Intent(JuniorChsLearnActivity.this,
                                 PinyinActivity.class).putExtra("dialog",
@@ -313,7 +322,7 @@ public class JuniorChsLearnActivity extends SBaseLearnActivity implements
                         }
                     }
 
-                    private String getEng()
+                    private String getEng() throws SrtException
                     {
                         String result = "";
                         for (SrtInfo srtInfo : srtPlayService
@@ -324,7 +333,7 @@ public class JuniorChsLearnActivity extends SBaseLearnActivity implements
                         return result;
                     }
 
-                    private String getEngChs()
+                    private String getEngChs() throws SrtException
                     {
                         String eresult = "";
                         String cresult = "";
@@ -338,7 +347,7 @@ public class JuniorChsLearnActivity extends SBaseLearnActivity implements
                         return eresult + " <> " + cresult;
                     }
 
-                    private void shareSrt()
+                    private void shareSrt() throws SrtException
                     {
                         ShareUtil.shareText(JuniorChsLearnActivity.this,
                                 getEngChs());
@@ -600,10 +609,12 @@ public class JuniorChsLearnActivity extends SBaseLearnActivity implements
      */
     private void showThumbPic()
     {
-        String filePath = SrtFilesAchieve.getThumbPicPath(srtPlayService
-                .getCurFile());
+        String filePath = "";
         try
         {
+            filePath = SrtFilesAchieve.getThumbPicPath(srtPlayService
+                    .getCurFile());
+
             Intent intent = ClickFileIntentFactory.getIntentByFile(filePath);
             startActivity(intent);
         }
@@ -703,7 +714,14 @@ public class JuniorChsLearnActivity extends SBaseLearnActivity implements
                                     .getSrtFileByArrIndex(defaultMoviePoint[0],
                                             defaultMoviePoint[1]);
                             initFileTv(srtFilePath);
-                            srtPlayService.showNewSrtFile(srtFilePath);
+                            try
+                            {
+                                srtPlayService.showNewSrtFile(srtFilePath);
+                            }
+                            catch (SrtException e)
+                            {
+                                e.printStackTrace();
+                            }
                             hideVirtualBts();
                         }
 
@@ -1049,9 +1067,16 @@ public class JuniorChsLearnActivity extends SBaseLearnActivity implements
         {
             String retPY = data.getStringExtra("pinyin");
             System.out.println("返回拼音:" + retPY);
-            SrtInfo srtInfo = DataHolder.getCurrent();
-            srtInfo.setEng(retPY);
-            setSrtContent(srtInfo);
+            try
+            {
+                SrtInfo srtInfo = DataHolder.getCurrent();
+                srtInfo.setEng(retPY);
+                setSrtContent(srtInfo);
+            }
+            catch (SrtException e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 

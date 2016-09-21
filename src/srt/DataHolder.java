@@ -6,6 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.wnc.basic.BasicStringUtil;
+import com.wnc.srtlearn.ex.ErrCode;
+import com.wnc.srtlearn.ex.ReachFileHeadException;
+import com.wnc.srtlearn.ex.ReachFileTailException;
+import com.wnc.srtlearn.ex.SrtException;
+import com.wnc.srtlearn.ex.SrtNotFoundException;
 
 public class DataHolder
 {
@@ -61,31 +66,31 @@ public class DataHolder
         return fileKey;
     }
 
-    public static SrtInfo getNext()
+    public static SrtInfo getNext() throws SrtException
     {
         srtIndex++;
         // System.out.println("next:srtIndex.." + srtIndex);
         return getSrtByIndex();
     }
 
-    public static SrtInfo getPre()
+    public static SrtInfo getPre() throws SrtException
     {
         srtIndex--;
         return getSrtByIndex();
     }
 
-    public static SrtInfo getFirst()
+    public static SrtInfo getFirst() throws SrtException
     {
         srtIndex = 0;
         return getSrtByIndex();
     }
 
-    public static SrtInfo getCurrent()
+    public static SrtInfo getCurrent() throws SrtException
     {
         return getSrtByIndex();
     }
 
-    public static SrtInfo getLast()
+    public static SrtInfo getLast() throws SrtException
     {
         checkExist();
         List<SrtInfo> list = srtInfoMap.get(fileKey);
@@ -93,38 +98,38 @@ public class DataHolder
         return getSrtByIndex();
     }
 
-    public static SrtInfo getSrtInfoByIndex(int selIndex)
+    public static SrtInfo getSrtInfoByIndex(int selIndex) throws SrtException
     {
         checkExist();
         List<SrtInfo> list = srtInfoMap.get(fileKey);
         if (selIndex == -1)
         {
-            throw new RuntimeException("已经是第一条了!");
+            throw new ReachFileHeadException(ErrCode.SRT_REACH_HEAD);
         }
-        if (selIndex == list.size())
+        if (selIndex >= list.size())
         {
-            throw new RuntimeException("已经读完了!");
+            throw new ReachFileTailException(ErrCode.SRT_REACH_TAIL);
         }
         return list.get(selIndex);
     }
 
-    private static SrtInfo getSrtByIndex()
+    private static SrtInfo getSrtByIndex() throws SrtException
     {
         checkExist();
-        indexMap.put(fileKey, srtIndex);
         List<SrtInfo> list = srtInfoMap.get(fileKey);
         if (srtIndex == -1)
         {
             srtIndex = 0;
             indexMap.put(fileKey, srtIndex);
-            throw new RuntimeException("已经是第一条了!");
+            throw new ReachFileHeadException(ErrCode.SRT_REACH_HEAD);
         }
-        if (srtIndex == list.size())
+        if (srtIndex >= list.size())
         {
             srtIndex = list.size() - 1;
             indexMap.put(fileKey, srtIndex);
-            throw new RuntimeException("已经读完了!");
+            throw new ReachFileTailException(ErrCode.SRT_REACH_TAIL);
         }
+        indexMap.put(fileKey, srtIndex);
         return list.get(srtIndex);
     }
 
@@ -134,15 +139,16 @@ public class DataHolder
         srtIndex = indexMap.get(fileKey) == null ? -1 : indexMap.get(fileKey);
     }
 
-    private static void checkExist()
+    private static void checkExist() throws SrtNotFoundException
     {
         if (!srtInfoMap.containsKey(fileKey))
         {
-            throw new RuntimeException("找不到该文件的字幕!");
+            throw new SrtNotFoundException(ErrCode.SRT_NOT_FOUND);
         }
     }
 
     public static SrtInfo getClosestSrt(int hour, int minute, int second)
+            throws SrtNotFoundException
     {
         checkExist();
         long l = TimeHelper.getTime(hour, minute, second, 0);
@@ -184,7 +190,6 @@ public class DataHolder
         {
             srtInfoMap.get(srtFile).addAll(srtInfos);
         }
-
     }
 
     /**
@@ -204,7 +209,6 @@ public class DataHolder
                         .compareTo(rhs.getFromTime().toString());
             }
         });
-        srtIndex = 0;
         // System.out.println("list:srtIndex.." + srtIndex);
     }
 

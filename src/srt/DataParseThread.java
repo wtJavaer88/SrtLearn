@@ -6,9 +6,12 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import srt.picker.Picker;
+import srt.picker.PickerFactory;
 
 import com.wnc.basic.BasicFileUtil;
 import com.wnc.basic.BasicRunTimeUtil;
+import com.wnc.srtlearn.ex.ErrCode;
+import com.wnc.srtlearn.ex.SrtParseErrorException;
 
 public class DataParseThread extends Thread
 {
@@ -16,17 +19,17 @@ public class DataParseThread extends Thread
     final int COUNTS_PER_PAGE = 100;
     Picker picker;
     ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors
-            .newFixedThreadPool(5);
+            .newFixedThreadPool(1);
     private String[] leftTimelineArr;
     private String[] rightTimelineArr;
 
-    public DataParseThread(String curFile)
+    public DataParseThread(String curFile) throws SrtParseErrorException
     {
         this.curFile = curFile;
-        picker = srt.picker.PickerFactory.getPicker(curFile);
+        picker = PickerFactory.getPicker(curFile);
         if (picker == null)
         {
-            throw new RuntimeException("字幕文件找不到!");
+            throw new SrtParseErrorException(ErrCode.SRT_PARSE_ERROR);
         }
     }
 

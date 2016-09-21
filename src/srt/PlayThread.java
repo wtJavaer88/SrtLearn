@@ -4,6 +4,7 @@ import java.util.Queue;
 
 import android.os.Message;
 
+import com.wnc.srtlearn.ex.SrtException;
 import com.wnc.srtlearn.modules.srt.SrtVoiceHelper;
 import com.wnc.srtlearn.monitor.StudyMonitor;
 import com.wnc.srtlearn.monitor.work.ActiveWork;
@@ -66,7 +67,7 @@ public class PlayThread extends Thread
         }
     }
 
-    private long palyVoice()
+    private long palyVoice() throws SrtException
     {
         // String voicePath = SrtTextHelper.getSrtVoiceLocation(
         // DataHolder.getFileKey(), DataHolder.getCurrent()
@@ -113,7 +114,7 @@ public class PlayThread extends Thread
     }
 
     private long getVoiceDuration(final SrtInfo currentSrtInfo,
-            Queue<String> srtVoicesWithBg)
+            Queue<String> srtVoicesWithBg) throws SrtException
     {
         if (srtVoicesWithBg.size() < 2)
         {
