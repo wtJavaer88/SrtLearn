@@ -5,12 +5,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import srt.ex.SrtException;
+
 import android.util.Log;
 
 import com.wnc.basic.BasicDateUtil;
 import com.wnc.basic.BasicFileUtil;
 import com.wnc.srtlearn.dao.FavDao;
-import com.wnc.srtlearn.ex.SrtException;
 import com.wnc.srtlearn.modules.srt.SrtVoiceHelper;
 import com.wnc.srtlearn.pojo.FavoriteMultiSrt;
 import com.wnc.srtlearn.pojo.FavoriteSingleSrt;

@@ -2,7 +2,8 @@ package srt;
 
 import java.util.List;
 
-import com.wnc.srtlearn.ex.SrtException;
+import srt.ex.SrtException;
+
 
 public class Main
 {

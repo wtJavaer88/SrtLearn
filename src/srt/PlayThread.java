@@ -2,14 +2,16 @@ package srt;
 
 import java.util.Queue;
 
+import srt.ex.SrtException;
+
 import android.os.Message;
 
-import com.wnc.srtlearn.ex.SrtException;
 import com.wnc.srtlearn.modules.srt.SrtVoiceHelper;
 import com.wnc.srtlearn.monitor.StudyMonitor;
 import com.wnc.srtlearn.monitor.work.ActiveWork;
 import com.wnc.srtlearn.monitor.work.WORKTYPE;
 import com.wnc.srtlearn.setting.SrtSetting;
+import com.wnc.srtlearn.ui.handler.AutoPlayHandler;
 import common.utils.Mp3Utils;
 
 public class PlayThread extends Thread
@@ -42,13 +44,12 @@ public class PlayThread extends Thread
                     // 正常结束
                     threadRunning = false;
                     Message msg = new Message();
-                    msg.what = 1;
+                    msg.what = AutoPlayHandler.NEXT_DIALOG;
                     srtPlayService.sBaseLearnActivity.getHanlder().sendMessage(
                             msg);
                 }
                 else
                 {
-
                     Thread.sleep(SLEEP_TIME);
                 }
             }
@@ -62,7 +63,7 @@ public class PlayThread extends Thread
             srtPlayService.autoPlayNextCtrl = false;
             // 通知UI,停止播放
             Message msg2 = new Message();
-            msg2.what = 2;
+            msg2.what = AutoPlayHandler.PLAY_ERR;
             srtPlayService.sBaseLearnActivity.getHanlder().sendMessage(msg2);
         }
     }

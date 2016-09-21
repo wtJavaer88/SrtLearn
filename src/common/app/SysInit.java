@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
+import com.wnc.srtlearn.modules.srt.SaveFavoriteSrtToDb;
 import common.uihelper.MyAppParams;
 
 public class SysInit
@@ -31,6 +32,8 @@ public class SysInit
         boolean moveAssertDb = MoveDbUtil.moveAssertDb("srtlearn.db",
                 "srtlearn.db", context2);
         System.out.println("移动成功标志: " + moveAssertDb);
+        // 移植收藏字幕
+        SaveFavoriteSrtToDb.save(context2);
     }
 
     static String FIRST_RUN = "isSrtlearnFirstRun";

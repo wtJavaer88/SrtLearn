@@ -1,4 +1,4 @@
-package com.wnc.srtlearn.ex;
+package srt.ex;
 
 public class SrtParseErrorException extends SrtException
 {
@@ -8,9 +8,9 @@ public class SrtParseErrorException extends SrtException
      */
     private static final long serialVersionUID = 4188869110979560840L;
 
-    public SrtParseErrorException(String msg)
+    public SrtParseErrorException()
     {
-        super(msg);
+        super(SrtErrCode.SRT_PARSE_ERROR);
     }
 
 }

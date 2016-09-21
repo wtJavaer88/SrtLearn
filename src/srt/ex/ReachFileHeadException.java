@@ -1,4 +1,4 @@
-package com.wnc.srtlearn.ex;
+package srt.ex;
 
 public class ReachFileHeadException extends SrtException
 {
@@ -8,8 +8,8 @@ public class ReachFileHeadException extends SrtException
      */
     private static final long serialVersionUID = -4973102507820087104L;
 
-    public ReachFileHeadException(String msg)
+    public ReachFileHeadException()
     {
-        super(msg);
+        super(SrtErrCode.SRT_REACH_HEAD);
     }
 }

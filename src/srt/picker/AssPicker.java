@@ -6,6 +6,7 @@ import java.util.List;
 import srt.SrtInfo;
 import srt.SrtTextHelper;
 import srt.TimeInfo;
+import srt.ex.SrtParseErrorException;
 
 import com.wnc.basic.BasicNumberUtil;
 import com.wnc.string.PatternUtil;
@@ -15,10 +16,17 @@ public class AssPicker implements Picker
 {
     List<String> segments;
 
-    public AssPicker(String srtFile)
+    public AssPicker(String srtFile) throws SrtParseErrorException
     {
         this.srtFile = srtFile;
-        segments = FileOp.readFrom(srtFile, "GBK");
+        try
+        {
+            segments = FileOp.readFrom(srtFile);
+        }
+        catch (Exception ex)
+        {
+            throw new SrtParseErrorException();
+        }
     }
 
     String srtFile;
@@ -42,14 +50,14 @@ public class AssPicker implements Picker
 
     private TimeInfo parseTimeInfo(String timeStr)
     {
-        int hour = BasicNumberUtil.getNumber(PatternUtil.getFirstPattern(
-                timeStr, "\\d+:").replace(":", ""));
-        int minute = BasicNumberUtil.getNumber(PatternUtil.getLastPattern(
-                timeStr, "\\d+:").replace(":", ""));
-        int second = BasicNumberUtil.getNumber(PatternUtil.getFirstPattern(
-                timeStr, "\\d{2}\\.").replace(".", ""));
-        int millSecond = BasicNumberUtil.getNumber(PatternUtil.getLastPattern(
-                timeStr, "\\d+"));
+        int hour = BasicNumberUtil.getNumber(PatternUtil.getFirstPatternGroup(
+                timeStr, "(\\d+):"));
+        int minute = BasicNumberUtil.getNumber(PatternUtil.getLastPatternGroup(
+                timeStr, "(\\d+):"));
+        int second = BasicNumberUtil.getNumber(PatternUtil
+                .getFirstPatternGroup(timeStr, "(\\d{2})\\."));
+        int millSecond = BasicNumberUtil.getNumber(PatternUtil
+                .getLastPatternGroup(timeStr, "\\d+"));
         if (millSecond < 100)
         {
             millSecond = millSecond * 10;

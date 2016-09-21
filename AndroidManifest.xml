@@ -40,7 +40,7 @@
         android:theme="@style/MymoneyTheme" >
         
         <activity
-            android:name="com.wnc.srtlearn.ui.JuniorChsLearnActivity"
+            android:name="com.wnc.srtlearn.ui.SrtActivity"
             android:label="@string/app_name" 
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask"
@@ -55,7 +55,7 @@
          <activity android:name="com.wnc.srtlearn.ui.PinyinActivity" android:configChanges="orientation|keyboardHidden|screenSize"/>
          <activity android:name="com.wnc.srtlearn.ui.RecWordActivity" android:configChanges="orientation|keyboardHidden|screenSize"/>
          <activity android:name="com.wnc.srtlearn.ui.TTSActivity" />
-         <activity android:name="com.wnc.srtlearn.ui.SrtActivity"  android:configChanges="orientation|keyboardHidden|screenSize"/>
+         <activity android:name="com.wnc.srtlearn.ui.JuniorChsLearnActivity"  android:configChanges="orientation|keyboardHidden|screenSize"/>
          <activity android:name="com.wnc.srtlearn.ui.FanyiActivity" android:configChanges="orientation|keyboardHidden|screenSize"/>
          <activity android:name="com.wnc.srtlearn.ui.FavoriteSrtActivity" android:configChanges="orientation|keyboardHidden|screenSize"/>
          <activity android:name="com.wnc.srtlearn.ui.ReadActivity"/>

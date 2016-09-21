@@ -19,41 +19,52 @@ public class SaveFavoriteSrtToDb
 {
     public static void save(Context context)
     {
-        List<String> readFrom = FileOp.readFrom(MyAppParams.FAVORITE_TXT,
-                "UTF-8");
-        for (String info : readFrom)
+        try
         {
-            String[] childs = info.split("]");
-            String tag = PatternUtil.getFirstPattern(info, "tag<.*?>")
-                    .replace("tag<", "").replace(">", "");
-            String ftime = PatternUtil.getFirstPattern(info,
-                    "\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}");
-            String srtfile = PatternUtil.getFirstPattern(info, "\".*?\"")
-                    .replace("\"", "");
-            FavoriteMultiSrt mfav = new FavoriteMultiSrt();
-            mfav.setTag(tag);
-            mfav.setFavTime(ftime);
-            mfav.setFromTimeStr("");
-            mfav.setToTimeStr("");
-            mfav.setSrtFile(srtfile);
-            List<FavoriteSingleSrt> list = new ArrayList<FavoriteSingleSrt>();
-            for (String child : childs)
+            List<String> readFrom = FileOp.readFrom(MyAppParams.FAVORITE_TXT,
+                    "UTF-8");
+            for (String info : readFrom)
             {
-                FavoriteSingleSrt fsInfo = getSrtInfo(child + "]");
-                list.add(fsInfo);
+                String[] childs = info.split("]");
+                String tag = PatternUtil.getFirstPatternGroup(info,
+                        "tag<(.*?)>");
+                String ftime = PatternUtil.getFirstPatternGroup(info,
+                        "\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}");
+                String srtfile = PatternUtil.getFirstPatternGroup(info,
+                        "\"(.*?)\"");
+                FavoriteMultiSrt mfav = new FavoriteMultiSrt();
+                mfav.setTag(tag);
+                mfav.setFavTime(ftime);
+                mfav.setSrtFile(srtfile);
+                List<FavoriteSingleSrt> list = new ArrayList<FavoriteSingleSrt>();
+                if (list.size() > 0)
+                {
+                    mfav.setFromTimeStr(list.get(0).getFromTimeStr().toString());
+                    mfav.setToTimeStr(list.get(list.size() - 1).getToTimeStr()
+                            .toString());
+                }
+                for (String child : childs)
+                {
+                    FavoriteSingleSrt fsInfo = getSrtInfo(child + "]");
+                    list.add(fsInfo);
+                }
+                mfav.setHasChild(list.size());
+                FavDao.insertFavMulti(context, mfav, list);
             }
-            mfav.setHasChild(list.size());
-            FavDao.insertFavMulti(context, mfav, list);
+        }
+        catch (Exception e)
+        {
+            System.out.println("err:" + e.getMessage());
+            e.printStackTrace();
         }
     }
 
     private static FavoriteSingleSrt getSrtInfo(String info)
     {
         FavoriteSingleSrt fsInfo = new FavoriteSingleSrt();
-        final String chs = PatternUtil.getFirstPattern(info, "chs=.*?, eng")
-                .replace("chs=", "").replace("eng", "").replace(", ", "");
-        final String eng = PatternUtil.getFirstPattern(info, "eng=.*?]")
-                .replace("eng=", "").replace("]", "");
+        final String chs = PatternUtil.getFirstPatternGroup(info,
+                "chs=(.*?), eng");
+        final String eng = PatternUtil.getFirstPatternGroup(info, "eng=(.*?)]");
         // 对于字幕里英文与中文颠倒的,用这种方法
         if (TextFormatUtil.containsChinese(eng)
                 && !TextFormatUtil.containsChinese(chs))
@@ -66,19 +77,15 @@ public class SaveFavoriteSrtToDb
             fsInfo.setChs(chs);
             fsInfo.setEng(eng);
         }
-        fsInfo.setsIndex(BasicNumberUtil.getNumber(PatternUtil.getFirstPattern(
-                info, "srtIndex=\\d+").replace("srtIndex=", "")));
+        fsInfo.setsIndex(BasicNumberUtil.getNumber(PatternUtil
+                .getFirstPatternGroup(info, "srtIndex=(\\d+)")));
         fsInfo.setFromTimeStr(TimeHelper.parseTimeInfo(
-                PatternUtil
-                        .getFirstPattern(info,
-                                "fromTime=\\d{2}:\\d{2}:\\d{2},\\d{3}, toTime")
-                        .replace("fromTime=", "").replace(", toTime", ""))
+                PatternUtil.getFirstPatternGroup(info,
+                        "fromTime=(\\d{2}:\\d{2}:\\d{2},\\d{3}), toTime"))
                 .toString());
         fsInfo.setToTimeStr(TimeHelper.parseTimeInfo(
-                PatternUtil
-                        .getFirstPattern(info,
-                                "toTime=\\d{2}:\\d{2}:\\d{2},\\d{3}, srtIndex")
-                        .replace("toTime=", "").replace(", srtIndex", ""))
+                PatternUtil.getFirstPatternGroup(info,
+                        "toTime=(\\d{2}:\\d{2}:\\d{2},\\d{3}), srtIndex"))
                 .toString());
         return fsInfo;
     }

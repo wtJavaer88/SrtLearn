@@ -5,12 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import srt.ex.ReachFileHeadException;
+import srt.ex.ReachFileTailException;
+import srt.ex.SrtException;
+import srt.ex.SrtNotFoundException;
+
 import com.wnc.basic.BasicStringUtil;
-import com.wnc.srtlearn.ex.ErrCode;
-import com.wnc.srtlearn.ex.ReachFileHeadException;
-import com.wnc.srtlearn.ex.ReachFileTailException;
-import com.wnc.srtlearn.ex.SrtException;
-import com.wnc.srtlearn.ex.SrtNotFoundException;
 
 public class DataHolder
 {
@@ -104,11 +104,11 @@ public class DataHolder
         List<SrtInfo> list = srtInfoMap.get(fileKey);
         if (selIndex == -1)
         {
-            throw new ReachFileHeadException(ErrCode.SRT_REACH_HEAD);
+            throw new ReachFileHeadException();
         }
         if (selIndex >= list.size())
         {
-            throw new ReachFileTailException(ErrCode.SRT_REACH_TAIL);
+            throw new ReachFileTailException();
         }
         return list.get(selIndex);
     }
@@ -121,13 +121,13 @@ public class DataHolder
         {
             srtIndex = 0;
             indexMap.put(fileKey, srtIndex);
-            throw new ReachFileHeadException(ErrCode.SRT_REACH_HEAD);
+            throw new ReachFileHeadException();
         }
         if (srtIndex >= list.size())
         {
             srtIndex = list.size() - 1;
             indexMap.put(fileKey, srtIndex);
-            throw new ReachFileTailException(ErrCode.SRT_REACH_TAIL);
+            throw new ReachFileTailException();
         }
         indexMap.put(fileKey, srtIndex);
         return list.get(srtIndex);
@@ -143,7 +143,7 @@ public class DataHolder
     {
         if (!srtInfoMap.containsKey(fileKey))
         {
-            throw new SrtNotFoundException(ErrCode.SRT_NOT_FOUND);
+            throw new SrtNotFoundException();
         }
     }
 

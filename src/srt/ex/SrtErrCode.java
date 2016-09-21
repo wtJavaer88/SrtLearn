@@ -1,6 +1,6 @@
-package com.wnc.srtlearn.ex;
+package srt.ex;
 
-public class ErrCode
+public class SrtErrCode
 {
     public final static String SRT_REACH_HEAD = "已经是第一条了!";
     public final static String SRT_REACH_TAIL = "已经读完了!";

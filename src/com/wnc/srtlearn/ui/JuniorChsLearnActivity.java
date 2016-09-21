@@ -12,6 +12,7 @@ import srt.SrtFilesAchieve;
 import srt.SrtInfo;
 import srt.SrtPlayService;
 import srt.SrtTextHelper;
+import srt.ex.SrtException;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -38,7 +39,6 @@ import com.wnc.basic.BasicStringUtil;
 import com.wnc.srtlearn.R;
 import com.wnc.srtlearn.dao.FavDao;
 import com.wnc.srtlearn.dao.WorkDao;
-import com.wnc.srtlearn.ex.SrtException;
 import com.wnc.srtlearn.monitor.StudyMonitor;
 import com.wnc.srtlearn.monitor.WorkMgr;
 import com.wnc.srtlearn.monitor.work.ActiveWork;
@@ -713,16 +713,7 @@ public class JuniorChsLearnActivity extends SBaseLearnActivity implements
                             String srtFilePath = SrtFilesAchieve
                                     .getSrtFileByArrIndex(defaultMoviePoint[0],
                                             defaultMoviePoint[1]);
-                            initFileTv(srtFilePath);
-                            try
-                            {
-                                srtPlayService.showNewSrtFile(srtFilePath);
-                            }
-                            catch (SrtException e)
-                            {
-                                e.printStackTrace();
-                            }
-                            hideVirtualBts();
+                            enter(srtFilePath);
                         }
 
                     });
@@ -1102,6 +1093,20 @@ public class JuniorChsLearnActivity extends SBaseLearnActivity implements
     public void playCurrent()
     {
         getSrtInfoAndPlay(SRT_VIEW_TYPE.VIEW_CURRENT);
+    }
+
+    @Override
+    public void enter(String srtFilePath)
+    {
+        initFileTv(srtFilePath);
+        try
+        {
+            srtPlayService.showNewSrtFile(srtFilePath);
+        }
+        catch (SrtException e)
+        {
+            e.printStackTrace();
+        }
     }
 
 }

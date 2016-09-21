@@ -6,6 +6,7 @@ import java.util.List;
 import srt.SrtInfo;
 import srt.SrtTextHelper;
 import srt.TimeInfo;
+import srt.ex.SrtParseErrorException;
 
 import com.wnc.basic.BasicNumberUtil;
 import com.wnc.string.PatternUtil;
@@ -15,10 +16,17 @@ public class SrtPicker implements Picker
 {
     List<String> segments;
 
-    public SrtPicker(String srtFile)
+    public SrtPicker(String srtFile) throws SrtParseErrorException
     {
         this.srtFile = srtFile;
-        segments = FileOp.readFrom(srtFile, "GBK");
+        try
+        {
+            segments = FileOp.readFrom(srtFile);
+        }
+        catch (Exception ex)
+        {
+            throw new SrtParseErrorException();
+        }
     }
 
     String srtFile;
@@ -32,7 +40,7 @@ public class SrtPicker implements Picker
     private TimeInfo parseTimeInfo(String timeStr)
     {
         int hour = BasicNumberUtil.getNumber(PatternUtil.getFirstPattern(
-                timeStr, "\\d{2}:").replace(":", ""));
+                timeStr, "\\d{2}:"));
         int minute = BasicNumberUtil.getNumber(PatternUtil.getLastPattern(
                 timeStr, "\\d{2}:").replace(":", ""));
         int second = BasicNumberUtil.getNumber(PatternUtil.getFirstPattern(

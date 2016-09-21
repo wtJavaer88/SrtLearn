@@ -2,7 +2,9 @@ package com.wnc.srtlearn.ui;
 
 import java.io.File;
 import java.lang.Thread.UncaughtExceptionHandler;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import net.headset.HeadSetUtil;
 import net.headset.HeadSetUtil.OnHeadSetListener;
@@ -12,6 +14,8 @@ import srt.SrtFilesAchieve;
 import srt.SrtInfo;
 import srt.SrtPlayService;
 import srt.SrtTextHelper;
+import srt.ex.ReachFileTailException;
+import srt.ex.SrtException;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -20,6 +24,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -38,7 +43,6 @@ import com.wnc.basic.BasicStringUtil;
 import com.wnc.srtlearn.R;
 import com.wnc.srtlearn.dao.FavDao;
 import com.wnc.srtlearn.dao.WorkDao;
-import com.wnc.srtlearn.ex.SrtException;
 import com.wnc.srtlearn.monitor.StudyMonitor;
 import com.wnc.srtlearn.monitor.WorkMgr;
 import com.wnc.srtlearn.monitor.work.ActiveWork;
@@ -59,6 +63,7 @@ import common.uihelper.gesture.CtrlableVerGestureDetectorListener;
 import common.uihelper.gesture.EmptyFlingPoint;
 import common.uihelper.gesture.FlingPoint;
 import common.uihelper.gesture.MyCtrlableGestureDetector;
+import common.utils.MyFileUtil;
 import common.utils.TextFormatUtil;
 
 public class SrtActivity extends SBaseLearnActivity implements OnClickListener,
@@ -703,15 +708,8 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener,
                             String srtFilePath = SrtFilesAchieve
                                     .getSrtFileByArrIndex(defaultMoviePoint[0],
                                             defaultMoviePoint[1]);
-                            initFileTv(srtFilePath);
-                            try
-                            {
-                                srtPlayService.showNewSrtFile(srtFilePath);
-                            }
-                            catch (SrtException e)
-                            {
-                                e.printStackTrace();
-                            }
+
+                            enter(srtFilePath);
                         }
 
                     });
@@ -744,10 +742,96 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener,
             // System.out.println("913view_type:" + view_type + "  srt:" + srt);
             play(srt);
         }
+        catch (ReachFileTailException ex)
+        {
+            if (SrtSetting.isAutoNextEP())
+            {
+                final long tip_time = 2000;
+                final String nextEp = getNextEp();
+                if (nextEp != null)
+                {
+                    ToastUtil.showShortToast(this, "将为你自动播放下一集");
+                    new Thread(new Runnable()
+                    {
+
+                        @Override
+                        public void run()
+                        {
+                            try
+                            {
+                                TimeUnit.MILLISECONDS.sleep(tip_time);
+                            }
+                            catch (InterruptedException e)
+                            {
+                                e.printStackTrace();
+                            }
+                            Message msg = new Message();
+                            msg.what = AutoPlayHandler.NEXT_EP;
+                            msg.obj = nextEp;
+                            autoPlayHandler.sendMessage(msg);
+                        }
+                    }).start();
+                }
+                else
+                {
+                    ToastUtil.showLongToast(this, "本文件夹已经没有更多字幕了!");
+                }
+            }
+            else
+            {
+                stopSrtPlay();
+            }
+        }
         catch (Exception ex)
         {
             stopSrtPlay();
             ToastUtil.showShortToast(this, ex.getMessage());
+        }
+    }
+
+    /**
+     * 自动获取下一集
+     * 
+     * @return
+     */
+    private String getNextEp()
+    {
+        String srtFile = srtPlayService.getCurFile();
+        File folder = new File(BasicFileUtil.getFileParent(srtFile));
+        List<File> sortedList = MyFileUtil.getSortFiles(folder.listFiles());
+        List<File> sortedSrtList = new ArrayList<File>();
+        for (File f : sortedList)
+        {
+            if (SrtTextHelper.isSrtfile(f))
+            {
+                sortedSrtList.add(f);
+            }
+        }
+        for (int i = 0; i < sortedSrtList.size(); i++)
+        {
+            String absolutePath = sortedSrtList.get(i).getAbsolutePath();
+            if (absolutePath.equals(srtFile))
+            {
+                if (i < sortedSrtList.size() - 1)
+                {
+                    return sortedSrtList.get(i + 1).getAbsolutePath();
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void enter(String srtFilePath)
+    {
+        initFileTv(srtFilePath);
+        try
+        {
+            srtPlayService.showNewSrtFile(srtFilePath);
+        }
+        catch (SrtException e)
+        {
+            e.printStackTrace();
         }
     }
 

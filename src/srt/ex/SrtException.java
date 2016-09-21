@@ -1,4 +1,4 @@
-package com.wnc.srtlearn.ex;
+package srt.ex;
 
 public class SrtException extends Exception
 {

@@ -19,6 +19,8 @@ public class SrtSetting
     private final static String VOLKEYLISTEN = "S003";
     // 是否播放背景声音
     private final static String PLAYBGVOICE = "S004";
+    // 是否自动播放下一集
+    private final static String AUTONEXTEP = "S005";
 
     public static boolean isVolKeyListen()
     {
@@ -62,5 +64,21 @@ public class SrtSetting
     {
         return Boolean.valueOf(SharedPreferenceUtil.getShareDataByKey(
                 PLAYBGVOICE, "true"));
+    }
+
+    /**
+     * 是否自动下一集
+     * 
+     * @return
+     */
+    public static boolean isAutoNextEP()
+    {
+        return Boolean.valueOf(SharedPreferenceUtil.getShareDataByKey(
+                AUTONEXTEP, "true"));
+    }
+
+    public static void setAutoNextEP(boolean flag)
+    {
+        SharedPreferenceUtil.changeValue(AUTONEXTEP, flag + "");
     }
 }

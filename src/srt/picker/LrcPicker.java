@@ -5,6 +5,7 @@ import java.util.List;
 
 import srt.SrtInfo;
 import srt.TimeInfo;
+import srt.ex.SrtParseErrorException;
 
 import com.wnc.basic.BasicNumberUtil;
 import com.wnc.basic.BasicStringUtil;
@@ -15,20 +16,17 @@ public class LrcPicker implements Picker
 {
     List<String> segments;
 
-    public static void main(String[] args)
-    {
-        List<SrtInfo> srtInfos = PickerFactory.getPicker("10.ai ei ui.lrc")
-                .getSrtInfos();
-        for (SrtInfo srtInfo : srtInfos)
-        {
-            System.out.println(srtInfo);
-        }
-    }
-
-    public LrcPicker(String srtFile)
+    public LrcPicker(String srtFile) throws SrtParseErrorException
     {
         this.srtFile = srtFile;
-        segments = FileOp.readFrom(srtFile, "UTF-8");
+        try
+        {
+            segments = FileOp.readFrom(srtFile);
+        }
+        catch (Exception ex)
+        {
+            throw new SrtParseErrorException();
+        }
     }
 
     String srtFile;
@@ -42,12 +40,12 @@ public class LrcPicker implements Picker
     private TimeInfo parseTimeInfo(String timeStr)
     {
         int hour = 0;
-        int minute = BasicNumberUtil.getNumber(PatternUtil.getFirstPattern(
-                timeStr, "\\d{2}:").replace(":", ""));
-        int second = BasicNumberUtil.getNumber(PatternUtil.getFirstPattern(
-                timeStr, "\\d{2}\\.").replace(".", ""));
+        int minute = BasicNumberUtil.getNumber(PatternUtil
+                .getFirstPatternGroup(timeStr, "(\\d{2}):"));
+        int second = BasicNumberUtil.getNumber(PatternUtil
+                .getFirstPatternGroup(timeStr, "(\\d{2})\\."));
         int millSecond = 10 * BasicNumberUtil.getNumber(PatternUtil
-                .getLastPattern(timeStr, "\\d{2}"));
+                .getLastPatternGroup(timeStr, "\\d{2}"));
         TimeInfo timeInfo = new TimeInfo();
         timeInfo.setHour(hour);
         timeInfo.setMinute(minute);
@@ -74,16 +72,14 @@ public class LrcPicker implements Picker
                 continue;
             }
 
-            fromTime = parseTimeInfo(PatternUtil.getFirstPattern(str,
+            fromTime = parseTimeInfo(PatternUtil.getFirstPatternGroup(str,
                     "\\d{2}:\\d{2}\\.\\d{2}"));
             if (index > 0 && srtInfos.get(index - 1).getToTime() == null)
             {
                 srtInfos.get(index - 1).setToTime(fromTime);
             }
-            chs = PatternUtil.getFirstPattern(str, "\\].*?\\\\N")
-                    .replace("]", "").replace("\\N", "");
-            eng = PatternUtil.getFirstPattern(str, "\\\\N.*+").replace("\\N",
-                    "");
+            chs = PatternUtil.getFirstPatternGroup(str, "\\](.*?)\\\\N");
+            eng = PatternUtil.getFirstPatternGroup(str, "\\\\N(.*+)");
             if (fromTime != null && !BasicStringUtil.isNullAllString(chs, eng))
             {
                 index++;

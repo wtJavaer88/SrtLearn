@@ -5,13 +5,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import srt.ex.SrtParseErrorException;
 import srt.picker.Picker;
 import srt.picker.PickerFactory;
 
 import com.wnc.basic.BasicFileUtil;
 import com.wnc.basic.BasicRunTimeUtil;
-import com.wnc.srtlearn.ex.ErrCode;
-import com.wnc.srtlearn.ex.SrtParseErrorException;
 
 public class DataParseThread extends Thread
 {
@@ -29,7 +28,7 @@ public class DataParseThread extends Thread
         picker = PickerFactory.getPicker(curFile);
         if (picker == null)
         {
-            throw new SrtParseErrorException(ErrCode.SRT_PARSE_ERROR);
+            throw new SrtParseErrorException();
         }
     }
 

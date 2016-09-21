@@ -6,9 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import srt.ex.SrtException;
+
 import com.wnc.basic.BasicFileUtil;
 import com.wnc.basic.BasicStringUtil;
-import com.wnc.srtlearn.ex.SrtException;
 import common.uihelper.MyAppParams;
 import common.utils.MyFileUtil;
 import common.utils.PinYinUtil;

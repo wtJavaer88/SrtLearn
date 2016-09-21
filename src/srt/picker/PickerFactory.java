@@ -1,8 +1,11 @@
 package srt.picker;
 
+import srt.ex.SrtParseErrorException;
+
 public class PickerFactory
 {
     public static Picker getPicker(String srtFile)
+            throws SrtParseErrorException
     {
         if (srtFile.endsWith(".srt"))
         {

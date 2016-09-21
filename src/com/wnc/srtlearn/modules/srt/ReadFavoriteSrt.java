@@ -28,21 +28,16 @@ public class ReadFavoriteSrt
     private static FavoriteSrtInfoVo getSrtInfo(String info)
     {
         FavoriteSrtInfoVo fsInfo = new FavoriteSrtInfoVo();
-        fsInfo.setChs(PatternUtil.getFirstPattern(info, "chs=.*?, eng")
-                .replace("chs=", "").replace("eng", "").replace(", ", ""));
-        fsInfo.setEng(PatternUtil.getFirstPattern(info, "eng=.*?]")
-                .replace("eng=", "").replace("]", ""));
+        fsInfo.setChs(PatternUtil.getFirstPatternGroup(info, "chs=(.*?), eng"));
+        fsInfo.setEng(PatternUtil.getFirstPatternGroup(info, "eng=(.*?)]"));
         fsInfo.setSrtIndex(BasicNumberUtil.getNumber(PatternUtil
-                .getFirstPattern(info, "srtIndex=\\d+")
-                .replace("srtIndex=", "")));
+                .getFirstPatternGroup(info, "srtIndex=(\\d+)")));
         fsInfo.setFromTime(TimeHelper.parseTimeInfo(PatternUtil
-                .getFirstPattern(info,
-                        "fromTime=\\d{2}:\\d{2}:\\d{2},\\d{3}, toTime")
-                .replace("fromTime=", "").replace(", toTime", "")));
+                .getFirstPatternGroup(info,
+                        "fromTime=(\\d{2}:\\d{2}:\\d{2},\\d{3}), toTime")));
         fsInfo.setToTime(TimeHelper.parseTimeInfo(PatternUtil
-                .getFirstPattern(info,
-                        "toTime=\\d{2}:\\d{2}:\\d{2},\\d{3}, srtIndex")
-                .replace("toTime=", "").replace(", srtIndex", "")));
+                .getFirstPatternGroup(info,
+                        "toTime=(\\d{2}:\\d{2}:\\d{2},\\d{3}), srtIndex")));
         return fsInfo;
     }
 
@@ -56,12 +51,10 @@ public class ReadFavoriteSrt
     {
         List<FavoriteSrtInfoVo> list = new ArrayList<FavoriteSrtInfoVo>();
         String[] childs = info.split("]");
-        String tag = PatternUtil.getFirstPattern(info, "tag<.*?>")
-                .replace("tag<", "").replace(">", "");
+        String tag = PatternUtil.getFirstPatternGroup(info, "tag<(.*?)>");
         String ftime = PatternUtil.getFirstPattern(info,
                 "\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}");
-        String srtfile = PatternUtil.getFirstPattern(info, "\".*?\"").replace(
-                "\"", "");
+        String srtfile = PatternUtil.getFirstPatternGroup(info, "\"(.*?)\"");
         for (String child : childs)
         {
             FavoriteSrtInfoVo fsInfo = getSrtInfo(child + "]");
