@@ -26,9 +26,11 @@ public class SharedPreferenceUtil
         return sharedPreferences.getString(key, defaultValue);
     }
 
-    public static Boolean getShareDataByKey(String key, Boolean defaultValue)
+    public static boolean getShareDataByKey(String key, boolean defaultValue)
     {
-        return sharedPreferences.getBoolean(key, defaultValue);
+        final boolean boolean1 = sharedPreferences
+                .getBoolean(key, defaultValue);
+        return boolean1;
     }
 
     public static void changeValue(String key, boolean value)

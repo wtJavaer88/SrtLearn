@@ -30,40 +30,37 @@ public class SrtSetting
 
     public static void setVolKeyListen(boolean flag)
     {
-        SharedPreferenceUtil.changeValue(VOLKEYLISTEN, flag + "");
+        SharedPreferenceUtil.changeValue(VOLKEYLISTEN, flag);
     }
 
     public static boolean isPlayVoice()
     {
-        return Boolean.valueOf(SharedPreferenceUtil.getShareDataByKey(
-                PLAYVOICE, "false"));
+        return SharedPreferenceUtil.getShareDataByKey(PLAYVOICE, false);
     }
 
     public static void setPlayVoice(boolean flag)
     {
-        SharedPreferenceUtil.changeValue(PLAYVOICE, flag + "");
+        SharedPreferenceUtil.changeValue(PLAYVOICE, flag);
     }
 
     public static boolean isAutoPlayNext()
     {
-        return Boolean.valueOf(SharedPreferenceUtil.getShareDataByKey(
-                AUTOPLAYNEXT, "false"));
+        return SharedPreferenceUtil.getShareDataByKey(AUTOPLAYNEXT, false);
     }
 
     public static void setAutoPlayNext(boolean flag)
     {
-        SharedPreferenceUtil.changeValue(AUTOPLAYNEXT, flag + "");
+        SharedPreferenceUtil.changeValue(AUTOPLAYNEXT, flag);
     }
 
     public static void setPlayBgVoice(boolean flag)
     {
-        SharedPreferenceUtil.changeValue(PLAYBGVOICE, flag + "");
+        SharedPreferenceUtil.changeValue(PLAYBGVOICE, flag);
     }
 
     public static boolean isPlayBgVoice()
     {
-        return Boolean.valueOf(SharedPreferenceUtil.getShareDataByKey(
-                PLAYBGVOICE, "true"));
+        return SharedPreferenceUtil.getShareDataByKey(PLAYBGVOICE, true);
     }
 
     /**
@@ -79,6 +76,6 @@ public class SrtSetting
 
     public static void setAutoNextEP(boolean flag)
     {
-        SharedPreferenceUtil.changeValue(AUTONEXTEP, flag + "");
+        SharedPreferenceUtil.changeValue(AUTONEXTEP, flag);
     }
 }
