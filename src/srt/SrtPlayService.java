@@ -5,8 +5,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import srt.ex.SrtErrCode;
 import srt.ex.SrtException;
-
+import srt.ex.SrtNotFoundException;
 import android.util.Log;
 
 import com.wnc.basic.BasicDateUtil;
@@ -191,6 +192,71 @@ public class SrtPlayService
         else
         {
             Log.e("srt", "not found " + srtFile);
+        }
+    }
+
+    /**
+     * 指定一个时间点,开始搜索字幕
+     * 
+     * @param srtFile
+     * @param seekTimeStr
+     * @throws SrtException
+     */
+    public void seekSrtFile(String srtFile, String seekTimeStr)
+            throws SrtException
+    {
+        this.setReplayCtrl(false);
+        this.setReplayIndex(-1, -1);
+        System.out.println("srtFile:" + srtFile);
+        if (BasicFileUtil.isExistFile(srtFile))
+        {
+            sBaseLearnActivity.stopSrtPlay();
+            DataHolder.switchFile(srtFile);
+            if (!DataHolder.srtInfoMap.containsKey(srtFile))
+            {
+                new DataParseThread(getCurFile(), seekTimeStr).start();
+                while (DataHolder.getAllSrtInfos() == null
+                        || DataHolder.getAllSrtInfos().size() == 0)
+                {
+                    System.out.println("wait");
+                    try
+                    {
+                        TimeUnit.MILLISECONDS.sleep(10);
+                    }
+                    catch (InterruptedException e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+                sBaseLearnActivity.play(getSrtInfo(SRT_VIEW_TYPE.VIEW_CURRENT));
+            }
+            else
+            {
+                SrtInfo curPlaySrtInfo = null;
+                for (int i = 0; i < DataHolder.getAllSrtInfos().size(); i++)
+                {
+                    SrtInfo srtInfo = DataHolder.getAllSrtInfos().get(i);
+                    if (srtInfo.getFromTime().toString().compareTo(seekTimeStr) >= 0)
+                    {
+                        curPlaySrtInfo = srtInfo;
+                        DataHolder.setCurrentSrtIndex(i);
+                        break;
+                    }
+                }
+                if (curPlaySrtInfo == null)
+                {
+                    throw new SrtException(SrtErrCode.SRT_OUTOF_RANGE);
+                }
+                else
+                {
+                    sBaseLearnActivity.play(curPlaySrtInfo);
+                }
+            }
+        }
+        else
+        {
+            Log.e("srt", "not found " + srtFile);
+            throw new SrtNotFoundException();
         }
     }
 
