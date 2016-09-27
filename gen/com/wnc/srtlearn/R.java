@@ -623,10 +623,10 @@ public final class R {
     }
     public static final class id {
         public static final int actSrtSearch=0x7f0c0033;
-        public static final int add_tag_dialg_content=0x7f0c0044;
-        public static final int add_tag_dialg_no=0x7f0c0045;
-        public static final int add_tag_dialg_ok=0x7f0c0046;
-        public static final int add_tag_dialg_title=0x7f0c0043;
+        public static final int add_tag_dialg_content=0x7f0c004d;
+        public static final int add_tag_dialg_no=0x7f0c004e;
+        public static final int add_tag_dialg_ok=0x7f0c004f;
+        public static final int add_tag_dialg_title=0x7f0c004c;
         public static final int author_book=0x7f0c0002;
         public static final int btnBDFanyi=0x7f0c000a;
         public static final int btnBihua=0x7f0c0006;
@@ -658,6 +658,10 @@ public final class R {
         public static final int btn_srt=0x7f0c001d;
         public static final int btn_srtsearch=0x7f0c0034;
         public static final int btn_tts=0x7f0c0020;
+        public static final int button_pause=0x7f0c0042;
+        public static final int button_play=0x7f0c0041;
+        public static final int button_replay=0x7f0c0044;
+        public static final int button_stop=0x7f0c0043;
         public static final int chs_text=0x7f0c0036;
         public static final int chs_tv=0x7f0c0019;
         public static final int edt_content=0x7f0c0026;
@@ -666,11 +670,12 @@ public final class R {
         public static final int etFanyi=0x7f0c0009;
         public static final int etHanzi_bh=0x7f0c0007;
         public static final int et_recresult=0x7f0c0030;
-        public static final int evChs=0x7f0c0042;
+        public static final int evChs=0x7f0c004b;
         public static final int file_tv=0x7f0c000f;
         public static final int gallery=0x7f0c0008;
         public static final int id_book=0x7f0c0000;
-        public static final int imageview=0x7f0c003f;
+        public static final int imageview=0x7f0c0048;
+        public static final int linearLayout=0x7f0c0040;
         public static final int lvSrtSearch=0x7f0c0035;
         public static final int myact=0x7f0c0005;
         public static final int name_book=0x7f0c0001;
@@ -685,13 +690,17 @@ public final class R {
         public static final int recbtn2=0x7f0c002a;
         public static final int recword_gallery=0x7f0c0031;
         public static final int sayBtn=0x7f0c002b;
-        public static final int text=0x7f0c0040;
+        public static final int seekBar=0x7f0c003f;
+        public static final int seekTv=0x7f0c0045;
+        public static final int sv=0x7f0c003e;
+        public static final int text=0x7f0c0049;
         public static final int timeline_tv=0x7f0c0016;
-        public static final int tvEng=0x7f0c0041;
-        public static final int tvEpidoseInfo=0x7f0c003d;
+        public static final int tttv=0x7f0c003d;
+        public static final int tvEng=0x7f0c004a;
+        public static final int tvEpidoseInfo=0x7f0c0046;
         public static final int tvSearchDialog=0x7f0c0032;
         public static final int tvSearchEng=0x7f0c0004;
-        public static final int tvTimeLine=0x7f0c003e;
+        public static final int tvTimeLine=0x7f0c0047;
         public static final int tv_rectip=0x7f0c002f;
     }
     public static final class integer {
@@ -723,10 +732,11 @@ public final class R {
         public static final int activity_srt=0x7f03000b;
         public static final int activity_srtsearch=0x7f03000c;
         public static final int activity_srtview=0x7f03000d;
-        public static final int common_wdailog=0x7f03000e;
-        public static final int gallery_item=0x7f03000f;
-        public static final int lv_item_srtsearch=0x7f030010;
-        public static final int setting_add_tags_dialg=0x7f030011;
+        public static final int activity_videotest=0x7f03000e;
+        public static final int common_wdailog=0x7f03000f;
+        public static final int gallery_item=0x7f030010;
+        public static final int lv_item_srtsearch=0x7f030011;
+        public static final int setting_add_tags_dialg=0x7f030012;
     }
     public static final class raw {
         public static final int bdspeech_recognition_cancel=0x7f050000;

@@ -60,6 +60,7 @@
          <activity android:name="com.wnc.srtlearn.ui.FavoriteSrtActivity" android:configChanges="orientation|keyboardHidden|screenSize"/>
          <activity android:name="com.wnc.srtlearn.ui.ReadActivity"/>
          <activity android:name="com.wnc.srtlearn.ui.SrtSearchActivity" android:configChanges="orientation|keyboardHidden|screenSize"/>
+         <activity android:name="com.wnc.srtlearn.ui.VideoActivity" android:configChanges="orientation|keyboardHidden|screenSize"/>
          
          <activity android:name="net.widget.act.sample.ActTestActivity"/>
          
