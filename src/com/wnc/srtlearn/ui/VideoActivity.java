@@ -29,6 +29,7 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
+import com.wnc.basic.BasicNumberUtil;
 import com.wnc.srtlearn.R;
 import common.uihelper.gesture.CtrlableHorGestureDetectorListener;
 import common.uihelper.gesture.FlingPoint;
@@ -41,9 +42,11 @@ import common.uihelper.gesture.MyCtrlableGestureDetector;
 public class VideoActivity extends BaseVerActivity implements OnClickListener,
         UncaughtExceptionHandler, CtrlableHorGestureDetectorListener
 {
-    private static final int SRT_PAUSE = 100;
+    private static final int PLAY_SLEEP = 500;
+    private static final int SRT_PAUSE_CODE = 100;
+    private static final int ON_PLAYING = 101;
     private SurfaceView surfaceView;
-    private Button button_pause, button_stop, button_replay;
+    private Button button_pause, button_replay;
     private MediaPlayer mediaPlayer;
     private SeekBar seekBar;
     private GestureDetector gestureDetector;
@@ -78,7 +81,6 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
     private void init()
     {
         button_pause = (Button) findViewById(R.id.button_pause);
-        button_stop = (Button) findViewById(R.id.button_stop);
         button_replay = (Button) findViewById(R.id.button_replay);
         veng_tv = (TextView) findViewById(R.id.veng_tv);
         vchs_tv = (TextView) findViewById(R.id.vchs_tv);
@@ -87,27 +89,25 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
         seekBar = (SeekBar) findViewById(R.id.seekBar);
         seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener()
         {
-
             @Override
             public void onStopTrackingTouch(SeekBar seekBar)
             {
-                int process = seekBar.getProgress();
-                if (mediaPlayer != null && mediaPlayer.isPlaying())
-                {
-                    mediaPlayer.seekTo(process);
-                }
+                System.out.println("onStopTrackingTouch");
+                updateUI(seekBar.getProgress());
+                play(seektime);
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar)
             {
-
+                System.out.println("onStartTrackingTouch");
             }
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress,
                     boolean fromUser)
             {
+                System.out.println("onProgressChanged");
 
             }
         });
@@ -172,7 +172,6 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
         });
 
         button_pause.setOnClickListener(this);
-        button_stop.setOnClickListener(this);
         button_replay.setOnClickListener(this);
     }
 
@@ -186,10 +185,6 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
             playpause();
             break;
 
-        case R.id.button_stop:
-            stopPlay();
-            break;
-
         case R.id.button_replay:
             replay();
             break;
@@ -201,24 +196,27 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
 
     private void replay()
     {
+        isShowingSrt = true;
         if (mediaPlayer.isPlaying())
         {
             mediaPlayer.seekTo(seektime);
         }
         else
         {
-            isPlaying = false;
             play(seektime);
         }
     }
 
     private void stopPlay()
     {
-        if (mediaPlayer.isPlaying())
+        isPlaying = false;
+        isPaused = false;
+        isShowingSrt = false;
+        if (mediaPlayer != null)
         {
-            mediaPlayer.stop();
-            mediaPlayer.seekTo(0);
-            isPlaying = false;
+            mediaPlayer.reset();
+            mediaPlayer.release();
+            mediaPlayer = null;
         }
     }
 
@@ -235,13 +233,35 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
         {
             if (mediaPlayer.isPlaying())
             {
+                isPaused = true;
+                isShowingSrt = false;
                 mediaPlayer.pause();
             }
             else
             {
-                mediaPlayer.start();
+                if (isPausedModel())
+                {
+                    // 暂停,但字幕不在更新或播放. 这种情况下,继续播放
+                    isPaused = false;
+                    mediaPlayer.start();
+                }
+                else
+                {
+                    isPaused = false;
+                    isPlaying = false;
+                    play(seektime);
+                }
+
             }
         }
+    }
+
+    boolean isPaused = false;// 只在暂停时为true
+    boolean isShowingSrt = false;// 字幕更新或播放时为true,暂停停止时为false
+
+    private boolean isPausedModel()
+    {
+        return isPaused && !isShowingSrt;
     }
 
     Handler handler = new Handler()
@@ -249,15 +269,25 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
         @Override
         public void handleMessage(Message msg)
         {
-            if (msg.what == SRT_PAUSE)
+            if (msg.what == SRT_PAUSE_CODE)
             {
                 playpause();
+            }
+            else if (msg.what == ON_PLAYING)
+            {
+                updateUI(BasicNumberUtil.getNumber("" + msg.obj));
             }
         }
     };
 
+    /**
+     * 播放指定位置的字幕
+     * 
+     * @param currentPosition
+     */
     private void play(final int currentPosition)
     {
+        isShowingSrt = true;
         if (mediaPlayer != null)
         {
             mediaPlayer.reset();
@@ -283,35 +313,41 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
                 {
                     mediaPlayer.start();
                     int max = mediaPlayer.getDuration();
+                    seekBar.setProgress(currentPosition);
                     seekBar.setMax(max);
                     mediaPlayer.seekTo(currentPosition);
 
                     new Thread()
                     {
-
                         @Override
                         public void run()
                         {
                             isPlaying = true;
                             while (isPlaying)
                             {
+                                System.out.println("Running 500......");
                                 int position = mediaPlayer.getCurrentPosition();
-                                if (position > seekendtime)
+                                if (position > seekendtime && isShowingSrt)
                                 {
-                                    if (mediaPlayer.isPlaying())
-                                    {
-                                        Message msg = new Message();
-                                        msg.what = SRT_PAUSE;
-                                        handler.sendMessage(msg);
-                                    }
+                                    Message msg = new Message();
+                                    msg.what = SRT_PAUSE_CODE;
+                                    handler.sendMessage(msg);
                                 }
                                 else
                                 {
                                     seekBar.setProgress(position);
+                                    if (!isPaused && position > currentPosition)
+                                    {
+                                        // 找出当前播放处的字幕
+                                        Message msg2 = new Message();
+                                        msg2.what = ON_PLAYING;
+                                        msg2.obj = position;
+                                        handler.sendMessage(msg2);
+                                    }
                                 }
                                 try
                                 {
-                                    Thread.sleep(100);
+                                    Thread.sleep(PLAY_SLEEP);
                                 }
                                 catch (InterruptedException e)
                                 {
@@ -319,7 +355,8 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
                                 }
                             }
 
-                        };
+                        }
+
                     }.start();
                 }
             });
@@ -346,6 +383,24 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
             e.printStackTrace();
         }
     }
+
+    private void updateUI(int position)
+    {
+        for (int i = 0; i < srtInfos.size(); i++)
+        {
+            SrtInfo srt = srtInfos.get(i);
+            if (TimeHelper.getTime(srt.getToTime()) >= position
+                    && TimeHelper.getTime(srt.getFromTime()) <= position)
+            {
+                if (i != curIndex)
+                {
+                    curIndex = i;
+                    setUI();
+                }
+                break;
+            }
+        }
+    };
 
     private void setSrtContent(SrtInfo srt)
     {
@@ -376,20 +431,37 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
     @Override
     public void doLeft(FlingPoint p1, FlingPoint p2)
     {
+        isShowingSrt = true;
         curIndex--;
         if (curIndex < 0)
         {
             curIndex++;
         }
-        work();
+        setUI();
+        if (mediaPlayer != null && mediaPlayer.isPlaying())
+        {
+            play(seektime);
+        }
     }
 
-    private void work()
+    private void setUI()
     {
         curSrt = srtInfos.get(curIndex);
         setSrtContent(curSrt);
         seektime = (int) TimeHelper.getTime(curSrt.getFromTime());
         seekendtime = (int) TimeHelper.getTime(curSrt.getToTime());
+    }
+
+    @Override
+    public void doRight(FlingPoint p1, FlingPoint p2)
+    {
+        isShowingSrt = true;
+        curIndex++;
+        if (curIndex == srtInfos.size())
+        {
+            curIndex--;
+        }
+        setUI();
         if (mediaPlayer != null && mediaPlayer.isPlaying())
         {
             play(seektime);
@@ -397,14 +469,9 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
     }
 
     @Override
-    public void doRight(FlingPoint p1, FlingPoint p2)
+    public void onDestroy()
     {
-        curIndex++;
-        if (curIndex == srtInfos.size())
-        {
-            curIndex--;
-        }
-        work();
+        stopPlay();
+        super.onDestroy();
     }
-
 }

@@ -252,25 +252,6 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener,
                         }
                     }
 
-                    private void intoVideo() throws SrtException
-                    {
-                        Intent intent = new Intent(SrtActivity.this,
-                                VideoActivity.class)
-                                .putExtra(
-                                        "seekfrom",
-                                        (int) TimeHelper.getTime(DataHolder
-                                                .getCurrent().getFromTime()))
-                                .putExtra(
-                                        "seekto",
-                                        (int) TimeHelper.getTime(DataHolder
-                                                .getCurrent().getToTime()))
-                                .putExtra("eng",
-                                        DataHolder.getCurrent().getEng())
-                                .putExtra("chs",
-                                        DataHolder.getCurrent().getChs());
-                        startActivity(intent);
-                    }
-
                     private void intoSearch()
                     {
                         Intent intent = new Intent(SrtActivity.this,
@@ -297,6 +278,22 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener,
                         hideVirtualBts();
                     }
                 });
+    }
+
+    private void intoVideo() throws SrtException
+    {
+        Intent intent = new Intent(SrtActivity.this, VideoActivity.class)
+                .putExtra(
+                        "seekfrom",
+                        (int) TimeHelper.getTime(DataHolder.getCurrent()
+                                .getFromTime()))
+                .putExtra(
+                        "seekto",
+                        (int) TimeHelper.getTime(DataHolder.getCurrent()
+                                .getToTime()))
+                .putExtra("eng", DataHolder.getCurrent().getEng())
+                .putExtra("chs", DataHolder.getCurrent().getChs());
+        startActivity(intent);
     }
 
     private void initEngMenuDialog()
@@ -552,7 +549,16 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener,
             }
             break;
         case R.id.btnMore:
-            alertDialog = moreDialogBuilder.show();
+            try
+            {
+                intoVideo();
+            }
+            catch (SrtException e)
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            // alertDialog = moreDialogBuilder.show();
             break;
         }
         hideVirtualBts();
