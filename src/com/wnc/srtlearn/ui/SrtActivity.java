@@ -138,6 +138,7 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener,
         // 因为是横屏,所以设置的滑屏比例低一些
         this.gestureDetector = new GestureDetector(this,
                 new MyCtrlableGestureDetector(this, 0.15, 0.25, this, this));
+        enter(SrtFilesAchieve.getSrtFileByArrIndex(2, 1));
     }
 
     /**
@@ -254,11 +255,19 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener,
                     private void intoVideo() throws SrtException
                     {
                         Intent intent = new Intent(SrtActivity.this,
-                                VideoActivity.class).putExtra(
-                                "seekto",
-                                ""
-                                        + TimeHelper.getTime(DataHolder
-                                                .getCurrent().getFromTime()));
+                                VideoActivity.class)
+                                .putExtra(
+                                        "seekfrom",
+                                        (int) TimeHelper.getTime(DataHolder
+                                                .getCurrent().getFromTime()))
+                                .putExtra(
+                                        "seekto",
+                                        (int) TimeHelper.getTime(DataHolder
+                                                .getCurrent().getToTime()))
+                                .putExtra("eng",
+                                        DataHolder.getCurrent().getEng())
+                                .putExtra("chs",
+                                        DataHolder.getCurrent().getChs());
                         startActivity(intent);
                     }
 

@@ -658,10 +658,9 @@ public final class R {
         public static final int btn_srt=0x7f0c001d;
         public static final int btn_srtsearch=0x7f0c0034;
         public static final int btn_tts=0x7f0c0020;
-        public static final int button_pause=0x7f0c0042;
-        public static final int button_play=0x7f0c0041;
-        public static final int button_replay=0x7f0c0044;
-        public static final int button_stop=0x7f0c0043;
+        public static final int button_pause=0x7f0c0041;
+        public static final int button_replay=0x7f0c0043;
+        public static final int button_stop=0x7f0c0042;
         public static final int chs_text=0x7f0c0036;
         public static final int chs_tv=0x7f0c0019;
         public static final int edt_content=0x7f0c0026;
@@ -691,7 +690,6 @@ public final class R {
         public static final int recword_gallery=0x7f0c0031;
         public static final int sayBtn=0x7f0c002b;
         public static final int seekBar=0x7f0c003f;
-        public static final int seekTv=0x7f0c0045;
         public static final int sv=0x7f0c003e;
         public static final int text=0x7f0c0049;
         public static final int timeline_tv=0x7f0c0016;
@@ -702,6 +700,8 @@ public final class R {
         public static final int tvSearchEng=0x7f0c0004;
         public static final int tvTimeLine=0x7f0c0047;
         public static final int tv_rectip=0x7f0c002f;
+        public static final int vchs_tv=0x7f0c0044;
+        public static final int veng_tv=0x7f0c0045;
     }
     public static final class integer {
         public static final int piechartView_amountLabelTextSize=0x7f080001;

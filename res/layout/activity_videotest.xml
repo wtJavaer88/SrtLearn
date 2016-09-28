@@ -14,7 +14,7 @@
     <SurfaceView
         android:id="@+id/sv"
         android:layout_width="match_parent"
-        android:layout_height="320dp"
+        android:layout_height="240dp"
         android:layout_below="@id/tttv" />
 
     <SeekBar
@@ -30,19 +30,13 @@
         android:layout_below="@id/seekBar"
         android:orientation="horizontal" >
 
-        <Button
-            android:id="@+id/button_play"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="播放" />
 
         <Button
             android:id="@+id/button_pause"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="暂停" />
+            android:text="播放" />
 
         <Button
             android:id="@+id/button_stop"
@@ -59,14 +53,27 @@
             android:text="重播" />
     </LinearLayout>
 
-    <EditText
-        android:id="@+id/seekTv"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/vchs_tv"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/tttv"
+        android:layout_alignLeft="@+id/veng_tv"
+        android:layout_below="@+id/veng_tv"
+        android:layout_marginTop="5dp"
+        android:maxLines="2"
+        android:singleLine="false"
+        android:textColor="@color/purple"
+        />
+
+    <TextView
+        android:id="@+id/veng_tv"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
         android:layout_below="@+id/linearLayout"
-        android:layout_marginLeft="22dp"
-        android:layout_marginTop="18dp"
-        android:text="300" />
+        android:maxLines="2"
+        android:singleLine="false"
+        android:textColor="@color/purple"
+         />
 
 </RelativeLayout>
