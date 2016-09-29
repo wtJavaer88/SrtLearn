@@ -291,6 +291,7 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener,
                         "seekto",
                         (int) TimeHelper.getTime(DataHolder.getCurrent()
                                 .getToTime()))
+                .putExtra("curindex", DataHolder.getCurrentSrtIndex())
                 .putExtra("eng", DataHolder.getCurrent().getEng())
                 .putExtra("chs", DataHolder.getCurrent().getChs());
         startActivity(intent);

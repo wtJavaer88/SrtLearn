@@ -42,8 +42,8 @@ import common.uihelper.gesture.MyCtrlableGestureDetector;
 public class VideoActivity extends BaseVerActivity implements OnClickListener,
         UncaughtExceptionHandler, CtrlableHorGestureDetectorListener
 {
-    private static final int PLAY_SLEEP_TIME = 50;
-    private static final int SRT_PAUSE_CODE = 100;
+    private static final int PLAY_SLEEP_TIME = 200;
+    private static final int SRT_AUTOPAUSE_CODE = 100;
     private static final int ON_PLAYING_CODE = 101;
     private SurfaceView surfaceView;
     private Button button_pause, button_replay, button_custom_replay;
@@ -53,7 +53,7 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
     private TextView veng_tv;
     private TextView vchs_tv;
 
-    private List<SrtInfo> srtInfos = DataHolder.getAllSrtInfos();
+    private List<SrtInfo> srtInfos;
     private int curIndex = DataHolder.getCurrentSrtIndex();
     private SrtInfo curSrt;
     // private EditText seekTv;
@@ -116,12 +116,15 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
 
     private void initData()
     {
+        srtInfos = DataHolder.getAllSrtInfos();
         Intent intent = getIntent();
 
         if (intent != null)
         {
             seektime = intent.getIntExtra("seekfrom", 0);
             seekendtime = intent.getIntExtra("seekto", 0);
+            curIndex = intent.getIntExtra("curindex", 0);
+            System.out.println("curIndex:  " + curIndex);
             if (intent.getStringExtra("eng") != null)
             {
                 this.veng_tv.setText(intent.getStringExtra("eng"));
@@ -130,7 +133,6 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
             if (intent.getStringExtra("chs") != null)
             {
                 this.vchs_tv.setText(intent.getStringExtra("chs"));
-
             }
         }
 
@@ -201,9 +203,10 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
 
     private void cusReplay()
     {
+        firstPlay = false;
         isCusReplay = true;
         this.button_pause.setText("暂停");
-        int endIndex = curIndex + 2;
+        int endIndex = curIndex + 1;
         endIndex = endIndex >= srtInfos.size() ? srtInfos.size() : endIndex;
         seekendtime = (int) TimeHelper.getTime(srtInfos.get(endIndex)
                 .getToTime());
@@ -212,10 +215,13 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
 
     private void replay()
     {
+        firstPlay = false;
         isCusReplay = false;
         this.button_pause.setText("暂停");
         isShowingSrt = true;
         isPaused = false;
+        seekendtime = (int) TimeHelper.getTime(srtInfos.get(curIndex)
+                .getToTime());
         if (mediaPlayer.isPlaying())
         {
             mediaPlayer.seekTo(seektime);
@@ -242,7 +248,6 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
 
     private void playpause()
     {
-        isCusReplay = false;
         String tip = button_pause.getText().toString();
         this.button_pause.setText(tip.equals("播放") ? "暂停" : "播放");
         if (firstPlay)
@@ -264,6 +269,7 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
                 {
                     // 暂停,但字幕不在更新或播放. 这种情况下,继续播放
                     isPaused = false;
+                    isShowingSrt = true;
                     mediaPlayer.start();
                 }
                 else
@@ -291,16 +297,23 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
         @Override
         public void handleMessage(Message msg)
         {
-            if (msg.what == SRT_PAUSE_CODE)
+            if (msg.what == SRT_AUTOPAUSE_CODE)
             {
+                if (isCusReplay)
+                {
+                    isCusReplay = false;
+                }
+                seekendtime = Integer.MAX_VALUE;
                 playpause();
             }
             else if (msg.what == ON_PLAYING_CODE)
             {
                 if (!isCusReplay)
                 {
-                    updateUI(BasicNumberUtil.getNumber("" + msg.obj));
-                    initSeekTimes();
+                    if (updateUI(BasicNumberUtil.getNumber("" + msg.obj)))
+                    {
+                        initSeekTimes();
+                    }
                 }
                 else
                 {
@@ -362,11 +375,13 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
                             {
 
                                 int position = mediaPlayer.getCurrentPosition();
-
-                                if (position > seekendtime && isShowingSrt)
+                                boolean isover = curOver(position);
+                                System.out.println(position + "/" + seekendtime
+                                        + "  " + isover + " " + isPaused);
+                                if (isover)
                                 {
                                     Message msg = new Message();
-                                    msg.what = SRT_PAUSE_CODE;
+                                    msg.what = SRT_AUTOPAUSE_CODE;
                                     handler.sendMessage(msg);
                                 }
                                 else
@@ -392,6 +407,11 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
                                 }
                             }
 
+                        }
+
+                        private boolean curOver(int position)
+                        {
+                            return position > seekendtime && !isPausedModel();
                         }
 
                     }.start();
@@ -439,7 +459,7 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
         }
     };
 
-    private void updateUI(int position)
+    private boolean updateUI(int position)
     {
         for (int i = 0; i < srtInfos.size(); i++)
         {
@@ -452,10 +472,12 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
                     curIndex = i;
                     curSrt = srtInfos.get(curIndex);
                     setUI();
+                    return true;
                 }
                 break;
             }
         }
+        return false;
     };
 
     private void setSrtContent(SrtInfo srt)
