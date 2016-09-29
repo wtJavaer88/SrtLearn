@@ -283,6 +283,8 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener,
     private void intoVideo() throws SrtException
     {
         Intent intent = new Intent(SrtActivity.this, VideoActivity.class)
+                .putExtra("fileinfo",
+                        SrtTextHelper.getSxFile(srtPlayService.getCurFile()))
                 .putExtra(
                         "seekfrom",
                         (int) TimeHelper.getTime(DataHolder.getCurrent()

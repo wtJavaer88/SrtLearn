@@ -17,6 +17,8 @@ public class MyAppParams
             .getExternalStorageDirectory().getPath() + "/wnc/res/swf/";
     public static final String SRT_FOLDER = Environment
             .getExternalStorageDirectory().getPath() + "/wnc/res/srt/";
+    public final static String VIDEO_FOLDER = Environment
+            .getExternalStorageDirectory().getPath() + "/wnc/res/video/";
     public final static String THUMB_PICFOLDER = Environment
             .getExternalStorageDirectory().getPath() + "/wnc/res/srtpic/";
     public final static String FAVORITE_TXT = workPath + "favorite.txt";

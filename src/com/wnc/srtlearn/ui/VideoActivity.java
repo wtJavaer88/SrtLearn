@@ -6,6 +6,7 @@ import java.util.List;
 import net.widget.cqq.AddAndSubView;
 import srt.DataHolder;
 import srt.SrtInfo;
+import srt.SrtTextHelper;
 import srt.TimeHelper;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -15,7 +16,6 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -34,7 +34,9 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import com.wnc.basic.BasicNumberUtil;
+import com.wnc.basic.BasicStringUtil;
 import com.wnc.srtlearn.R;
+import com.wnc.string.PatternUtil;
 import common.app.ToastUtil;
 import common.uihelper.MyAppParams;
 import common.uihelper.gesture.CtrlableHorGestureDetectorListener;
@@ -72,6 +74,9 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
     private volatile boolean isPlaying;
 
     private boolean firstPlay = true;
+
+    private String videoSeries;
+    private String videoEpisode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -133,14 +138,25 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
 
         if (intent != null)
         {
+            String fileInfo = intent.getStringExtra("fileinfo");
+            if (BasicStringUtil.isNotNullString(fileInfo))
+            {
+                this.videoSeries = PatternUtil.getFirstPatternGroup(fileInfo,
+                        "(.*?)/").trim();
+                this.videoEpisode = PatternUtil.getFirstPatternGroup(fileInfo,
+                        "/(.*+)").trim();
+                System.out.println(videoEpisode + " " + videoSeries);
+            }
             seektime = intent.getIntExtra("seekfrom", 0);
             seekendtime = intent.getIntExtra("seekto", 0);
             curIndex = intent.getIntExtra("curindex", 0);
             curSrt = srtInfos.get(curIndex);
             System.out.println("curIndex:  " + curIndex);
             setUI();
+            setTipTv(0);
         }
 
+        currentPosition = seektime;
         surfaceView.getHolder()
                 .setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);// 4.0一下的版本需要加该段代码。
 
@@ -167,7 +183,44 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
                  */
                 if (currentPosition > 0)
                 {
-                    play(currentPosition);
+                    initHoldPlay();
+                }
+            }
+
+            /**
+             * 主要是看看当画面,无其他目的,点击播放后又要重新new一个
+             */
+            private void initHoldPlay()
+            {
+                mediaPlayer = new MediaPlayer();
+                String path = SrtTextHelper.getVideoFile(
+                        MyAppParams.VIDEO_FOLDER, videoSeries, videoEpisode);
+                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);// 设置视频流类型
+                try
+                {
+
+                    mediaPlayer.setDisplay(surfaceView.getHolder());
+                    mediaPlayer.setDataSource(path);
+                    mediaPlayer.prepareAsync();
+
+                    mediaPlayer.setOnPreparedListener(new OnPreparedListener()
+                    {
+
+                        @Override
+                        public void onPrepared(MediaPlayer mp)
+                        {
+                            // mediaPlayer.start();
+                            int max = mediaPlayer.getDuration();
+                            seekBar.setProgress(currentPosition);
+                            seekBar.setMax(max);
+                            mediaPlayer.seekTo(currentPosition);
+                            // mediaPlayer.pause();
+                        }
+                    });
+                }
+                catch (Exception ex)
+                {
+                    ex.printStackTrace();
                 }
             }
 
@@ -286,6 +339,10 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
 
     private void replaySetting()
     {
+        final AddAndSubView mView1 = new AddAndSubView(this);
+        final AddAndSubView mView2 = new AddAndSubView(this);
+        final AddAndSubView mView3 = new AddAndSubView(this);
+
         if (replaySettingDialog == null)
         {
             System.out.println("replayInfo:" + replayInfo);
@@ -300,30 +357,19 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
 
             LinearLayout mLayout1 = (LinearLayout) replaySettingDialog
                     .findViewById(R.id.layout_add_and_sub_count);
-            final AddAndSubView mView1 = new AddAndSubView(this);
-            if (replayInfo.getSrtcounts() > 0)
-            {
-                mView1.setNum(replayInfo.getSrtcounts());
-            }
-            else
-            {
-                mView1.setNum(2);
-            }
+            mView1.setNum(2);
             mView1.setDeafultStyle();
             mLayout1.addView(mView1);
             LinearLayout mLayout2 = (LinearLayout) replaySettingDialog
                     .findViewById(R.id.layout_add_and_sub_preload);
-
-            final AddAndSubView mView2 = new AddAndSubView(this);
-            mView2.setNum(replayInfo.getPreLoad());
+            mView2.setNum(0);
             mView2.setNumStep(100);
             mView2.setDeafultStyle();
             mLayout2.addView(mView2);
             LinearLayout mLayout3 = (LinearLayout) replaySettingDialog
                     .findViewById(R.id.layout_add_and_sub_afterload);
 
-            final AddAndSubView mView3 = new AddAndSubView(this);
-            mView2.setNum(replayInfo.getAfterLoad());
+            mView3.setNum(0);
             mView3.setNumStep(100);
             mView3.setDeafultStyle();
             mLayout3.addView(mView3);
@@ -363,6 +409,12 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
         }
         else
         {
+            if (replayInfo.getSrtcounts() > 0)
+            {
+                mView1.setNum(replayInfo.getSrtcounts());
+            }
+            mView2.setNum(replayInfo.getPreLoad());
+            mView3.setNum(replayInfo.getAfterLoad());
             replaySettingDialog.show();
         }
     }
@@ -380,6 +432,8 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
         {
             endIndex = curIndex;
         }
+        curSrt = srtInfos.get(curIndex);
+        setSrtContent(curSrt);
 
         endIndex = endIndex >= srtInfos.size() ? srtInfos.size() : endIndex;
         seektime = (int) TimeHelper.getTime(srtInfos.get(curIndex)
@@ -405,9 +459,17 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
         isShowingSrt = false;
         if (mediaPlayer != null)
         {
-            mediaPlayer.reset();
-            mediaPlayer.release();
-            mediaPlayer = null;
+            try
+            {
+                mediaPlayer.reset();
+                mediaPlayer.release();
+                mediaPlayer = null;
+            }
+            catch (Exception e)
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
     }
 
@@ -474,9 +536,11 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
             }
             else if (msg.what == ON_PLAYING_CODE)
             {
+                int position = BasicNumberUtil.getNumber("" + msg.obj);
+                setTipTv(position);
                 if (!isCusReplay)
                 {
-                    if (updateUI(BasicNumberUtil.getNumber("" + msg.obj)))
+                    if (updateUI(position))
                     {
                         initSeekTimes();
                     }
@@ -493,7 +557,21 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
                 playpause();
             }
         }
+
     };
+
+    private void setTipTv(int position)
+    {
+        if (position > 0)
+        {
+            tipTv.setText("  " + videoSeries + "-" + videoEpisode + "    "
+                    + (position / 1000 + "/" + seekBar.getMax() / 1000));
+        }
+        else
+        {
+            tipTv.setText(videoSeries + "-" + videoEpisode);
+        }
+    }
 
     /**
      * 播放指定位置的字幕
@@ -502,20 +580,20 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
      */
     private void play(final int currentPosition)
     {
-        hideHead();
-        this.button_pause.setText("暂停");
-        isShowingSrt = true;
-        isPaused = false;
-        isPlaying = false;
         if (mediaPlayer != null)
         {
             mediaPlayer.reset();
             mediaPlayer.release();
             mediaPlayer = null;
         }
+        hideHead();
+        this.button_pause.setText("暂停");
+        isShowingSrt = true;
+        isPaused = false;
+        isPlaying = false;
         mediaPlayer = new MediaPlayer();
-        String path = Environment.getExternalStorageDirectory().getPath()
-                + "/wnc/Friends.S01E02.avi";
+        String path = SrtTextHelper.getVideoFile(MyAppParams.VIDEO_FOLDER,
+                videoSeries, videoEpisode);
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);// 设置视频流类型
         try
         {
@@ -547,8 +625,9 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
 
                                 int position = mediaPlayer.getCurrentPosition();
                                 boolean isover = curOver(position);
-                                System.out.println(position + "/" + seekendtime
-                                        + "  " + isover + " " + isPaused);
+                                // System.out.println(position + "/" +
+                                // seekendtime
+                                // + "  " + isover + " " + isPaused);
                                 if (isover && (isCusReplay || onlyOneSrt))
                                 {
                                     Message msg = new Message();
@@ -710,11 +789,6 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
     private void setUI()
     {
         setSrtContent(curSrt);
-        if (seekBar.getMax() > 1000)
-        {
-            this.tipTv.setText(TimeHelper.getTime(curSrt.getFromTime()) / 1000
-                    + "/" + seekBar.getMax() / 1000);
-        }
     }
 
     @Override
