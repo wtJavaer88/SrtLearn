@@ -4,18 +4,33 @@
     android:layout_height="match_parent"
   >
 
-    <TextView
-        android:id="@+id/tttv"
-        android:layout_width="wrap_content"
+       <LinearLayout
+        android:id="@+id/video_head"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:text="视频播放器SurfaceView实例" />
-
+        android:visibility="gone"
+        android:orientation="horizontal" >
+	    
+           <Button
+            android:id="@+id/button_onlyone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="多个播放" />
+	    <TextView
+	        android:id="@+id/tipTv"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_centerHorizontal="true"
+	        android:textColor="@color/black"
+	        android:text="视频播放器SurfaceView实例" />
+	    
+	</LinearLayout>
+    
     <SurfaceView
         android:id="@+id/sv"
         android:layout_width="match_parent"
         android:layout_height="240dp"
-        android:layout_below="@id/tttv" />
+        android:layout_below="@id/video_head" />
 
     <SeekBar
         android:id="@+id/seekBar"
@@ -38,20 +53,20 @@
             android:layout_weight="1"
             android:text="播放" />
 
-
-        <Button
-            android:id="@+id/button_replay"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="重播单句" />
-        
          <Button
             android:id="@+id/button_replay_custom"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="高级重播" />
+            android:text="重播" />
+
+        <Button
+            android:id="@+id/button_replay_setting"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="重播设置" />
+        
     </LinearLayout>
 
     <TextView
