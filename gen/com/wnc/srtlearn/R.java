@@ -602,24 +602,31 @@ public final class R {
         public static final int report_activity_go_trans_list_btn_width=0x7f0701f8;
     }
     public static final class drawable {
-        public static final int bg_text_color=0x7f020000;
-        public static final int bihua_select=0x7f020001;
-        public static final int gallery_item=0x7f020002;
-        public static final int ic_launcher=0x7f020003;
-        public static final int main_add_expense_quickly_new=0x7f020004;
-        public static final int main_add_expense_quickly_new_normal=0x7f020005;
-        public static final int main_add_expense_quickly_new_selected=0x7f020006;
-        public static final int mymoney_bg=0x7f020007;
-        public static final int mymoney_repeat_bg=0x7f020008;
-        public static final int py=0x7f020009;
-        public static final int py_select=0x7f02000a;
-        public static final int star2=0x7f02000b;
-        public static final int star_dark2=0x7f02000c;
-        public static final int tian=0x7f02000d;
-        public static final int wheel_bg=0x7f02000e;
-        public static final int wheel_val=0x7f02000f;
-        public static final int yuyin_select=0x7f020010;
-        public static final int yy=0x7f020011;
+        public static final int bfq_head=0x7f020000;
+        public static final int bfq_next=0x7f020001;
+        public static final int bfq_pause=0x7f020002;
+        public static final int bfq_play=0x7f020003;
+        public static final int bfq_pre=0x7f020004;
+        public static final int bfq_stop=0x7f020005;
+        public static final int bfq_tail=0x7f020006;
+        public static final int bg_text_color=0x7f020007;
+        public static final int bihua_select=0x7f020008;
+        public static final int gallery_item=0x7f020009;
+        public static final int ic_launcher=0x7f02000a;
+        public static final int main_add_expense_quickly_new=0x7f02000b;
+        public static final int main_add_expense_quickly_new_normal=0x7f02000c;
+        public static final int main_add_expense_quickly_new_selected=0x7f02000d;
+        public static final int mymoney_bg=0x7f02000e;
+        public static final int mymoney_repeat_bg=0x7f02000f;
+        public static final int py=0x7f020010;
+        public static final int py_select=0x7f020011;
+        public static final int star2=0x7f020012;
+        public static final int star_dark2=0x7f020013;
+        public static final int tian=0x7f020014;
+        public static final int wheel_bg=0x7f020015;
+        public static final int wheel_val=0x7f020016;
+        public static final int yuyin_select=0x7f020017;
+        public static final int yy=0x7f020018;
     }
     public static final class id {
         public static final int actSrtSearch=0x7f0c0033;
@@ -659,7 +666,6 @@ public final class R {
         public static final int btn_srtsearch=0x7f0c0034;
         public static final int btn_tts=0x7f0c0020;
         public static final int button_onlyone=0x7f0c003e;
-        public static final int button_pause=0x7f0c0043;
         public static final int button_replay_custom=0x7f0c0044;
         public static final int button_replay_setting=0x7f0c0045;
         public static final int chs_text=0x7f0c0036;
@@ -675,6 +681,7 @@ public final class R {
         public static final int gallery=0x7f0c0008;
         public static final int id_book=0x7f0c0000;
         public static final int imageview=0x7f0c004a;
+        public static final int imgbtn_play=0x7f0c0043;
         public static final int layout_add_and_sub_afterload=0x7f0c0054;
         public static final int layout_add_and_sub_count=0x7f0c0052;
         public static final int layout_add_and_sub_preload=0x7f0c0053;
@@ -706,8 +713,8 @@ public final class R {
         public static final int tvSearchEng=0x7f0c0004;
         public static final int tvTimeLine=0x7f0c0049;
         public static final int tv_rectip=0x7f0c002f;
-        public static final int vchs_tv=0x7f0c0046;
-        public static final int veng_tv=0x7f0c0047;
+        public static final int vchs_tv=0x7f0c0047;
+        public static final int veng_tv=0x7f0c0046;
         public static final int video_head=0x7f0c003d;
     }
     public static final class integer {

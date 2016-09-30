@@ -8,8 +8,12 @@ import srt.DataHolder;
 import srt.SrtInfo;
 import srt.SrtTextHelper;
 import srt.TimeHelper;
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.media.MediaPlayer.OnSeekCompleteListener;
@@ -22,10 +26,11 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -34,12 +39,16 @@ import android.widget.TextView;
 import com.wnc.basic.BasicNumberUtil;
 import com.wnc.basic.BasicStringUtil;
 import com.wnc.srtlearn.R;
+import com.wnc.srtlearn.modules.video.MyVideoView;
+import com.wnc.srtlearn.modules.video.MyVideoView.OnVideoClickLinster;
 import com.wnc.srtlearn.modules.video.RelpayInfo;
 import com.wnc.srtlearn.modules.video.SingleMPlayer;
 import com.wnc.srtlearn.modules.video.VideoPlayThread;
 import com.wnc.string.PatternUtil;
+import common.app.BasicPhoneUtil;
 import common.app.ToastUtil;
 import common.uihelper.MyAppParams;
+import common.uihelper.gesture.CtrlableDoubleClickGestureDetectorListener;
 import common.uihelper.gesture.CtrlableHorGestureDetectorListener;
 import common.uihelper.gesture.FlingPoint;
 import common.uihelper.gesture.MyCtrlableGestureDetector;
@@ -48,14 +57,15 @@ import common.uihelper.gesture.MyCtrlableGestureDetector;
  * 使用SurfaceView和MediaPlayer的本地视频播放器。
  * 
  */
-public class VideoActivity extends BaseVerActivity implements OnClickListener,
-        UncaughtExceptionHandler, CtrlableHorGestureDetectorListener
+public class VideoActivity extends Activity implements OnClickListener,
+        UncaughtExceptionHandler, CtrlableHorGestureDetectorListener,
+        CtrlableDoubleClickGestureDetectorListener
 {
     private VideoPlayThread videoPlayThread;
     public static final int SRT_AUTOPAUSE_CODE = 100;
     public static final int ON_PLAYING_CODE = 101;
-    private SurfaceView surfaceView;
-    private Button button_pause, button_replay_setting, button_custom_replay;
+    private MyVideoView videoView;
+    private Button button_replay_setting, button_custom_replay;
     private Button button_onlyone;
     private MediaPlayer mediaPlayer;
     public SeekBar seekBar;
@@ -67,33 +77,68 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
     private List<SrtInfo> srtInfos;
     private int curIndex = DataHolder.getCurrentSrtIndex();
     private SrtInfo curSrt;
-    // private EditText seekTv;
     public int seektime = 0;
     public int seekendtime = 0;
 
     private int currentPosition;
+    ImageButton imgButton_play;
 
     private String videoSeries;
     private String videoEpisode;
+    View main;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_videotest);
+        main = getLayoutInflater().from(this).inflate(
+                R.layout.activity_videotest, null);
+
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        hideVirtualBts();
+        setContentView(main);
+
         Thread.setDefaultUncaughtExceptionHandler(this);
         this.gestureDetector = new GestureDetector(this,
-                new MyCtrlableGestureDetector(this, 0.2, 0, this, null));
+                new MyCtrlableGestureDetector(this, 0.2, 0, this, null)
+                        .setDclistener(this));
         init();
         videoPlayThread = new VideoPlayThread(this);
         initData();
     }
 
+    /**
+     * 隐藏虚拟按键
+     */
+    @SuppressLint("NewApi")
+    private void hideVirtualBts()
+    {
+        // 普通
+        final int currentAPIVersion = BasicPhoneUtil
+                .getCurrentAPIVersion(getApplicationContext());
+        System.out.println("Level ........" + currentAPIVersion);
+        if (currentAPIVersion < 19)
+        {
+            main.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+        }
+        else
+        {
+            // 完全
+            main.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        }
+    }
+
     private void init()
     {
         headLayout = (LinearLayout) findViewById(R.id.video_head);
+        imgButton_play = (ImageButton) findViewById(R.id.imgbtn_play);
         button_onlyone = (Button) findViewById(R.id.button_onlyone);
-        button_pause = (Button) findViewById(R.id.button_pause);
         button_replay_setting = (Button) findViewById(R.id.button_replay_setting);
         button_custom_replay = (Button) findViewById(R.id.button_replay_custom);
 
@@ -101,7 +146,7 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
         vchs_tv = (TextView) findViewById(R.id.vchs_tv);
         tipTv = (TextView) findViewById(R.id.tipTv);
 
-        surfaceView = (SurfaceView) findViewById(R.id.sv);
+        videoView = (MyVideoView) findViewById(R.id.sv);
         seekBar = (SeekBar) findViewById(R.id.seekBar);
         seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener()
         {
@@ -155,10 +200,9 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
         }
 
         currentPosition = seektime;
-        surfaceView.getHolder()
-                .setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);// 4.0一下的版本需要加该段代码。
+        videoView.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);// 4.0一下的版本需要加该段代码。
 
-        surfaceView.getHolder().addCallback(new Callback()
+        videoView.getHolder().addCallback(new Callback()
         {
 
             @Override
@@ -192,9 +236,28 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
 
             }
         });
-        surfaceView.setOnClickListener(this);
+        videoView.setOnVideoClickLinster(new OnVideoClickLinster()
+        {
+
+            @Override
+            public void onDoubleClick()
+            {
+                playpause();
+            }
+
+            @Override
+            public void onClick()
+            {
+                switchHead();
+            }
+        });
+        // 横屏最大化
+        videoView.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT));
+
         button_onlyone.setOnClickListener(this);
-        button_pause.setOnClickListener(this);
+        imgButton_play.setOnClickListener(this);
         button_replay_setting.setOnClickListener(this);
         button_custom_replay.setOnClickListener(this);
     }
@@ -211,7 +274,7 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
         String path = SrtTextHelper.getVideoFile(MyAppParams.VIDEO_FOLDER,
                 videoSeries, videoEpisode);
         mediaPlayer = SingleMPlayer.getMp(path);
-        mediaPlayer.setDisplay(surfaceView.getHolder());
+        mediaPlayer.setDisplay(videoView.getHolder());
         mediaPlayer.setOnPreparedListener(new OnPreparedListener()
         {
 
@@ -241,7 +304,7 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
                         "当前为单个字幕播放模式!");
             }
             break;
-        case R.id.button_pause:
+        case R.id.imgbtn_play:
             hideHead();
             playpause();
             break;
@@ -255,16 +318,34 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
             cusReplay();
             break;
 
-        case R.id.sv:
-            switchHead();
-            break;
         default:
             break;
         }
     }
 
+    /**
+     * 实现屏幕的手动切换
+     */
+    private void screenChange()
+    {
+        if (this.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+        {
+            this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+        else if (this.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+        {
+            this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
+        else if (this.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+        {
+            Log.e("Video", "err");
+        }
+
+    }
+
     private void switchHead()
     {
+        System.out.println("切换视频头");
         if (this.headLayout.getVisibility() == View.VISIBLE)
         {
             hideHead();
@@ -371,7 +452,7 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
     private void cusReplay()
     {
         setCusReplay(true);
-        this.button_pause.setText("暂停");
+        this.imgButton_play.setImageResource(R.drawable.bfq_pause);
         int endIndex = curIndex + replayInfo.getSrtcounts() - 1;
         if (replayInfo.getSrtcounts() == 0)
         {
@@ -408,7 +489,6 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
             }
             catch (Exception e)
             {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
@@ -421,11 +501,11 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
             isPaused = true;
             isShowingSrt = false;
             mediaPlayer.pause();
-            this.button_pause.setText("播放");
+            imgButton_play.setImageResource(R.drawable.bfq_play);
         }
         else
         {
-            this.button_pause.setText("暂停");
+            imgButton_play.setImageResource(R.drawable.bfq_pause);
             if (isPausedModel())
             {
                 // 暂停,但字幕不在更新或播放. 这种情况下,继续播放
@@ -447,10 +527,9 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
     private void videoSeek(int time)
     {
         hideHead();
-        this.button_pause.setText("暂停");
         isShowingSrt = true;
         isPaused = false;
-        this.button_pause.setText("暂停");
+        this.imgButton_play.setImageResource(R.drawable.bfq_pause);
         mediaPlayer.seekTo(time);
         mediaPlayer.setOnSeekCompleteListener(new OnSeekCompleteListener()
         {
@@ -502,7 +581,6 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
                     // 这儿不更新curIndex
                     updateReplayUI(BasicNumberUtil.getNumber("" + msg.obj));
                 }
-                System.out.println(seekendtime);
             }
             else
             {
@@ -516,32 +594,15 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
     {
         if (position > 0)
         {
+            final String timeStr = SrtTextHelper.timeToText(position) + "/"
+                    + SrtTextHelper.timeToText(seekBar.getMax());
             tipTv.setText("  " + videoSeries + "-" + videoEpisode + "    "
-                    + (position / 1000 + "/" + seekBar.getMax() / 1000));
+                    + timeStr);
         }
         else
         {
             tipTv.setText(videoSeries + "-" + videoEpisode);
         }
-    }
-
-    /**
-     * 播放指定位置的字幕
-     * 
-     * @param currentPosition
-     */
-    private void play2(final int currentPosition)
-    {
-        if (mediaPlayer != null)
-        {
-            mediaPlayer.reset();
-            mediaPlayer.release();
-            setMediaPlayer(null);
-        }
-        hideHead();
-        this.button_pause.setText("暂停");
-        isShowingSrt = true;
-        isPaused = false;
     }
 
     private boolean updateReplayUI(int position)
@@ -620,10 +681,6 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
     @Override
     public void doLeft(FlingPoint p1, FlingPoint p2)
     {
-        if (p1.getY() < seekBar.getTop())
-        {
-            return;
-        }
         isShowingSrt = true;
         curIndex--;
         if (curIndex < 0)
@@ -647,10 +704,6 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
     @Override
     public void doRight(FlingPoint p1, FlingPoint p2)
     {
-        if (p1.getY() < seekBar.getTop())
-        {
-            return;
-        }
         isShowingSrt = true;
         curIndex++;
         if (curIndex == srtInfos.size())
@@ -686,14 +739,47 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
     }
 
     @Override
+    public void onBackPressed()
+    {
+        System.out.println("按下返回键 curIndex: " + curIndex);
+        Intent intent = new Intent();
+        intent.putExtra("curIndex", curIndex);// 放入返回值
+        setResult(0, intent);// 放入回传的值,并添加一个Code,方便区分返回的数据
+        super.onBackPressed();
+    }
+
+    @Override
     public void onPause()
     {
-        super.onPause();
         System.out.println("OnPause........" + mediaPlayer.isPlaying());
         if (mediaPlayer != null && mediaPlayer.isPlaying())
         {
-            this.button_pause.setText("播放");
+            playpause();
         }
+        super.onPause();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig)
+    {
+        super.onConfigurationChanged(newConfig);
+        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+        {
+            super.onConfigurationChanged(newConfig);
+            videoView.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT));
+        }
+        else if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+        {
+            super.onConfigurationChanged(newConfig);
+            videoView.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, (int) (0.4 * Math
+                            .max(MyAppParams.getScreenWidth(),
+                                    MyAppParams.getScreenHeight()))));
+        }
+        hideHead();
+        hideVirtualBts();
     }
 
     public MediaPlayer getMediaPlayer()
@@ -726,4 +812,12 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
         this.handler = handler;
     }
 
+    @Override
+    public void doDoubleClick(MotionEvent e)
+    {
+        if (e.getY() > videoView.getBottom())
+        {
+            playpause();
+        }
+    }
 }

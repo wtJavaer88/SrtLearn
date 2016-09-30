@@ -9,6 +9,7 @@ public class MyCtrlableGestureDetector extends SimpleOnGestureListener
     Activity context;
     CtrlableHorGestureDetectorListener horlistener;
     CtrlableVerGestureDetectorListener verlistener;
+    CtrlableDoubleClickGestureDetectorListener dclistener;
     double scaleX = 0.5f;
     double scaleY = 0.5f;
 
@@ -30,6 +31,13 @@ public class MyCtrlableGestureDetector extends SimpleOnGestureListener
         setScaleY(scaleY);
         this.horlistener = listener;
         this.verlistener = listener2;
+    }
+
+    public MyCtrlableGestureDetector setDclistener(
+            CtrlableDoubleClickGestureDetectorListener dclistener)
+    {
+        this.dclistener = dclistener;
+        return this;
     }
 
     public void setScaleX(double scale)
@@ -102,4 +110,14 @@ public class MyCtrlableGestureDetector extends SimpleOnGestureListener
 
         return false;
     }
+
+    @Override
+    public boolean onDoubleTap(MotionEvent e)
+    {
+        if (dclistener != null)
+        {
+            this.dclistener.doDoubleClick(e);
+        }
+        return false;
+    };
 }

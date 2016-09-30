@@ -106,4 +106,18 @@ public class SrtTextHelper
         }
         return ret;
     }
+
+    public static String timeToText(int millistime)
+    {
+        if (millistime < 1000)
+        {
+            return "00:00";
+        }
+
+        millistime = millistime / 1000;
+        int minutes = millistime / 60;
+        int seconds = millistime % 60;
+        return (minutes >= 10 ? minutes + "" : "0" + minutes) + ":"
+                + (seconds >= 10 ? seconds + "" : "0" + seconds);
+    }
 }

@@ -1,8 +1,10 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-  >
+    android:orientation="vertical"
+    android:padding="0dp" >
 
        <LinearLayout
         android:id="@+id/video_head"
@@ -11,13 +13,26 @@
         android:visibility="gone"
         android:orientation="horizontal" >
 	    
-           <Button
+        <Button
             android:id="@+id/button_onlyone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="多个播放" />
+            android:layout_width="60dp"
+            android:layout_height="@dimen/dimen_40_dip"
+            android:layout_gravity="center"
+            android:layout_marginRight="@dimen/dimen_5_dip"
+            android:background="@drawable/main_add_expense_quickly_new"
+            android:gravity="center"
+            android:shadowColor="@color/black"
+            android:shadowDx="0.0"
+            android:shadowDy="2.0"
+            android:shadowRadius="1.0"
+            android:text="设置"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dimen_12_dip"
+            android:textStyle="bold" />
+           
 	    <TextView
 	        android:id="@+id/tipTv"
+	        android:layout_gravity="center"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_centerHorizontal="true"
@@ -26,11 +41,11 @@
 	    
 	</LinearLayout>
     
-    <SurfaceView
+    <com.wnc.srtlearn.modules.video.MyVideoView
         android:id="@+id/sv"
         android:layout_width="match_parent"
         android:layout_height="240dp"
-        android:layout_below="@id/video_head" />
+        />
 
     <SeekBar
         android:id="@+id/seekBar"
@@ -42,54 +57,75 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/seekBar"
         android:orientation="horizontal" >
 
-
+        <ImageButton 
+                android:id="@+id/imgbtn_play"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:scaleType="fitXY"
+                android:background="@drawable/bfq_play"/>
+        
         <Button
-            android:id="@+id/button_pause"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="播放" />
-
-         <Button
             android:id="@+id/button_replay_custom"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="重播" />
-
+            android:layout_width="60dp"
+            android:layout_height="@dimen/dimen_40_dip"
+            android:layout_gravity="center"
+            android:layout_marginRight="@dimen/dimen_2_dip"
+            android:background="@drawable/main_add_expense_quickly_new"
+            android:gravity="center"
+            android:paddingBottom="@dimen/dimen_6_dip"
+            android:shadowColor="@color/black"
+            android:shadowDx="0.0"
+            android:shadowDy="2.0"
+            android:shadowRadius="1.0"
+            android:text="重播"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dimen_12_dip"
+            android:textStyle="bold" />
+        
         <Button
             android:id="@+id/button_replay_setting"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="重播设置" />
+            android:layout_width="86dp"
+            android:layout_height="@dimen/dimen_40_dip"
+            android:layout_gravity="center"
+            android:layout_marginRight="@dimen/dimen_2_dip"
+            android:background="@drawable/main_add_expense_quickly_new"
+            android:gravity="center"
+            android:paddingBottom="@dimen/dimen_6_dip"
+            android:shadowColor="@color/black"
+            android:shadowDx="0.0"
+            android:shadowDy="2.0"
+            android:shadowRadius="1.0"
+            android:text="重播设置"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dimen_12_dip"
+            android:textStyle="bold" />
         
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/vchs_tv"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/veng_tv"
-        android:layout_below="@+id/veng_tv"
-        android:layout_marginTop="5dp"
-        android:maxLines="2"
-        android:singleLine="false"
-        android:textColor="@color/purple"
-        />
 
     <TextView
         android:id="@+id/veng_tv"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/linearLayout"
-        android:maxLines="2"
+        android:maxLines="3"
         android:singleLine="false"
+        android:textSize="@dimen/dimen_15_dip"
         android:textColor="@color/purple"
          />
+    
+    <TextView
+        android:id="@+id/vchs_tv"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:maxLines="3"
+        android:textSize="@dimen/dimen_15_dip"
+        android:singleLine="false"
+        android:textColor="@color/purple"
+        />
 
-</RelativeLayout>
+    
+
+</LinearLayout>

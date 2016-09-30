@@ -75,6 +75,7 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener,
     private final String SRT_STOP_TEXT = "停止";
     public Handler autoPlayHandler;
     final int PINYIN_RESULT = 100;
+    final int VIDEO_RESULT = 101;
 
     View main;
 
@@ -297,7 +298,8 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener,
                 .putExtra("curindex", DataHolder.getCurrentSrtIndex())
                 .putExtra("eng", DataHolder.getCurrent().getEng())
                 .putExtra("chs", DataHolder.getCurrent().getChs());
-        startActivity(intent);
+        // startActivity(intent);
+        startActivityForResult(intent, VIDEO_RESULT);
     }
 
     private void initEngMenuDialog()
@@ -1171,6 +1173,7 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener,
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
+        System.out.println("requestCode:" + requestCode + " data:" + data);
         if (requestCode == this.PINYIN_RESULT && data != null)
         {
             String retPY = data.getStringExtra("pinyin");
@@ -1179,6 +1182,23 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener,
             {
                 SrtInfo srtInfo = DataHolder.getCurrent();
                 srtInfo.setEng(retPY);
+                setSrtContent(srtInfo);
+            }
+            catch (SrtException e)
+            {
+                e.printStackTrace();
+            }
+
+        }
+        else if (requestCode == this.VIDEO_RESULT && data != null)
+        {
+            int curIndex = data.getIntExtra("curIndex",
+                    DataHolder.getCurrentSrtIndex());
+            DataHolder.setCurrentSrtIndex(curIndex);
+            System.out.println("返回字幕位置:" + curIndex);
+            try
+            {
+                SrtInfo srtInfo = DataHolder.getSrtInfoByIndex(curIndex);
                 setSrtContent(srtInfo);
             }
             catch (SrtException e)
