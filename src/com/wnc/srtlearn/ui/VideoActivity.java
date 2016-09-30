@@ -10,10 +10,7 @@ import srt.SrtTextHelper;
 import srt.TimeHelper;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
-import android.media.MediaPlayer.OnErrorListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.media.MediaPlayer.OnSeekCompleteListener;
 import android.os.Bundle;
@@ -38,6 +35,7 @@ import com.wnc.basic.BasicNumberUtil;
 import com.wnc.basic.BasicStringUtil;
 import com.wnc.srtlearn.R;
 import com.wnc.srtlearn.modules.video.RelpayInfo;
+import com.wnc.srtlearn.modules.video.SingleMPlayer;
 import com.wnc.srtlearn.modules.video.VideoPlayThread;
 import com.wnc.string.PatternUtil;
 import common.app.ToastUtil;
@@ -170,7 +168,7 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
                  * 当点击手机上home键（或其他使SurfaceView视图消失的键）时，调用该方法，获取到当前视频的播放值，
                  * currentPosition。 并停止播放。
                  */
-                currentPosition = getMediaPlayer().getCurrentPosition();
+                currentPosition = mediaPlayer.getCurrentPosition();
                 stopPlay();
             }
 
@@ -209,54 +207,25 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
         hideHead();
         isShowingSrt = true;
         isPaused = false;
-        setMediaPlayer(new MediaPlayer());
+
         String path = SrtTextHelper.getVideoFile(MyAppParams.VIDEO_FOLDER,
                 videoSeries, videoEpisode);
-        getMediaPlayer().setAudioStreamType(AudioManager.STREAM_MUSIC);// 设置视频流类型
-        try
+        mediaPlayer = SingleMPlayer.getMp(path);
+        mediaPlayer.setDisplay(surfaceView.getHolder());
+        mediaPlayer.setOnPreparedListener(new OnPreparedListener()
         {
 
-            getMediaPlayer().setDisplay(surfaceView.getHolder());
-            getMediaPlayer().setDataSource(path);
-            getMediaPlayer().prepareAsync();
-
-            getMediaPlayer().setOnPreparedListener(new OnPreparedListener()
+            @Override
+            public void onPrepared(MediaPlayer mp)
             {
-
-                @Override
-                public void onPrepared(MediaPlayer mp)
-                {
-                    // mediaPlayer.start();
-                    int max = getMediaPlayer().getDuration();
-                    seekBar.setProgress(currentPosition);
-                    seekBar.setMax(max);
-                    getMediaPlayer().seekTo(currentPosition);
-
-                    videoPlayThread.start();
-                }
-            });
-
-            getMediaPlayer().setOnCompletionListener(new OnCompletionListener()
-            {
-                @Override
-                public void onCompletion(MediaPlayer mp)
-                {
-                }
-            });
-
-            getMediaPlayer().setOnErrorListener(new OnErrorListener()
-            {
-                @Override
-                public boolean onError(MediaPlayer mp, int what, int extra)
-                {
-                    return false;
-                }
-            });
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+                // mediaPlayer.start();
+                int max = mediaPlayer.getDuration();
+                seekBar.setProgress(currentPosition);
+                seekBar.setMax(max);
+                mediaPlayer.seekTo(currentPosition);
+                videoPlayThread.start();
+            }
+        });
     }
 
     @Override
@@ -417,7 +386,7 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
         seektime = seektime < 0 ? 0 : seektime;
         seekendtime = (int) TimeHelper.getTime(srtInfos.get(endIndex)
                 .getToTime()) + replayInfo.getAfterLoad();
-        if (getMediaPlayer() != null)
+        if (mediaPlayer != null)
         {
             videoSeek(seektime);
         }
@@ -429,12 +398,12 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
         setCusReplay(false);
         isPaused = false;
         isShowingSrt = false;
-        if (getMediaPlayer() != null)
+        if (mediaPlayer != null)
         {
             try
             {
-                getMediaPlayer().reset();
-                getMediaPlayer().release();
+                mediaPlayer.reset();
+                mediaPlayer.release();
                 setMediaPlayer(null);
             }
             catch (Exception e)
@@ -447,22 +416,22 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
 
     private void playpause()
     {
-        String tip = button_pause.getText().toString();
-        this.button_pause.setText(tip.equals("播放") ? "暂停" : "播放");
-        if (getMediaPlayer().isPlaying())
+        if (mediaPlayer.isPlaying())
         {
             isPaused = true;
             isShowingSrt = false;
-            getMediaPlayer().pause();
+            mediaPlayer.pause();
+            this.button_pause.setText("播放");
         }
         else
         {
+            this.button_pause.setText("暂停");
             if (isPausedModel())
             {
                 // 暂停,但字幕不在更新或播放. 这种情况下,继续播放
                 isPaused = false;
                 isShowingSrt = true;
-                getMediaPlayer().start();
+                mediaPlayer.start();
             }
             else
             {
@@ -477,13 +446,18 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
 
     private void videoSeek(int time)
     {
-        getMediaPlayer().seekTo(time);
-        getMediaPlayer().setOnSeekCompleteListener(new OnSeekCompleteListener()
+        hideHead();
+        this.button_pause.setText("暂停");
+        isShowingSrt = true;
+        isPaused = false;
+        this.button_pause.setText("暂停");
+        mediaPlayer.seekTo(time);
+        mediaPlayer.setOnSeekCompleteListener(new OnSeekCompleteListener()
         {
             @Override
             public void onSeekComplete(MediaPlayer arg0)
             {
-                getMediaPlayer().start();
+                mediaPlayer.start();
             }
         });
     }
@@ -558,10 +532,10 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
      */
     private void play2(final int currentPosition)
     {
-        if (getMediaPlayer() != null)
+        if (mediaPlayer != null)
         {
-            getMediaPlayer().reset();
-            getMediaPlayer().release();
+            mediaPlayer.reset();
+            mediaPlayer.release();
             setMediaPlayer(null);
         }
         hideHead();
@@ -659,7 +633,7 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
         curSrt = srtInfos.get(curIndex);
         setUI();
         initSeekTimes();
-        if (getMediaPlayer() != null && getMediaPlayer().isPlaying())
+        if (mediaPlayer != null && mediaPlayer.isPlaying())
         {
             videoSeek(seektime);
         }
@@ -686,7 +660,7 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
         curSrt = srtInfos.get(curIndex);
         setUI();
         initSeekTimes();
-        if (getMediaPlayer() != null && getMediaPlayer().isPlaying())
+        if (mediaPlayer != null && mediaPlayer.isPlaying())
         {
             videoSeek(seektime);
         }
@@ -715,20 +689,11 @@ public class VideoActivity extends BaseVerActivity implements OnClickListener,
     public void onPause()
     {
         super.onPause();
-        System.out.println("OnPause........" + getMediaPlayer().isPlaying());
-        if (getMediaPlayer() != null && !getMediaPlayer().isPlaying())
+        System.out.println("OnPause........" + mediaPlayer.isPlaying());
+        if (mediaPlayer != null && mediaPlayer.isPlaying())
         {
-            playpause();
+            this.button_pause.setText("播放");
         }
-        // mediaPlayer.start();
-        // if (mediaPlayer != null && !mediaPlayer.isPlaying())
-        // {
-        // mediaPlayer.start();
-        // }
-        // else
-        // {
-        // playpause();
-        // }
     }
 
     public MediaPlayer getMediaPlayer()
