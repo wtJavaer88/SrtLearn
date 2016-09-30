@@ -65,7 +65,6 @@ public class VideoActivity extends Activity implements OnClickListener,
     public static final int SRT_AUTOPAUSE_CODE = 100;
     public static final int ON_PLAYING_CODE = 101;
     private MyVideoView videoView;
-    private Button button_replay_setting, button_custom_replay;
     private Button button_onlyone;
     private MediaPlayer mediaPlayer;
     public SeekBar seekBar;
@@ -81,7 +80,8 @@ public class VideoActivity extends Activity implements OnClickListener,
     public int seekendtime = 0;
 
     private int currentPosition;
-    ImageButton imgButton_play;
+    ImageButton imgButton_play, imgbutton_replay_setting,
+            imgbutton_custom_replay;
 
     private String videoSeries;
     private String videoEpisode;
@@ -139,8 +139,8 @@ public class VideoActivity extends Activity implements OnClickListener,
         headLayout = (LinearLayout) findViewById(R.id.video_head);
         imgButton_play = (ImageButton) findViewById(R.id.imgbtn_play);
         button_onlyone = (Button) findViewById(R.id.button_onlyone);
-        button_replay_setting = (Button) findViewById(R.id.button_replay_setting);
-        button_custom_replay = (Button) findViewById(R.id.button_replay_custom);
+        imgbutton_replay_setting = (ImageButton) findViewById(R.id.imgbutton_replay_setting);
+        imgbutton_custom_replay = (ImageButton) findViewById(R.id.imgbutton_replay_custom);
 
         veng_tv = (TextView) findViewById(R.id.veng_tv);
         vchs_tv = (TextView) findViewById(R.id.vchs_tv);
@@ -258,8 +258,8 @@ public class VideoActivity extends Activity implements OnClickListener,
 
         button_onlyone.setOnClickListener(this);
         imgButton_play.setOnClickListener(this);
-        button_replay_setting.setOnClickListener(this);
-        button_custom_replay.setOnClickListener(this);
+        imgbutton_replay_setting.setOnClickListener(this);
+        imgbutton_custom_replay.setOnClickListener(this);
     }
 
     /**
@@ -309,11 +309,11 @@ public class VideoActivity extends Activity implements OnClickListener,
             playpause();
             break;
 
-        case R.id.button_replay_setting:
+        case R.id.imgbutton_replay_setting:
             replaySetting();
             break;
 
-        case R.id.button_replay_custom:
+        case R.id.imgbutton_replay_custom:
             hideHead();
             cusReplay();
             break;

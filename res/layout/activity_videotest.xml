@@ -61,46 +61,32 @@
 
         <ImageButton 
                 android:id="@+id/imgbtn_play"
+                android:layout_marginLeft="3dp"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:scaleType="fitXY"
                 android:background="@drawable/bfq_play"/>
         
-        <Button
-            android:id="@+id/button_replay_custom"
-            android:layout_width="60dp"
-            android:layout_height="@dimen/dimen_40_dip"
-            android:layout_gravity="center"
-            android:layout_marginRight="@dimen/dimen_2_dip"
-            android:background="@drawable/main_add_expense_quickly_new"
-            android:gravity="center"
-            android:paddingBottom="@dimen/dimen_6_dip"
-            android:shadowColor="@color/black"
-            android:shadowDx="0.0"
-            android:shadowDy="2.0"
-            android:shadowRadius="1.0"
-            android:text="重播"
-            android:textColor="@color/white"
-            android:textSize="@dimen/dimen_12_dip"
-            android:textStyle="bold" />
+        <ImageButton 
+                android:id="@+id/imgbutton_replay_custom"
+                android:layout_marginLeft="5dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:scaleType="fitXY"
+                android:background="@drawable/bfq_replay"/>
         
-        <Button
-            android:id="@+id/button_replay_setting"
-            android:layout_width="86dp"
-            android:layout_height="@dimen/dimen_40_dip"
-            android:layout_gravity="center"
-            android:layout_marginRight="@dimen/dimen_2_dip"
-            android:background="@drawable/main_add_expense_quickly_new"
-            android:gravity="center"
-            android:paddingBottom="@dimen/dimen_6_dip"
-            android:shadowColor="@color/black"
-            android:shadowDx="0.0"
-            android:shadowDy="2.0"
-            android:shadowRadius="1.0"
-            android:text="重播设置"
-            android:textColor="@color/white"
-            android:textSize="@dimen/dimen_12_dip"
-            android:textStyle="bold" />
+        <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        />
+        <ImageButton 
+                android:id="@+id/imgbutton_replay_setting"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:scaleType="fitXY"
+                android:gravity="right"
+                android:background="@drawable/bfq_setting"/>
         
     </LinearLayout>
 
