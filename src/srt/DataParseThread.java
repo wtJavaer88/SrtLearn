@@ -82,7 +82,7 @@ public class DataParseThread extends Thread
                 }
             }
         }
-        System.out.println("cachedSrtInfos:" + cachedSrtInfos);
+        // System.out.println("cachedSrtInfos:" + cachedSrtInfos);
         DataHolder.appendData(curFile, cachedSrtInfos);
         try
         {

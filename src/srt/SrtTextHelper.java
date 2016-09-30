@@ -88,7 +88,6 @@ public class SrtTextHelper
     public static String getVideoFile(String baseFolder, String series,
             String episodeKey)
     {
-        System.out.println("episodeKey:  " + episodeKey);
         String ret = null;
         String makeFilePath = BasicFileUtil.getMakeFilePath(baseFolder, series);
         if (BasicFileUtil.isExistFolder(makeFilePath))

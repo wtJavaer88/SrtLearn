@@ -25,7 +25,7 @@ public class SrtPlayService
 {
     private PlayThread playThread;
     private boolean replayCtrl = false;// 复读模式
-    boolean autoPlayNextCtrl = true;// 如果播放过程出异常,就不能单靠系统设置的值控制自动播放下一个了,
+    public boolean autoPlayNextCtrl = true;// 如果播放过程出异常,就不能单靠系统设置的值控制自动播放下一个了,
     public SBaseLearnActivity sBaseLearnActivity;
     private int beginReplayIndex = -1;
     private int endReplayIndex = -1;
