@@ -78,7 +78,7 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 	public int seekendtime = 0;
 
 	private int currentPosition;
-	ImageButton imgButton_play, imgbutton_replay_setting, imgbutton_custom_replay;
+	ImageButton imgButton_fullscreen, imgButton_play, imgbutton_replay_setting, imgbutton_custom_replay;
 
 	private String videoSeries;
 	private String videoEpisode;
@@ -127,8 +127,9 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 	private void init()
 	{
 		headLayout = (LinearLayout) findViewById(R.id.video_head);
-		imgButton_play = (ImageButton) findViewById(R.id.imgbtn_play);
 		button_onlyone = (Button) findViewById(R.id.button_onlyone);
+		imgButton_fullscreen = (ImageButton) findViewById(R.id.imgbtn_fullscreen);
+		imgButton_play = (ImageButton) findViewById(R.id.imgbtn_play);
 		imgbutton_replay_setting = (ImageButton) findViewById(R.id.imgbutton_replay_setting);
 		imgbutton_custom_replay = (ImageButton) findViewById(R.id.imgbutton_replay_custom);
 
@@ -246,6 +247,7 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 		});
 
 		button_onlyone.setOnClickListener(this);
+		imgButton_fullscreen.setOnClickListener(this);
 		imgButton_play.setOnClickListener(this);
 		imgbutton_replay_setting.setOnClickListener(this);
 		imgbutton_custom_replay.setOnClickListener(this);
@@ -253,7 +255,7 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 	}
 
 	/**
-	 * 主要是看看当画面,无其他目的,点击播放后又要重新new一个
+	 * 主要是看看当画面,无其他目的,点击播放后从seektime位置开始继续
 	 */
 	private void initHoldPlay()
 	{
@@ -298,6 +300,8 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 			{
 				ToastUtil.showShortToast(getApplicationContext(), "当前为单个字幕播放模式!");
 			}
+			break;
+		case R.id.imgbtn_fullscreen:
 			screenChange();
 			break;
 		case R.id.imgbtn_play:

@@ -6,13 +6,21 @@
     android:orientation="vertical"
     android:padding="0dp" >
 
-       <LinearLayout
+    <LinearLayout
         android:id="@+id/video_head"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:orientation="horizontal" >
-	    
+        android:orientation="horizontal"
+        android:visibility="gone" >
+
+        <ImageButton
+            android:id="@+id/imgbtn_fullscreen"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="3dp"
+            android:background="@drawable/full_screen"
+            android:scaleType="fitXY" />
+
         <Button
             android:id="@+id/button_onlyone"
             android:layout_width="60dp"
@@ -29,23 +37,21 @@
             android:textColor="@color/white"
             android:textSize="@dimen/dimen_12_dip"
             android:textStyle="bold" />
-           
-	    <TextView
-	        android:id="@+id/tipTv"
-	        android:layout_gravity="center"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_centerHorizontal="true"
-	        android:textColor="@color/black"
-	        android:text="视频播放器SurfaceView实例" />
-	    
-	</LinearLayout>
-    
+
+        <TextView
+            android:id="@+id/tipTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:text="视频播放器SurfaceView实例"
+            android:textColor="@color/black" />
+    </LinearLayout>
+
     <com.wnc.srtlearn.modules.video.MyVideoView
         android:id="@+id/sv"
         android:layout_width="match_parent"
-        android:layout_height="240dp"
-        />
+        android:layout_height="240dp" />
 
     <SeekBar
         android:id="@+id/seekBar"
@@ -59,35 +65,34 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
-        <ImageButton 
-                android:id="@+id/imgbtn_play"
-                android:layout_marginLeft="3dp"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:scaleType="fitXY"
-                android:background="@drawable/bfq_play"/>
-        
-        <ImageButton 
-                android:id="@+id/imgbutton_replay_custom"
-                android:layout_marginLeft="5dp"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:scaleType="fitXY"
-                android:background="@drawable/bfq_replay"/>
-        
+        <ImageButton
+            android:id="@+id/imgbtn_play"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="3dp"
+            android:background="@drawable/bfq_play"
+            android:scaleType="fitXY" />
+
+        <ImageButton
+            android:id="@+id/imgbutton_replay_custom"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/bfq_replay"
+            android:scaleType="fitXY" />
+
         <TextView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        />
-        <ImageButton 
-                android:id="@+id/imgbutton_replay_setting"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:scaleType="fitXY"
-                android:gravity="right"
-                android:background="@drawable/bfq_setting"/>
-        
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/imgbutton_replay_setting"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bfq_setting"
+            android:gravity="right"
+            android:scaleType="fitXY" />
     </LinearLayout>
 
     <TextView
@@ -97,21 +102,17 @@
         android:layout_alignParentLeft="true"
         android:maxLines="3"
         android:singleLine="false"
-        android:textSize="@dimen/dimen_15_dip"
         android:textColor="@color/purple"
-         />
-    
+        android:textSize="@dimen/dimen_15_dip" />
+
     <TextView
         android:id="@+id/vchs_tv"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:maxLines="3"
-        android:textSize="@dimen/dimen_15_dip"
         android:singleLine="false"
         android:textColor="@color/purple"
-        />
-
-    
+        android:textSize="@dimen/dimen_15_dip" />
 
 </LinearLayout>
