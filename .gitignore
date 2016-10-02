@@ -40,6 +40,11 @@ $RECYCLE.BIN/
 *.class
 
 bin/
+bin/classes/com/wnc/srtlearn/R$id.class
+bin/classes/com/wnc/srtlearn/R$layout.class
+bin/classes/com/wnc/srtlearn/R$raw.class
+bin/classes/com/wnc/srtlearn/R$string.class
+bin/classes/com/wnc/srtlearn/R$style.class
 .settings/
 
 # Files that might appear on external disk

@@ -634,10 +634,10 @@ public final class R {
     }
     public static final class id {
         public static final int actSrtSearch=0x7f0c0033;
-        public static final int add_tag_dialg_content=0x7f0c0050;
-        public static final int add_tag_dialg_no=0x7f0c0051;
-        public static final int add_tag_dialg_ok=0x7f0c0052;
-        public static final int add_tag_dialg_title=0x7f0c004f;
+        public static final int add_tag_dialg_content=0x7f0c0051;
+        public static final int add_tag_dialg_no=0x7f0c0052;
+        public static final int add_tag_dialg_ok=0x7f0c0053;
+        public static final int add_tag_dialg_title=0x7f0c0050;
         public static final int author_book=0x7f0c0002;
         public static final int btnBDFanyi=0x7f0c000a;
         public static final int btnBihua=0x7f0c0006;
@@ -678,19 +678,18 @@ public final class R {
         public static final int etFanyi=0x7f0c0009;
         public static final int etHanzi_bh=0x7f0c0007;
         public static final int et_recresult=0x7f0c0030;
-        public static final int evChs=0x7f0c004e;
+        public static final int evChs=0x7f0c004f;
         public static final int file_tv=0x7f0c000f;
         public static final int gallery=0x7f0c0008;
         public static final int id_book=0x7f0c0000;
-        public static final int imageview=0x7f0c004b;
+        public static final int imageview=0x7f0c004c;
         public static final int imgbtn_fullscreen=0x7f0c003e;
-        public static final int imgbtn_play=0x7f0c0044;
-        public static final int imgbutton_replay_custom=0x7f0c0045;
-        public static final int imgbutton_replay_setting=0x7f0c0046;
-        public static final int layout_add_and_sub_afterload=0x7f0c0055;
-        public static final int layout_add_and_sub_count=0x7f0c0053;
-        public static final int layout_add_and_sub_preload=0x7f0c0054;
-        public static final int linearLayout=0x7f0c0043;
+        public static final int imgbtn_play=0x7f0c0045;
+        public static final int imgbutton_replay_custom=0x7f0c0046;
+        public static final int imgbutton_replay_setting=0x7f0c0047;
+        public static final int layout_add_and_sub_afterload=0x7f0c0056;
+        public static final int layout_add_and_sub_count=0x7f0c0054;
+        public static final int layout_add_and_sub_preload=0x7f0c0055;
         public static final int lvSrtSearch=0x7f0c0035;
         public static final int myact=0x7f0c0005;
         public static final int name_book=0x7f0c0001;
@@ -705,22 +704,24 @@ public final class R {
         public static final int recbtn2=0x7f0c002a;
         public static final int recword_gallery=0x7f0c0031;
         public static final int sayBtn=0x7f0c002b;
-        public static final int seekBar=0x7f0c0042;
-        public static final int srt_replay_set_dialg_no=0x7f0c0057;
-        public static final int srt_replay_set_dialg_ok=0x7f0c0056;
+        public static final int seekBar=0x7f0c0044;
+        public static final int srt_replay_set_dialg_no=0x7f0c0058;
+        public static final int srt_replay_set_dialg_ok=0x7f0c0057;
+        public static final int srtinfoTv=0x7f0c0042;
         public static final int sv=0x7f0c0041;
-        public static final int text=0x7f0c004c;
+        public static final int text=0x7f0c004d;
         public static final int timeline_tv=0x7f0c0016;
         public static final int tipTv=0x7f0c0040;
-        public static final int tvEng=0x7f0c004d;
-        public static final int tvEpidoseInfo=0x7f0c0049;
+        public static final int tvEng=0x7f0c004e;
+        public static final int tvEpidoseInfo=0x7f0c004a;
         public static final int tvSearchDialog=0x7f0c0032;
         public static final int tvSearchEng=0x7f0c0004;
-        public static final int tvTimeLine=0x7f0c004a;
+        public static final int tvTimeLine=0x7f0c004b;
         public static final int tv_rectip=0x7f0c002f;
-        public static final int vchs_tv=0x7f0c0048;
-        public static final int veng_tv=0x7f0c0047;
-        public static final int video_head=0x7f0c003d;
+        public static final int vchs_tv=0x7f0c0049;
+        public static final int veng_tv=0x7f0c0048;
+        public static final int video_headll=0x7f0c003d;
+        public static final int video_operLl=0x7f0c0043;
     }
     public static final class integer {
         public static final int piechartView_amountLabelTextSize=0x7f080001;

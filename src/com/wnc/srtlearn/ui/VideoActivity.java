@@ -32,6 +32,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -126,7 +127,7 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 
 	private void init()
 	{
-		headLayout = (LinearLayout) findViewById(R.id.video_head);
+		headLayout = (LinearLayout) findViewById(R.id.video_headll);
 		button_onlyone = (Button) findViewById(R.id.button_onlyone);
 		imgButton_fullscreen = (ImageButton) findViewById(R.id.imgbtn_fullscreen);
 		imgButton_play = (ImageButton) findViewById(R.id.imgbtn_play);
@@ -640,6 +641,7 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 	{
 		veng_tv.setText(srt.getEng() == null ? "NULL" : srt.getEng());
 		vchs_tv.setText(srt.getChs() == null ? "NULL" : srt.getChs());
+		((TextView) findViewById(R.id.srtinfoTv)).setText(srt.getEng() + "\n" + srt.getChs());
 	}
 
 	@Override
@@ -768,12 +770,17 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 		if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
 		{
 			super.onConfigurationChanged(newConfig);
-			videoView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+			findViewById(R.id.video_operLl).setVisibility(View.GONE);
+			findViewById(R.id.srtinfoTv).setVisibility(View.VISIBLE);
+			((RelativeLayout) videoView.getParent()).setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+			videoView.setLayoutParams(new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
 		}
 		else if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
 		{
 			super.onConfigurationChanged(newConfig);
-			videoView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (int) (0.4 * Math.max(MyAppParams.getScreenWidth(), MyAppParams.getScreenHeight()))));
+			((RelativeLayout) videoView.getParent()).setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (int) (0.4 * Math.max(MyAppParams.getScreenWidth(), MyAppParams.getScreenHeight()))));
+			findViewById(R.id.video_operLl).setVisibility(View.VISIBLE);
+			findViewById(R.id.srtinfoTv).setVisibility(View.GONE);
 		}
 		hideHead();
 		hideVirtualBts();
