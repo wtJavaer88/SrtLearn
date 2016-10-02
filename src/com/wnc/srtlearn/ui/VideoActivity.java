@@ -64,14 +64,15 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 	public static final int SRT_AUTOPAUSE_CODE = 100;
 	public static final int ON_PLAYING_CODE = 101;
 	private MyVideoView videoView;
-	private Button button_onlyone;
+	private Button bt_videomenu;
 	private MediaPlayer mediaPlayer;
 	public SeekBar seekBar;
 	private GestureDetector gestureDetector;
 	private TextView veng_tv;
 	private TextView vchs_tv;
 	private TextView tipTv;
-	LinearLayout headLayout;
+	LinearLayout videoHeadLayout;
+	LinearLayout videoBottomLayout;
 	private List<SrtInfo> srtInfos;
 	private int curIndex = DataHolder.getCurrentSrtIndex();
 	private SrtInfo curSrt;
@@ -127,8 +128,10 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 
 	private void init()
 	{
-		headLayout = (LinearLayout) findViewById(R.id.video_headll);
-		button_onlyone = (Button) findViewById(R.id.button_onlyone);
+		videoHeadLayout = (LinearLayout) findViewById(R.id.video_headll);
+		videoBottomLayout = (LinearLayout) findViewById(R.id.video_bottomll2);
+		bt_videomenu = (Button) findViewById(R.id.videomenuBt);
+		System.out.println("111");
 		imgButton_fullscreen = (ImageButton) findViewById(R.id.imgbtn_fullscreen);
 		imgButton_play = (ImageButton) findViewById(R.id.imgbtn_play);
 		imgbutton_replay_setting = (ImageButton) findViewById(R.id.imgbutton_replay_setting);
@@ -137,7 +140,6 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 		veng_tv = (TextView) findViewById(R.id.veng_tv);
 		vchs_tv = (TextView) findViewById(R.id.vchs_tv);
 		tipTv = (TextView) findViewById(R.id.tipTv);
-
 		videoView = (MyVideoView) findViewById(R.id.sv);
 		seekBar = (SeekBar) findViewById(R.id.seekBar);
 		seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener()
@@ -162,7 +164,6 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 			{
 			}
 		});
-
 	}
 
 	private void initData()
@@ -248,7 +249,7 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 			}
 		});
 
-		button_onlyone.setOnClickListener(this);
+		bt_videomenu.setOnClickListener(this);
 		imgButton_fullscreen.setOnClickListener(this);
 		imgButton_play.setOnClickListener(this);
 		imgbutton_replay_setting.setOnClickListener(this);
@@ -294,7 +295,7 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 		// LinearLayout.LayoutParams.MATCH_PARENT));
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
-		hideHead();
+		hideVideoMenus();
 		isShowingSrt = true;
 		isPaused = false;
 
@@ -323,7 +324,7 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 	{
 		switch (v.getId())
 		{
-		case R.id.button_onlyone:
+		case R.id.videomenuBt:
 			onlyOneSrt = onlyOneSrt ? false : true;
 			if (onlyOneSrt)
 			{
@@ -334,7 +335,7 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 			screenChange();
 			break;
 		case R.id.imgbtn_play:
-			hideHead();
+			hideVideoMenus();
 			playpause();
 			break;
 
@@ -343,7 +344,7 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 			break;
 
 		case R.id.imgbutton_replay_custom:
-			hideHead();
+			hideVideoMenus();
 			cusReplay();
 			break;
 
@@ -374,20 +375,32 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 
 	private void switchVideoMenus()
 	{
-		System.out.println("切换视频上下菜单");
-		if (this.headLayout.getVisibility() == View.VISIBLE)
+		System.out.println("切换视频上下菜单:" + this.videoHeadLayout.getVisibility());
+		if (this.videoHeadLayout.getVisibility() == View.VISIBLE)
 		{
-			hideHead();
+			hideVideoMenus();
 		}
 		else
 		{
-			this.headLayout.setVisibility(View.VISIBLE);
+			this.videoHeadLayout.setVisibility(View.VISIBLE);
+			this.videoBottomLayout.setVisibility(View.VISIBLE);
 		}
+	}
+
+	private void hideVideoMenus()
+	{
+		hideHead();
+		hideSeekbar();
+	}
+
+	private void hideSeekbar()
+	{
+		this.videoBottomLayout.setVisibility(View.INVISIBLE);
 	}
 
 	private void hideHead()
 	{
-		this.headLayout.setVisibility(View.GONE);
+		this.videoHeadLayout.setVisibility(View.GONE);
 	}
 
 	RelpayInfo replayInfo = new RelpayInfo();
@@ -809,7 +822,7 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 			findViewById(R.id.video_operLl).setVisibility(View.VISIBLE);
 			findViewById(R.id.srtinfoTv).setVisibility(View.GONE);
 		}
-		hideHead();
+		hideVideoMenus();
 		hideVirtualBts();
 	}
 
