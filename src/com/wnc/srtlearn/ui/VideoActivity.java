@@ -244,7 +244,7 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 			@Override
 			public void onClick()
 			{
-				switchHead();
+				switchVideoMenus();
 			}
 		});
 
@@ -372,9 +372,9 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 
 	}
 
-	private void switchHead()
+	private void switchVideoMenus()
 	{
-		System.out.println("切换视频头");
+		System.out.println("切换视频上下菜单");
 		if (this.headLayout.getVisibility() == View.VISIBLE)
 		{
 			hideHead();
@@ -543,7 +543,6 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 
 	private void videoSeek(int time)
 	{
-		hideHead();
 		isShowingSrt = true;
 		isPaused = false;
 		this.imgButton_play.setImageResource(R.drawable.bfq_pause);
