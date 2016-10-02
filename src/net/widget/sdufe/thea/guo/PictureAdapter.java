@@ -16,96 +16,93 @@ import com.wnc.srtlearn.R;
 public class PictureAdapter extends BaseAdapter
 {
 
-    private Context context;
-    private int selectItem;
-    private List<GalleryModel> list;
+	private Context context;
+	private int selectItem;
+	private List<GalleryModel> list;
 
-    public PictureAdapter(Context context, List<GalleryModel> list)
-    {
-        super();
-        this.context = context;
-        this.list = list;
-    }
+	public PictureAdapter(Context context, List<GalleryModel> list)
+	{
+		super();
+		this.context = context;
+		this.list = list;
+	}
 
-    @Override
-    public int getCount()
-    {
-        if (list != null)
-        {
-            return list.size();
-        }
-        return 0;
-    }
+	@Override
+	public int getCount()
+	{
+		if (list != null)
+		{
+			return list.size();
+		}
+		return 0;
+	}
 
-    @Override
-    public Object getItem(int position)
-    {
-        if (list != null)
-        {
-            return list.get(position);
-        }
-        return null;
-    }
+	@Override
+	public Object getItem(int position)
+	{
+		if (list != null)
+		{
+			return list.get(position);
+		}
+		return null;
+	}
 
-    @Override
-    public long getItemId(int position)
-    {
-        return position;
-    }
+	@Override
+	public long getItemId(int position)
+	{
+		return position;
+	}
 
-    public void setSelectItem(int selectItem)
-    {
+	public void setSelectItem(int selectItem)
+	{
 
-        if (this.selectItem != selectItem)
-        {
-            this.selectItem = selectItem;
-            notifyDataSetChanged();
-        }
-    }
+		if (this.selectItem != selectItem)
+		{
+			this.selectItem = selectItem;
+			notifyDataSetChanged();
+		}
+	}
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent)
-    {
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent)
+	{
 
-        ViewHold hold;
+		ViewHold hold;
 
-        if (convertView == null)
-        {
-            hold = new ViewHold();
-            convertView = LayoutInflater.from(context).inflate(
-                    R.layout.gallery_item, null);
-            convertView.setTag(hold);
-        }
-        else
-        {
-            hold = (ViewHold) convertView.getTag();
-        }
-        hold.mImageView = (ImageView) convertView.findViewById(R.id.imageview);
-        hold.mTextView = (TextView) convertView.findViewById(R.id.text);
+		if (convertView == null)
+		{
+			hold = new ViewHold();
+			convertView = LayoutInflater.from(context).inflate(R.layout.gallery_item, null);
+			convertView.setTag(hold);
+		}
+		else
+		{
+			hold = (ViewHold) convertView.getTag();
+		}
+		hold.mImageView = (ImageView) convertView.findViewById(R.id.imageview);
+		hold.mTextView = (TextView) convertView.findViewById(R.id.text);
 
-        hold.mImageView.setImageResource(list.get(position).getImageView());
-        hold.mTextView.setText(list.get(position).getText());
-        if (selectItem == position)
-        {
-            hold.mImageView.setLayoutParams(new LinearLayout.LayoutParams(150,
-                    180));
-            hold.mTextView.setTextSize(20);
-            hold.mTextView.setFocusable(true);
-        }
-        else
-        {
-            hold.mImageView.setLayoutParams(new LinearLayout.LayoutParams(120,
-                    150));
-            hold.mTextView.setTextSize(20);
-            hold.mTextView.setFocusable(false);
-        }
-        return convertView;
-    }
+		hold.mImageView.setImageResource(list.get(position).getImageView());
+		hold.mTextView.setText(list.get(position).getText());
+		if (selectItem == position)
+		{
+			hold.mImageView.setLayoutParams(new LinearLayout.LayoutParams(240, 320));
+			hold.mTextView.setTextSize(20);
+			hold.mTextView.setFocusable(true);
+		}
+		else
+		{
+			hold.mImageView.setLayoutParams(new LinearLayout.LayoutParams(180, 240));
+			hold.mTextView.setTextSize(20);
+			hold.mTextView.setFocusable(false);
+		}
+		return convertView;
+	}
 
-    static class ViewHold
-    {
-        public TextView mTextView;
-        private ImageView mImageView;
-    }
+	static class ViewHold
+	{
+		public TextView mTextView;
+		private ImageView mImageView;
+	}
 
 }

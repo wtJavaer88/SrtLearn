@@ -19,6 +19,6 @@
         android:layout_height="wrap_content"
         android:textColor="#820072"
         android:text="aa"
-        android:textSize="16dp"/>
+        android:textSize="10dp"/>
 
 </LinearLayout>

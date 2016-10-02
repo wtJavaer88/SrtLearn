@@ -168,6 +168,7 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 	private void initData()
 	{
 		srtInfos = DataHolder.getAllSrtInfos();
+		getTimelySrtInfos();
 		Intent intent = getIntent();
 
 		if (intent != null)
@@ -253,6 +254,33 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 		imgbutton_replay_setting.setOnClickListener(this);
 		imgbutton_custom_replay.setOnClickListener(this);
 
+	}
+
+	private void getTimelySrtInfos()
+	{
+		new Thread(new Runnable()
+		{
+
+			@Override
+			public void run()
+			{
+				int i = 0;
+				while (++i < 10)
+				{
+					List<SrtInfo> allSrtInfos = DataHolder.getAllSrtInfos();
+					if (allSrtInfos != null)
+						srtInfos = allSrtInfos;
+					try
+					{
+						Thread.sleep(1000);
+					}
+					catch (InterruptedException e)
+					{
+						e.printStackTrace();
+					}
+				}
+			}
+		}).start();
 	}
 
 	/**
