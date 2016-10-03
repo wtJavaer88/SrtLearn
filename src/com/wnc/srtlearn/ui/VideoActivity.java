@@ -63,6 +63,7 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 	private VideoPlayThread videoPlayThread;
 	public static final int SRT_AUTOPAUSE_CODE = 100;
 	public static final int ON_PLAYING_CODE = 101;
+	public static final int ON_CLEAR_CODE = 102;
 	private MyVideoView videoView;
 	private Button bt_videomenu;
 	private MediaPlayer mediaPlayer;
@@ -71,8 +72,7 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 	private TextView veng_tv;
 	private TextView vchs_tv;
 	private TextView tipTv;
-	LinearLayout videoHeadLayout;
-	LinearLayout videoBottomLayout;
+	LinearLayout videoHeadLayout, videoBottomLayout, videoFloatLayout;
 	private List<SrtInfo> srtInfos;
 	private int curIndex = DataHolder.getCurrentSrtIndex();
 	private SrtInfo curSrt;
@@ -80,7 +80,7 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 	public int seekendtime = 0;
 
 	private int currentPosition;
-	ImageButton imgButton_fullscreen, imgButton_play, imgbutton_replay_setting, imgbutton_custom_replay;
+	ImageButton imgButton_fullscreen, imgButton_play, imgbutton_replay_setting, imgbutton_custom_replay, imgbutton_float_replay, imgbutton_float_zimu;
 
 	private String videoSeries;
 	private String videoEpisode;
@@ -128,28 +128,39 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 
 	private void init()
 	{
-		videoHeadLayout = (LinearLayout) findViewById(R.id.video_headll);
+		videoHeadLayout = (LinearLayout) findViewById(R.id.video_headll2);
 		videoBottomLayout = (LinearLayout) findViewById(R.id.video_bottomll2);
+		videoFloatLayout = (LinearLayout) findViewById(R.id.video_floatll2);
+		System.out.println("videoFloatLayout:" + videoFloatLayout);
 		bt_videomenu = (Button) findViewById(R.id.videomenuBt);
 		System.out.println("111");
 		imgButton_fullscreen = (ImageButton) findViewById(R.id.imgbtn_fullscreen);
 		imgButton_play = (ImageButton) findViewById(R.id.imgbtn_play);
 		imgbutton_replay_setting = (ImageButton) findViewById(R.id.imgbutton_replay_setting);
 		imgbutton_custom_replay = (ImageButton) findViewById(R.id.imgbutton_replay_custom);
+		imgbutton_float_replay = (ImageButton) findViewById(R.id.imgbutton_float_replay);
+		imgbutton_float_zimu = (ImageButton) findViewById(R.id.imgbutton_float_zimu);
+		System.out.println("111");
 
 		veng_tv = (TextView) findViewById(R.id.veng_tv);
 		vchs_tv = (TextView) findViewById(R.id.vchs_tv);
 		tipTv = (TextView) findViewById(R.id.tipTv);
 		videoView = (MyVideoView) findViewById(R.id.sv);
 		seekBar = (SeekBar) findViewById(R.id.seekBar);
+
 		seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener()
 		{
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar)
 			{
 				System.out.println("onStopTrackingTouch");
-				updateUI(seekBar.getProgress());
-				initSeekTimes();
+				if (updateUI(seekBar.getProgress()))
+					initSeekTimes();
+				else
+				{
+					seektime = seekBar.getProgress();
+					seekendtime = seekBar.getMax();
+				}
 				videoSeek(seektime);
 			}
 
@@ -181,18 +192,17 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 				this.videoEpisode = PatternUtil.getFirstPatternGroup(fileInfo, "/(.*+)").trim();
 				System.out.println(videoEpisode + " " + videoSeries);
 			}
+
 			seektime = intent.getIntExtra("seekfrom", 0);
 			seekendtime = intent.getIntExtra("seekto", 0);
 			curIndex = intent.getIntExtra("curindex", 0);
 			curSrt = srtInfos.get(curIndex);
-			System.out.println("curIndex:  " + curIndex);
+			System.out.println("curSrt:  " + curSrt);
 			setUI();
-			setTipTv(0);
+			setCurTime(seektime);
 		}
-
 		currentPosition = seektime;
 		videoView.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);// 4.0一下的版本需要加该段代码。
-
 		videoView.getHolder().addCallback(new Callback()
 		{
 
@@ -201,10 +211,14 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 			{
 				/**
 				 * 当点击手机上home键（或其他使SurfaceView视图消失的键）时，调用该方法，获取到当前视频的播放值，
-				 * currentPosition。 并停止播放。
+				 * currentPosition。 并暂停播放。
 				 */
-				currentPosition = mediaPlayer.getCurrentPosition();
-				stopPlay();
+				if (mediaPlayer.isPlaying())
+				{
+					currentPosition = mediaPlayer.getCurrentPosition();
+					mediaPlayer.stop();
+				}
+
 			}
 
 			@Override
@@ -214,16 +228,41 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 				 * 当重新回到该视频应当视图的时候，调用该方法，获取到currentPosition，
 				 * 并从该currentPosition开始继续播放。
 				 */
-				if (currentPosition > 0)
+				try
 				{
-					if (mediaPlayer != null)
+					if (currentPosition > 0)
 					{
-						mediaPlayer.seekTo(currentPosition);
+						if (mediaPlayer != null)
+						{
+							hideVideoMenus();
+							isShowingSrt = true;
+							isPaused = false;
+
+							String path = SrtTextHelper.getVideoFile(MyAppParams.VIDEO_FOLDER, videoSeries, videoEpisode);
+							mediaPlayer = SingleMPlayer.getMp(path);
+							mediaPlayer.setDisplay(videoView.getHolder());
+							mediaPlayer.start();
+
+							mediaPlayer.setOnPreparedListener(new OnPreparedListener()
+							{
+								@Override
+								public void onPrepared(MediaPlayer mp)
+								{
+									seekBar.setProgress(currentPosition);
+									mediaPlayer.seekTo(currentPosition);
+								}
+							});
+						}
+						else
+						{
+							initHoldPlay();
+						}
 					}
-					else
-					{
-						initHoldPlay();
-					}
+				}
+				catch (IllegalStateException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
 
@@ -248,15 +287,18 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 				switchVideoMenus();
 			}
 		});
-
 		bt_videomenu.setOnClickListener(this);
 		imgButton_fullscreen.setOnClickListener(this);
 		imgButton_play.setOnClickListener(this);
 		imgbutton_replay_setting.setOnClickListener(this);
 		imgbutton_custom_replay.setOnClickListener(this);
-
+		imgbutton_float_replay.setOnClickListener(this);
+		imgbutton_float_zimu.setOnClickListener(this);
 	}
 
+	/**
+	 * 后台线程实时更新总srtinfo
+	 */
 	private void getTimelySrtInfos()
 	{
 		new Thread(new Runnable()
@@ -266,10 +308,10 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 			public void run()
 			{
 				int i = 0;
-				while (++i < 10)
+				while (++i <= 15)
 				{
 					List<SrtInfo> allSrtInfos = DataHolder.getAllSrtInfos();
-					if (allSrtInfos != null)
+					if (allSrtInfos != null && allSrtInfos.size() > srtInfos.size())
 						srtInfos = allSrtInfos;
 					try
 					{
@@ -289,10 +331,6 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 	 */
 	private void initHoldPlay()
 	{
-		// 横屏最大化
-		// videoView.setLayoutParams(new
-		// LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-		// LinearLayout.LayoutParams.MATCH_PARENT));
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
 		hideVideoMenus();
@@ -302,6 +340,7 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 		String path = SrtTextHelper.getVideoFile(MyAppParams.VIDEO_FOLDER, videoSeries, videoEpisode);
 		mediaPlayer = SingleMPlayer.getMp(path);
 		mediaPlayer.setDisplay(videoView.getHolder());
+
 		mediaPlayer.setOnPreparedListener(new OnPreparedListener()
 		{
 
@@ -312,9 +351,15 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 				int max = mediaPlayer.getDuration();
 				seekBar.setProgress(currentPosition);
 				seekBar.setMax(max);
+
+				tipTv.setText("  " + videoSeries + "-" + videoEpisode);
+
+				((TextView) findViewById(R.id.totaltime)).setText(SrtTextHelper.timeToText(seekBar.getMax()));
 				mediaPlayer.seekTo(currentPosition);
 				videoPlayThread = new VideoPlayThread(VideoActivity.this);
+
 				videoPlayThread.start();
+
 			}
 		});
 	}
@@ -347,6 +392,13 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 			hideVideoMenus();
 			cusReplay();
 			break;
+		case R.id.imgbutton_float_replay:
+			hideVideoMenus();
+			cusReplay();
+			break;
+		case R.id.imgbutton_float_zimu:
+			ToastUtil.showShortToast(this, "启用字幕设置");
+			break;
 
 		default:
 			break;
@@ -373,15 +425,18 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 
 	}
 
+	@SuppressLint("NewApi")
 	private void switchVideoMenus()
 	{
 		System.out.println("切换视频上下菜单:" + this.videoHeadLayout.getVisibility());
 		if (this.videoHeadLayout.getVisibility() == View.VISIBLE)
 		{
 			hideVideoMenus();
+			hideVirtualBts();
 		}
 		else
 		{
+			videoFloatLayout.setVisibility(View.VISIBLE);
 			this.videoHeadLayout.setVisibility(View.VISIBLE);
 			this.videoBottomLayout.setVisibility(View.VISIBLE);
 		}
@@ -391,6 +446,7 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 	{
 		hideHead();
 		hideSeekbar();
+		videoFloatLayout.setVisibility(View.INVISIBLE);
 	}
 
 	private void hideSeekbar()
@@ -414,7 +470,6 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 
 		if (replaySettingDialog == null)
 		{
-			System.out.println("replayInfo:" + replayInfo);
 			replaySettingDialog = new AlertDialog.Builder(this).create();
 			replaySettingDialog.show();
 			replaySettingDialog.getWindow().setGravity(Gravity.CENTER);
@@ -597,7 +652,7 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 			else if (msg.what == ON_PLAYING_CODE)
 			{
 				int position = BasicNumberUtil.getNumber("" + msg.obj);
-				setTipTv(position);
+				setCurTime(position);
 				if (!isCusReplay())
 				{
 					if (updateUI(position))
@@ -611,6 +666,10 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 					updateReplayUI(BasicNumberUtil.getNumber("" + msg.obj));
 				}
 			}
+			else if (msg.what == ON_CLEAR_CODE)
+			{
+				clearEngChs();
+			}
 			else
 			{
 				playpause();
@@ -619,17 +678,9 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 
 	};
 
-	private void setTipTv(int position)
+	private void setCurTime(int position)
 	{
-		if (position > 0)
-		{
-			final String timeStr = SrtTextHelper.timeToText(position) + "/" + SrtTextHelper.timeToText(seekBar.getMax());
-			tipTv.setText("  " + videoSeries + "-" + videoEpisode + "    " + timeStr);
-		}
-		else
-		{
-			tipTv.setText(videoSeries + "-" + videoEpisode);
-		}
+		((TextView) findViewById(R.id.curtime)).setText(SrtTextHelper.timeToText(position));
 	}
 
 	private boolean updateReplayUI(int position)
@@ -679,9 +730,19 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 
 	private void setSrtContent(SrtInfo srt)
 	{
-		veng_tv.setText(srt.getEng() == null ? "NULL" : srt.getEng());
-		vchs_tv.setText(srt.getChs() == null ? "NULL" : srt.getChs());
+		veng_tv.setText(srt.getEng() == null ? "" : srt.getEng());
+		vchs_tv.setText(srt.getChs() == null ? "" : srt.getChs());
 		((TextView) findViewById(R.id.srtinfoTv)).setText(srt.getEng() + "\n" + srt.getChs());
+	}
+
+	/**
+	 * 时间一到清除当前字幕
+	 */
+	public void clearEngChs()
+	{
+		veng_tv.setText("");
+		vchs_tv.setText("");
+		((TextView) findViewById(R.id.srtinfoTv)).setText("");
 	}
 
 	@Override
@@ -760,6 +821,7 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 	@Override
 	public void onDestroy()
 	{
+		System.out.println("destroy on...");
 		stopPlay();
 		super.onDestroy();
 	}
@@ -777,7 +839,10 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 	@Override
 	public void onPause()
 	{
-		System.out.println("OnPause........" + mediaPlayer.isPlaying());
+		// if (mediaPlayer != null && mediaPlayer.isPlaying())
+		// {
+		// playpause();
+		// }
 		super.onPause();
 	}
 
@@ -864,4 +929,5 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 			playpause();
 		}
 	}
+
 }

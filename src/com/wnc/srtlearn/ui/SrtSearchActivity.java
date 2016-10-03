@@ -38,6 +38,7 @@ import com.wnc.srtlearn.modules.search.SrtWordAutoAdapter;
 import com.wnc.srtlearn.monitor.StudyMonitor;
 import com.wnc.srtlearn.monitor.work.ActiveWork;
 import com.wnc.srtlearn.monitor.work.WORKTYPE;
+import com.wnc.string.PatternUtil;
 import common.app.BasicPhoneUtil;
 import common.app.ToastUtil;
 import common.utils.TextFormatUtil;
@@ -73,12 +74,9 @@ public class SrtSearchActivity extends BaseVerActivity implements OnClickListene
 		{
 			dialog = "Today is a big day.".trim();
 		}
-		for (String word : dialog.split("[ .,!。，！]"))
+		for (String word : PatternUtil.getPatternStrings(dialog.toLowerCase(), "\\w+"))
 		{
-			word = TextFormatUtil.getTextNoSymbol(word);
-			ActSrtWord srtWord = new ActSrtWord();
-			srtWord.setWord(word);
-			items.add(srtWord);
+			items.add(new ActSrtWord(word));
 		}
 	}
 

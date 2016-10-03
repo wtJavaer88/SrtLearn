@@ -4,33 +4,37 @@ import net.widget.act.abs.AutoCompletable;
 
 public class ActSrtWord implements AutoCompletable
 {
-    private String word;
+	private String word;
 
-    @Override
-    public String toString()
-    {
-        return this.word;
-    }
+	public ActSrtWord(String word)
+	{
+		this.word = word;
+	}
 
-    @Override
-    public boolean match(String searchStr)
-    {
-        if (this.getWord() != null
-                && this.getWord().trim().startsWith(searchStr))
-        {
-            return true;
-        }
+	@Override
+	public String toString()
+	{
+		return this.word;
+	}
 
-        return false;
-    }
+	@Override
+	public boolean match(String searchStr)
+	{
+		if (this.getWord() != null && this.getWord().trim().startsWith(searchStr))
+		{
+			return true;
+		}
 
-    public String getWord()
-    {
-        return word;
-    }
+		return false;
+	}
 
-    public void setWord(String word)
-    {
-        this.word = word;
-    }
+	public String getWord()
+	{
+		return word;
+	}
+
+	public void setWord(String word)
+	{
+		this.word = word;
+	}
 }
