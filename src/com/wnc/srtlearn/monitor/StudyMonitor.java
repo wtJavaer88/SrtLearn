@@ -17,12 +17,19 @@ public class StudyMonitor
 {
 	private static ApplicationActiveWork appwork;
 	static List<ActiveWork> activeWorks = new ArrayList<ActiveWork>();
+	static MonitorThread monitorThread = new MonitorThread();
 
 	// 封装监控
 	public static void runMonitor()
 	{
 		appwork = new ApplicationActiveWork();
-		new MonitorThread().start();
+		monitorThread.setDaemon(true);
+		monitorThread.start();
+	}
+
+	public static void stopMonitor()
+	{
+		monitorThread.stopRun();
 	}
 
 	/**

@@ -906,6 +906,7 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 	@Override
 	public void onDestroy()
 	{
+		StudyMonitor.stopMonitor();
 		if (alertDialog != null)
 		{
 			alertDialog.dismiss();

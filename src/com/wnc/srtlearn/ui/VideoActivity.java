@@ -1,6 +1,7 @@
 package com.wnc.srtlearn.ui;
 
 import java.lang.Thread.UncaughtExceptionHandler;
+import java.util.Arrays;
 import java.util.List;
 
 import net.widget.cqq.AddAndSubView;
@@ -8,6 +9,7 @@ import srt.DataHolder;
 import srt.SrtInfo;
 import srt.SrtTextHelper;
 import srt.TimeHelper;
+import srt.ex.SrtException;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -40,12 +42,16 @@ import android.widget.TextView;
 import com.wnc.basic.BasicNumberUtil;
 import com.wnc.basic.BasicStringUtil;
 import com.wnc.srtlearn.R;
+import com.wnc.srtlearn.modules.srt.Favoritable;
+import com.wnc.srtlearn.modules.srt.FavoriteMgr;
+import com.wnc.srtlearn.modules.video.MenuDispossThread;
 import com.wnc.srtlearn.modules.video.MyVideoView;
 import com.wnc.srtlearn.modules.video.MyVideoView.OnVideoClickLinster;
 import com.wnc.srtlearn.modules.video.RelpayInfo;
 import com.wnc.srtlearn.modules.video.SingleMPlayer;
 import com.wnc.srtlearn.modules.video.VideoPlayThread;
 import com.wnc.string.PatternUtil;
+
 import common.app.BasicPhoneUtil;
 import common.app.ToastUtil;
 import common.uihelper.MyAppParams;
@@ -58,12 +64,15 @@ import common.uihelper.gesture.MyCtrlableGestureDetector;
  * 使用SurfaceView和MediaPlayer的本地视频播放器。
  * 
  */
-public class VideoActivity extends Activity implements OnClickListener, UncaughtExceptionHandler, CtrlableHorGestureDetectorListener, CtrlableDoubleClickGestureDetectorListener
+public class VideoActivity extends Activity implements OnClickListener, UncaughtExceptionHandler, CtrlableHorGestureDetectorListener, CtrlableDoubleClickGestureDetectorListener, Favoritable
 {
 	private VideoPlayThread videoPlayThread;
+	MenuDispossThread menuDispossThread;
 	public static final int SRT_AUTOPAUSE_CODE = 100;
 	public static final int ON_PLAYING_CODE = 101;
 	public static final int ON_CLEAR_CODE = 102;
+	public static final int ON_MENU_DISPOSS_CODE = 103;
+
 	private MyVideoView videoView;
 	private Button bt_videomenu;
 	private MediaPlayer mediaPlayer;
@@ -80,7 +89,7 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 	public int seekendtime = 0;
 
 	private int currentPosition;
-	ImageButton imgButton_fullscreen, imgButton_play, imgbutton_replay_setting, imgbutton_custom_replay, imgbutton_float_replay, imgbutton_float_zimu;
+	ImageButton imgButton_fullscreen, imgButton_play, imgbutton_replay_setting, imgbutton_custom_replay, imgbutton_float_replay, imgbutton_float_zimu, imgbutton_float_favorite;
 
 	private String videoSeries;
 	private String videoEpisode;
@@ -140,7 +149,7 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 		imgbutton_custom_replay = (ImageButton) findViewById(R.id.imgbutton_replay_custom);
 		imgbutton_float_replay = (ImageButton) findViewById(R.id.imgbutton_float_replay);
 		imgbutton_float_zimu = (ImageButton) findViewById(R.id.imgbutton_float_zimu);
-		System.out.println("111");
+		imgbutton_float_favorite = (ImageButton) findViewById(R.id.imgbutton_float_favorite);
 
 		veng_tv = (TextView) findViewById(R.id.veng_tv);
 		vchs_tv = (TextView) findViewById(R.id.vchs_tv);
@@ -158,6 +167,7 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 					initSeekTimes();
 				else
 				{
+
 					seektime = seekBar.getProgress();
 					seekendtime = seekBar.getMax();
 				}
@@ -294,6 +304,30 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 		imgbutton_custom_replay.setOnClickListener(this);
 		imgbutton_float_replay.setOnClickListener(this);
 		imgbutton_float_zimu.setOnClickListener(this);
+		imgbutton_float_favorite.setOnClickListener(this);
+		menuListen();
+	}
+
+	/*
+	 * 监听菜单的自动消失
+	 */
+	private void menuListen()
+	{
+		System.out.println("menuListen");
+		menuDispossThread = new MenuDispossThread(this);
+		menuDispossThread.setDaemon(true);
+		menuDispossThread.start();
+	}
+
+	/**
+	 * 监听视频播放时的各种事件
+	 */
+	private void videoPlayListen()
+	{
+		System.out.println("videoPlayListen");
+		videoPlayThread = new VideoPlayThread(VideoActivity.this);
+		videoPlayThread.setDaemon(true);
+		videoPlayThread.start();
 	}
 
 	/**
@@ -347,7 +381,6 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 			@Override
 			public void onPrepared(MediaPlayer mp)
 			{
-				// mediaPlayer.start();
 				int max = mediaPlayer.getDuration();
 				seekBar.setProgress(currentPosition);
 				seekBar.setMax(max);
@@ -356,11 +389,9 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 
 				((TextView) findViewById(R.id.totaltime)).setText(SrtTextHelper.timeToText(seekBar.getMax()));
 				mediaPlayer.seekTo(currentPosition);
-				videoPlayThread = new VideoPlayThread(VideoActivity.this);
-
-				videoPlayThread.start();
-
+				videoPlayListen();
 			}
+
 		});
 	}
 
@@ -399,10 +430,42 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 		case R.id.imgbutton_float_zimu:
 			ToastUtil.showShortToast(this, "启用字幕设置");
 			break;
-
+		case R.id.imgbutton_float_favorite:
+			ToastUtil.showShortToast(this, "启用字幕设置");
+			List<SrtInfo> currentPlaySrtInfos = getCurrentPlaySrtInfos();
+			FavoriteMgr favoriteMgr = new FavoriteMgr(this, this);
+			if (favoriteMgr.save(currentPlaySrtInfos))
+			{
+				ToastUtil.showLongToast(this, "收藏成功!");
+			}
+			else
+			{
+				ToastUtil.showLongToast(this, "收藏失败!");
+			}
+			break;
 		default:
 			break;
 		}
+	}
+
+	public List<SrtInfo> getCurrentPlaySrtInfos()
+	{
+		try
+		{
+			if (isCusReplay())
+			{
+				return DataHolder.getSrtInfos(curIndex, curIndex + Math.max(0, replayInfo.getSrtcounts() - 1));
+			}
+			else
+			{
+				return Arrays.asList(DataHolder.getCurrent());
+			}
+		}
+		catch (SrtException e)
+		{
+			e.printStackTrace();
+		}
+		return Arrays.asList(curSrt);
 	}
 
 	/**
@@ -431,11 +494,13 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 		System.out.println("切换视频上下菜单:" + this.videoHeadLayout.getVisibility());
 		if (this.videoHeadLayout.getVisibility() == View.VISIBLE)
 		{
+			menuDispossThread.stopListen();
 			hideVideoMenus();
 			hideVirtualBts();
 		}
 		else
 		{
+			menuDispossThread.refresh();
 			videoFloatLayout.setVisibility(View.VISIBLE);
 			this.videoHeadLayout.setVisibility(View.VISIBLE);
 			this.videoBottomLayout.setVisibility(View.VISIBLE);
@@ -670,6 +735,11 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 			{
 				clearEngChs();
 			}
+			else if (msg.what == ON_MENU_DISPOSS_CODE)
+			{
+				System.out.println("菜单自动消失...");
+				hideVideoMenus();
+			}
 			else
 			{
 				playpause();
@@ -722,9 +792,21 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 					setUI();
 					return true;
 				}
+				// 还是上一个
 				return false;
 			}
 		}
+		for (int i = 0; i < srtInfos.size(); i++)
+		{
+			SrtInfo srt = srtInfos.get(i);
+			if (TimeHelper.getTime(srt.getFromTime()) >= position)
+			{
+				curIndex = i;
+				break;
+			}
+		}
+		// 没找到字幕,不用显示
+		clearEngChs();
 		return false;
 	};
 
@@ -930,4 +1012,24 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 		}
 	}
 
+	public String getCurFile()
+	{
+		return DataHolder.getFileKey();
+	}
+
+	public String getFavTag()
+	{
+		String tag = "tag<";
+		if (isCusReplay())
+		{
+			tag += "replay";
+		}
+		else
+		{
+			tag += "normal";
+		}
+
+		tag += ">";
+		return tag;
+	}
 }
