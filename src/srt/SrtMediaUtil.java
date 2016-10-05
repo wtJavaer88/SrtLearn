@@ -32,11 +32,9 @@ public class SrtMediaUtil
 	public static String getCurEposide()
 	{
 		String srtFile = DataHolder.getFileKey();
-		System.out.println("srtFile:" + srtFile);
 		String eposide;
 		if (BasicFileUtil.isExistFile(srtFile))
 		{
-			System.out.println("exist");
 			eposide = TextFormatUtil.getFileNameNoExtend(srtFile);
 		}
 		else

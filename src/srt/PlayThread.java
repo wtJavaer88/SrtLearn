@@ -85,10 +85,10 @@ public class PlayThread extends Thread
 		{
 			if (!SrtSetting.isPlayVoice())
 			{
-				if (srtVoicesWithBg.size() == 1)
-				{
-					SrtVoiceHelper.play(srtVoicesWithBg.peek());
-				}
+				// if (srtVoicesWithBg.size() == 1)
+				// {
+				// SrtVoiceHelper.play(srtVoicesWithBg.peek());
+				// }
 				return voiceDuration;
 			}
 
