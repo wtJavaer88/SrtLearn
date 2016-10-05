@@ -133,7 +133,7 @@ public class SrtSearchActivity extends BaseVerActivity implements OnClickListene
 		switch (v.getId())
 		{
 		case R.id.btn_srtsearch:
-			SrtInfoDao.openDatabase(this);
+			SrtInfoDao.openDatabase();
 			final String keyword = this.act.getText().toString();
 			ActiveWork activeWork = StudyMonitor.peekWork(WORKTYPE.SRT_SEARCH);
 			if (BasicStringUtil.isNullString(keyword) || keyword.trim().length() == 0)

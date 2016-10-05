@@ -12,20 +12,9 @@ public class SrtTextHelper
 		return text.replaceAll("\\{.*?\\}", "").replaceAll("<.*?>", "");
 	}
 
-	/**
-	 * 根据当前字幕文件获取字幕同名的文件夹
-	 * 
-	 * @param srtFilePath
-	 * @return
-	 */
-	public static String getSrtVoiceFolder(String srtFilePath)
-	{
-		return BasicFileUtil.getFileParent(srtFilePath) + File.separator + common.utils.TextFormatUtil.getFileNameNoExtend(srtFilePath);
-	}
-
 	public static String getSrtVoiceLocation(String srtFile, String voiceTimeStr)
 	{
-		return getSrtVoiceFolder(srtFile) + File.separator + voiceTimeStr.replace(":", "") + ".mp3";
+		return SrtMediaUtil.getSrtVoiceFolder(srtFile) + File.separator + voiceTimeStr.replace(":", "") + ".mp3";
 	}
 
 	public static boolean isSrtfile(File f)
@@ -52,7 +41,7 @@ public class SrtTextHelper
 				return folder + " / " + name;
 			}
 		}
-		return "";
+		return srtFilePath;
 	}
 
 	public static String timeToText(int millistime)

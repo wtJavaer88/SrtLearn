@@ -12,6 +12,7 @@ import srt.DataHolder;
 import srt.SRT_VIEW_TYPE;
 import srt.SrtFilesAchieve;
 import srt.SrtInfo;
+import srt.SrtMediaUtil;
 import srt.SrtPlayService;
 import srt.SrtTextHelper;
 import srt.TimeHelper;
@@ -110,7 +111,6 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 
 		// 因为是横屏,所以设置的滑屏比例低一些
 		this.gestureDetector = new GestureDetector(this, new MyCtrlableGestureDetector(this, 0.15, 0.25, this, this));
-		// enter(SrtFilesAchieve.getSrtFileByArrIndex(0, 6));
 
 		Intent intent = getIntent();
 		if (intent.hasExtra("seektime"))
@@ -119,7 +119,7 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 		}
 		else
 		{
-			if (srtPlayService.isSrtShowing())
+			if (hasSrtContent())
 			{
 				try
 				{
@@ -131,6 +131,8 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 				}
 			}
 		}
+		enter("Transformers.Prime.S01/S01E14");
+
 	}
 
 	private void enterFromExtra(Intent intent)
@@ -139,13 +141,7 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 		System.out.println("srtFilePath: " + srtFilePath);
 		try
 		{
-			int dotPos = srtFilePath.lastIndexOf(".");
-			if (dotPos != -1)
-			{
-				movieTv.setText(srtFilePath.substring(0, dotPos));
-			}
-			else
-				movieTv.setText(srtFilePath.replaceAll("\\..*+", ""));
+			movieTv.setText(TextFormatUtil.removeFileExtend(srtFilePath));
 			srtPlayService.seekSrtFile(MyAppParams.SRT_FOLDER + srtFilePath, intent.getStringExtra("seektime"));
 		}
 		catch (SrtException e)
@@ -582,7 +578,7 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 
 	private boolean hasSrtContent()
 	{
-		return srtPlayService.isSrtShowing();
+		return BasicStringUtil.isNotNullString(DataHolder.getFileKey());
 	}
 
 	/**
@@ -593,7 +589,7 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 		String filePath = "";
 		try
 		{
-			filePath = SrtFilesAchieve.getThumbPicPath(srtPlayService.getCurFile());
+			filePath = SrtMediaUtil.getThumbPicPath(srtPlayService.getCurFile());
 
 			Intent intent = ClickFileIntentFactory.getIntentByFile(filePath);
 			startActivity(intent);

@@ -6,10 +6,7 @@ import java.util.concurrent.TimeUnit;
 
 import srt.ex.SrtErrCode;
 import srt.ex.SrtException;
-import srt.ex.SrtNotFoundException;
-import android.util.Log;
 
-import com.wnc.basic.BasicFileUtil;
 import com.wnc.srtlearn.modules.srt.Favoritable;
 import com.wnc.srtlearn.modules.srt.FavoriteMgr;
 import com.wnc.srtlearn.modules.srt.SrtVoiceHelper;
@@ -97,34 +94,27 @@ public class SrtPlayService implements Favoritable
 		this.setReplayCtrl(false);
 		this.setReplayIndex(-1, -1);
 		System.out.println("srtFile:" + srtFile);
-		if (BasicFileUtil.isExistFile(srtFile))
+		sBaseLearnActivity.stopSrtPlay();
+		DataHolder.switchFile(srtFile);
+		if (!DataHolder.srtInfoMap.containsKey(srtFile))
 		{
-			sBaseLearnActivity.stopSrtPlay();
-			DataHolder.switchFile(srtFile);
-			if (!DataHolder.srtInfoMap.containsKey(srtFile))
+			new DataParseThread(getCurFile()).start();
+			while (DataHolder.getAllSrtInfos() == null || DataHolder.getAllSrtInfos().size() == 0)
 			{
-				new DataParseThread(getCurFile()).start();
-				while (DataHolder.getAllSrtInfos() == null || DataHolder.getAllSrtInfos().size() == 0)
+				try
 				{
-					try
-					{
-						TimeUnit.MILLISECONDS.sleep(50);
-					}
-					catch (InterruptedException e)
-					{
-						e.printStackTrace();
-					}
+					TimeUnit.MILLISECONDS.sleep(50);
 				}
-				sBaseLearnActivity.play(getSrtInfo(SRT_VIEW_TYPE.VIEW_CURRENT));
+				catch (InterruptedException e)
+				{
+					e.printStackTrace();
+				}
 			}
-			else
-			{
-				sBaseLearnActivity.play(getSrtInfo(SRT_VIEW_TYPE.VIEW_CURRENT));
-			}
+			sBaseLearnActivity.play(getSrtInfo(SRT_VIEW_TYPE.VIEW_CURRENT));
 		}
 		else
 		{
-			Log.e("srt", "not found " + srtFile);
+			sBaseLearnActivity.play(getSrtInfo(SRT_VIEW_TYPE.VIEW_CURRENT));
 		}
 	}
 
@@ -140,54 +130,46 @@ public class SrtPlayService implements Favoritable
 		this.setReplayCtrl(false);
 		this.setReplayIndex(-1, -1);
 		System.out.println("srtFile:" + srtFile);
-		if (BasicFileUtil.isExistFile(srtFile))
+		sBaseLearnActivity.stopSrtPlay();
+		DataHolder.switchFile(srtFile);
+		if (!DataHolder.srtInfoMap.containsKey(srtFile))
 		{
-			sBaseLearnActivity.stopSrtPlay();
-			DataHolder.switchFile(srtFile);
-			if (!DataHolder.srtInfoMap.containsKey(srtFile))
+			new DataParseThread(getCurFile(), seekTimeStr).start();
+			while (DataHolder.getAllSrtInfos() == null || DataHolder.getAllSrtInfos().size() == 0)
 			{
-				new DataParseThread(getCurFile(), seekTimeStr).start();
-				while (DataHolder.getAllSrtInfos() == null || DataHolder.getAllSrtInfos().size() == 0)
+				System.out.println("wait");
+				try
 				{
-					System.out.println("wait");
-					try
-					{
-						TimeUnit.MILLISECONDS.sleep(10);
-					}
-					catch (InterruptedException e)
-					{
-						e.printStackTrace();
-					}
+					TimeUnit.MILLISECONDS.sleep(10);
 				}
-				sBaseLearnActivity.play(getSrtInfo(SRT_VIEW_TYPE.VIEW_CURRENT));
-			}
-			else
-			{
-				SrtInfo curPlaySrtInfo = null;
-				for (int i = 0; i < DataHolder.getAllSrtInfos().size(); i++)
+				catch (InterruptedException e)
 				{
-					SrtInfo srtInfo = DataHolder.getAllSrtInfos().get(i);
-					if (srtInfo.getFromTime().toString().compareTo(seekTimeStr) >= 0)
-					{
-						curPlaySrtInfo = srtInfo;
-						DataHolder.setCurrentSrtIndex(i);
-						break;
-					}
-				}
-				if (curPlaySrtInfo == null)
-				{
-					throw new SrtException(SrtErrCode.SRT_OUTOF_RANGE);
-				}
-				else
-				{
-					sBaseLearnActivity.play(curPlaySrtInfo);
+					e.printStackTrace();
 				}
 			}
+			sBaseLearnActivity.play(getSrtInfo(SRT_VIEW_TYPE.VIEW_CURRENT));
 		}
 		else
 		{
-			Log.e("srt", "not found " + srtFile);
-			throw new SrtNotFoundException();
+			SrtInfo curPlaySrtInfo = null;
+			for (int i = 0; i < DataHolder.getAllSrtInfos().size(); i++)
+			{
+				SrtInfo srtInfo = DataHolder.getAllSrtInfos().get(i);
+				if (srtInfo.getFromTime().toString().compareTo(seekTimeStr) >= 0)
+				{
+					curPlaySrtInfo = srtInfo;
+					DataHolder.setCurrentSrtIndex(i);
+					break;
+				}
+			}
+			if (curPlaySrtInfo == null)
+			{
+				throw new SrtException(SrtErrCode.SRT_OUTOF_RANGE);
+			}
+			else
+			{
+				sBaseLearnActivity.play(curPlaySrtInfo);
+			}
 		}
 	}
 
@@ -269,21 +251,6 @@ public class SrtPlayService implements Favoritable
 	public boolean isAutoPlayModel()
 	{
 		return autoPlayNextCtrl && SrtSetting.isAutoPlayNext();
-	}
-
-	/**
-	 * 是否已经选择了字幕文件
-	 * 
-	 * @return
-	 */
-	public boolean isSrtShowing()
-	{
-		if (BasicFileUtil.isExistFile(getCurFile()))
-		{
-			return true;
-		}
-		ToastUtil.showShortToast(sBaseLearnActivity, "请先选择一部剧集");
-		return false;
 	}
 
 	public boolean isRunning()

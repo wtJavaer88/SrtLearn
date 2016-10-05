@@ -1,5 +1,6 @@
 package common.uihelper;
 
+import android.app.Activity;
 import android.content.res.Resources;
 import android.os.Environment;
 
@@ -7,141 +8,139 @@ import com.wnc.basic.BasicFileUtil;
 
 public class MyAppParams
 {
-    private String packageName;
-    private Resources resources;
-    private String appPath;
-    private final static String workPath = Environment
-            .getExternalStorageDirectory().getPath() + "/wnc/app/srtlearn/";
-    private String localLogPath;
-    public final static String SWF_FOLDER = Environment
-            .getExternalStorageDirectory().getPath() + "/wnc/res/swf/";
-    public static final String SRT_FOLDER = Environment
-            .getExternalStorageDirectory().getPath() + "/wnc/res/srt/";
-    public final static String VIDEO_FOLDER = Environment
-            .getExternalStorageDirectory().getPath() + "/wnc/res/video/";
-    public final static String THUMB_PICFOLDER = Environment
-            .getExternalStorageDirectory().getPath() + "/wnc/res/srtpic/";
-    public final static String FAVORITE_TXT = workPath + "favorite.txt";
-    public final static String SRT_DB = workPath + "srt.db";
+	private String packageName;
+	private Resources resources;
+	private String appPath;
 
-    private String backupDbPath;
+	private final static String workPath = Environment.getExternalStorageDirectory().getPath() + "/wnc/app/srtlearn/";
+	private String localLogPath;
+	public final static String SWF_FOLDER = Environment.getExternalStorageDirectory().getPath() + "/wnc/res/swf/";
+	public static final String SRT_FOLDER = Environment.getExternalStorageDirectory().getPath() + "/wnc/res/srt/";
+	public final static String VIDEO_FOLDER = Environment.getExternalStorageDirectory().getPath() + "/wnc/res/video/";
+	public final static String THUMB_PICFOLDER = Environment.getExternalStorageDirectory().getPath() + "/wnc/res/srtpic/";
+	public final static String FAVORITE_TXT = workPath + "favorite.txt";
+	public final static String SRT_DB = workPath + "srt.db";
 
-    private String zipPath;
+	public static Activity mainActivity;
 
-    private static int screenWidth;
-    private static int screenHeight;
+	private String backupDbPath;
 
-    private static MyAppParams singletonMyAppParams = new MyAppParams();
+	private String zipPath;
 
-    private MyAppParams()
-    {
-        this.localLogPath = this.workPath + "log/";
-        this.backupDbPath = this.workPath + "backupdb/";
+	private static int screenWidth;
+	private static int screenHeight;
 
-        this.zipPath = this.workPath + "zip/";
+	private static MyAppParams singletonMyAppParams = new MyAppParams();
 
-        BasicFileUtil.makeDirectory(this.localLogPath);
-        BasicFileUtil.makeDirectory(this.backupDbPath);
-        BasicFileUtil.makeDirectory(SWF_FOLDER);
-        BasicFileUtil.makeDirectory(SRT_FOLDER);
-        BasicFileUtil.makeDirectory(THUMB_PICFOLDER);
-        BasicFileUtil.makeDirectory(this.zipPath);
-    }
+	private MyAppParams()
+	{
+		this.localLogPath = this.workPath + "log/";
+		this.backupDbPath = this.workPath + "backupdb/";
 
-    public static MyAppParams getInstance()
-    {
-        return singletonMyAppParams;
-    }
+		this.zipPath = this.workPath + "zip/";
 
-    public String getZipPath()
-    {
-        return this.zipPath;
-    }
+		BasicFileUtil.makeDirectory(this.localLogPath);
+		BasicFileUtil.makeDirectory(this.backupDbPath);
+		BasicFileUtil.makeDirectory(SWF_FOLDER);
+		BasicFileUtil.makeDirectory(SRT_FOLDER);
+		BasicFileUtil.makeDirectory(THUMB_PICFOLDER);
+		BasicFileUtil.makeDirectory(this.zipPath);
+	}
 
-    public String getBackupDbPath()
-    {
-        return this.backupDbPath;
-    }
+	public static MyAppParams getInstance()
+	{
+		return singletonMyAppParams;
+	}
 
-    public static int getScreenWidth()
-    {
-        return screenWidth;
-    }
+	public String getZipPath()
+	{
+		return this.zipPath;
+	}
 
-    public static void setScreenWidth(int screenWidth)
-    {
-        MyAppParams.screenWidth = screenWidth;
-    }
+	public String getBackupDbPath()
+	{
+		return this.backupDbPath;
+	}
 
-    public static int getScreenHeight()
-    {
-        return screenHeight;
-    }
+	public static int getScreenWidth()
+	{
+		return screenWidth;
+	}
 
-    public static void setScreenHeight(int screenHeight)
-    {
-        MyAppParams.screenHeight = screenHeight;
-    }
+	public static void setScreenWidth(int screenWidth)
+	{
+		MyAppParams.screenWidth = screenWidth;
+	}
 
-    public void setPackageName(String name)
-    {
-        if (name == null)
-        {
-            return;
-        }
-        if (this.packageName == null)
-        {
-            this.packageName = name;
-        }
-    }
+	public static int getScreenHeight()
+	{
+		return screenHeight;
+	}
 
-    public String getPackageName()
-    {
-        return this.packageName;
-    }
+	public static void setScreenHeight(int screenHeight)
+	{
+		MyAppParams.screenHeight = screenHeight;
+	}
 
-    public void setAppPath(String path)
-    {
-        if (path == null)
-        {
-            return;
-        }
-        if (this.appPath == null)
-        {
-            this.appPath = path;
-        }
-    }
+	public void setPackageName(String name)
+	{
+		if (name == null)
+		{
+			return;
+		}
+		if (this.packageName == null)
+		{
+			this.packageName = name;
+		}
+	}
 
-    public void setResources(Resources res)
-    {
-        if (res == null)
-        {
-            return;
-        }
-        if (this.resources == null)
-        {
-            this.resources = res;
-        }
-    }
+	public String getPackageName()
+	{
+		return this.packageName;
+	}
 
-    public Resources getResources()
-    {
-        return this.resources;
-    }
+	public void setAppPath(String path)
+	{
+		if (path == null)
+		{
+			return;
+		}
+		if (this.appPath == null)
+		{
+			this.appPath = path;
+		}
+	}
 
-    public String getWorkPath()
-    {
-        return this.workPath;
-    }
+	public void setResources(Resources res)
+	{
+		if (res == null)
+		{
+			return;
+		}
+		if (this.resources == null)
+		{
+			this.resources = res;
+		}
+	}
 
-    public String getLocalLogPath()
-    {
-        return this.localLogPath;
-    }
+	public Resources getResources()
+	{
+		return this.resources;
+	}
 
-    public String getAppPath()
-    {
-        return this.appPath;
-    }
+	public String getWorkPath()
+	{
+		return this.workPath;
+	}
+
+	public String getLocalLogPath()
+	{
+		return this.localLogPath;
+	}
+
+	public String getAppPath()
+	{
+		return this.appPath;
+	}
 
 }

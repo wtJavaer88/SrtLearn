@@ -40,7 +40,6 @@ public class FavoriteSrtActivity extends BaseHorActivity implements UncaughtExce
 		// 设置未捕获异常UncaughtExceptionHandler的处理方法
 		Thread.setDefaultUncaughtExceptionHandler(this);
 		list = ReadFavoriteSrt.getFSInfos();
-		System.out.println(list.size());
 		initView();
 		setContent();
 		this.gestureDetector = new GestureDetector(this, new MyCtrlableGestureDetector(this, 0.1, 0.2, this, this));
