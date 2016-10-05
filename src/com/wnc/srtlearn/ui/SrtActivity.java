@@ -105,17 +105,7 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 
 		initView();
 		initDialogs();
-		if (srtPlayService.isSrtShowing())
-		{
-			try
-			{
-				play(DataHolder.getCurrent());
-			}
-			catch (SrtException e)
-			{
-				e.printStackTrace();
-			}
-		}
+
 		autoPlayHandler = new AutoPlayHandler(this);
 
 		// 因为是横屏,所以设置的滑屏比例低一些
@@ -127,6 +117,20 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 		{
 			enterFromExtra(intent);
 		}
+		else
+		{
+			if (srtPlayService.isSrtShowing())
+			{
+				try
+				{
+					play(DataHolder.getCurrent());
+				}
+				catch (SrtException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 	private void enterFromExtra(Intent intent)
@@ -135,6 +139,13 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 		System.out.println("srtFilePath: " + srtFilePath);
 		try
 		{
+			int dotPos = srtFilePath.lastIndexOf(".");
+			if (dotPos != -1)
+			{
+				movieTv.setText(srtFilePath.substring(0, dotPos));
+			}
+			else
+				movieTv.setText(srtFilePath.replaceAll("\\..*+", ""));
 			srtPlayService.seekSrtFile(MyAppParams.SRT_FOLDER + srtFilePath, intent.getStringExtra("seektime"));
 		}
 		catch (SrtException e)
@@ -209,15 +220,15 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 						SrtActivity.this.startActivity(new Intent(SrtActivity.this, BihuaActivity.class).putExtra("dialog", chsTv.getText().toString()));
 						break;
 					case 2:
-						srtPlayService.stopSrt();
+						stopSrtPlay();
 						intoPinyin();
 						break;
 					case 3:
-						srtPlayService.stopSrt();
+						stopSrtPlay();
 						intoSearch();
 						break;
 					case 4:
-						srtPlayService.stopSrt();
+						stopSrtPlay();
 						intoVideo();
 						break;
 					default:

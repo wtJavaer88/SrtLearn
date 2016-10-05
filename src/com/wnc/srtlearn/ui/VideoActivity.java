@@ -68,10 +68,10 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 {
 	private VideoPlayThread videoPlayThread;
 	MenuDispossThread menuDispossThread;
-	public static final int SRT_AUTOPAUSE_CODE = 100;
-	public static final int ON_PLAYING_CODE = 101;
-	public static final int ON_CLEAR_CODE = 102;
-	public static final int ON_MENU_DISPOSS_CODE = 103;
+	public static final int MESSAGE_SRT_AUTOPAUSE_CODE = 100;
+	public static final int MESSAGE_ON_PLAYING_CODE = 101;
+	public static final int MESSAGE_ON_CLEAR_CODE = 102;
+	public static final int MESSAGE_ON_MENU_DISPOSS_CODE = 103;
 
 	private MyVideoView videoView;
 	private Button bt_videomenu;
@@ -163,12 +163,26 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 			public void onStopTrackingTouch(SeekBar seekBar)
 			{
 				System.out.println("onStopTrackingTouch");
-				if (updateUI(seekBar.getProgress()))
+				int position = seekBar.getProgress();
+				/**
+				 * 先找一个大概的位置
+				 */
+				for (int i = 0; i < srtInfos.size(); i++)
+				{
+					SrtInfo srt = srtInfos.get(i);
+					if (TimeHelper.getTime(srt.getFromTime()) >= position)
+					{
+						curIndex = i;
+						break;
+					}
+				}
+				// 再找准确的位置,并更新UI
+				if (updateUI(position))
 					initSeekTimes();
 				else
 				{
 
-					seektime = seekBar.getProgress();
+					seektime = position;
 					seekendtime = seekBar.getMax();
 				}
 				videoSeek(seektime);
@@ -705,7 +719,7 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 		@Override
 		public void handleMessage(Message msg)
 		{
-			if (msg.what == SRT_AUTOPAUSE_CODE)
+			if (msg.what == MESSAGE_SRT_AUTOPAUSE_CODE)
 			{
 				if (isCusReplay())
 				{
@@ -714,7 +728,7 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 				seekendtime = Integer.MAX_VALUE;
 				playpause();
 			}
-			else if (msg.what == ON_PLAYING_CODE)
+			else if (msg.what == MESSAGE_ON_PLAYING_CODE)
 			{
 				int position = BasicNumberUtil.getNumber("" + msg.obj);
 				setCurTime(position);
@@ -731,11 +745,11 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 					updateReplayUI(BasicNumberUtil.getNumber("" + msg.obj));
 				}
 			}
-			else if (msg.what == ON_CLEAR_CODE)
+			else if (msg.what == MESSAGE_ON_CLEAR_CODE)
 			{
-				clearEngChs();
+				hideEngChs();
 			}
-			else if (msg.what == ON_MENU_DISPOSS_CODE)
+			else if (msg.what == MESSAGE_ON_MENU_DISPOSS_CODE)
 			{
 				System.out.println("菜单自动消失...");
 				hideVideoMenus();
@@ -780,10 +794,11 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 	 */
 	private boolean updateUI(int position)
 	{
+		showEngChs();
 		for (int i = 0; i < srtInfos.size(); i++)
 		{
 			SrtInfo srt = srtInfos.get(i);
-			if (TimeHelper.getTime(srt.getToTime()) >= position && TimeHelper.getTime(srt.getFromTime()) <= position)
+			if (TimeHelper.getTime(srt.getToTime()) > position && TimeHelper.getTime(srt.getFromTime()) <= position)
 			{
 				if (i != curIndex)
 				{
@@ -796,17 +811,9 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 				return false;
 			}
 		}
-		for (int i = 0; i < srtInfos.size(); i++)
-		{
-			SrtInfo srt = srtInfos.get(i);
-			if (TimeHelper.getTime(srt.getFromTime()) >= position)
-			{
-				curIndex = i;
-				break;
-			}
-		}
+
 		// 没找到字幕,不用显示
-		clearEngChs();
+		hideEngChs();
 		return false;
 	};
 
@@ -820,11 +827,18 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 	/**
 	 * 时间一到清除当前字幕
 	 */
-	public void clearEngChs()
+	public void hideEngChs()
 	{
-		veng_tv.setText("");
-		vchs_tv.setText("");
-		((TextView) findViewById(R.id.srtinfoTv)).setText("");
+		veng_tv.setVisibility(View.INVISIBLE);
+		vchs_tv.setVisibility(View.INVISIBLE);
+		((TextView) findViewById(R.id.srtinfoTv)).setVisibility(View.INVISIBLE);
+	}
+
+	public void showEngChs()
+	{
+		veng_tv.setVisibility(View.VISIBLE);
+		vchs_tv.setVisibility(View.VISIBLE);
+		((TextView) findViewById(R.id.srtinfoTv)).setVisibility(View.VISIBLE);
 	}
 
 	@Override

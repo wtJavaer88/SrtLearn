@@ -46,7 +46,7 @@ public class MenuDispossThread extends Thread
 				if (isShowing)
 				{
 					Message msg = new Message();
-					msg.what = VideoActivity.ON_MENU_DISPOSS_CODE;
+					msg.what = VideoActivity.MESSAGE_ON_MENU_DISPOSS_CODE;
 					activity.getHandler().sendMessage(msg);
 					stopListen();
 				}

@@ -54,7 +54,6 @@ import common.utils.TextFormatUtil;
 public class SrtSearchActivity extends BaseVerActivity implements OnClickListener, UncaughtExceptionHandler
 {
 
-	private static final int MESSAGE_SHOW_SOFTINPUT = 100;
 	String dialog;
 	private List<AutoCompletable> items = new ArrayList<AutoCompletable>();
 	private MultiAutoCompleteTextView act;
@@ -110,6 +109,11 @@ public class SrtSearchActivity extends BaseVerActivity implements OnClickListene
 				// act.append(word.getWord() + " ");
 			}
 		});
+		showKeyBoard();
+	}
+
+	private void showKeyBoard()
+	{
 		Timer timer = new Timer();
 		timer.schedule(new TimerTask()
 		{
@@ -119,12 +123,6 @@ public class SrtSearchActivity extends BaseVerActivity implements OnClickListene
 				inputManager.showSoftInput(act, 0);
 			}
 		}, 998);
-	}
-
-	private void showKeyboard()
-	{
-		InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-		inputMethodManager.showSoftInput(act, 0);
 	}
 
 	int curArrIndex = -1;
