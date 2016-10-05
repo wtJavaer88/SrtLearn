@@ -20,7 +20,6 @@ import srt.ex.SrtException;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -38,23 +37,16 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.wnc.basic.BasicDateUtil;
 import com.wnc.basic.BasicFileUtil;
 import com.wnc.basic.BasicStringUtil;
 import com.wnc.srtlearn.R;
 import com.wnc.srtlearn.dao.FavDao;
-import com.wnc.srtlearn.dao.WorkDao;
-import com.wnc.srtlearn.monitor.StudyMonitor;
-import com.wnc.srtlearn.monitor.WorkMgr;
-import com.wnc.srtlearn.monitor.work.ActiveWork;
-import com.wnc.srtlearn.monitor.work.WORKTYPE;
 import com.wnc.srtlearn.setting.SrtSetting;
 import com.wnc.srtlearn.ui.handler.AutoPlayHandler;
 import common.app.BasicPhoneUtil;
 import common.app.ClickFileIntentFactory;
 import common.app.ClipBoardUtil;
 import common.app.ShareUtil;
-import common.app.SysInit;
 import common.app.ToastUtil;
 import common.app.WheelDialogShowUtil;
 import common.uihelper.AfterWheelChooseListener;
@@ -111,9 +103,6 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 
 		srtPlayService = new SrtPlayService(this);
 
-		SysInit.init(this);
-
-		initMonitor();
 		initView();
 		initDialogs();
 		if (srtPlayService.isSrtShowing())
@@ -131,7 +120,27 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 
 		// 因为是横屏,所以设置的滑屏比例低一些
 		this.gestureDetector = new GestureDetector(this, new MyCtrlableGestureDetector(this, 0.15, 0.25, this, this));
-		enter(SrtFilesAchieve.getSrtFileByArrIndex(0, 6));
+		// enter(SrtFilesAchieve.getSrtFileByArrIndex(0, 6));
+
+		Intent intent = getIntent();
+		if (intent.hasExtra("seektime"))
+		{
+			enterFromExtra(intent);
+		}
+	}
+
+	private void enterFromExtra(Intent intent)
+	{
+		String srtFilePath = intent.getStringExtra("srtFilePath");
+		System.out.println("srtFilePath: " + srtFilePath);
+		try
+		{
+			srtPlayService.seekSrtFile(MyAppParams.SRT_FOLDER + srtFilePath, intent.getStringExtra("seektime"));
+		}
+		catch (SrtException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -174,11 +183,6 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 		initEngMenuDialog();
 		initSettingDialog();
 		initMoreDialog();
-	}
-
-	private void initMonitor()
-	{
-		StudyMonitor.runMonitor();
 	}
 
 	Builder alertDialogBuilder;
@@ -906,52 +910,12 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 	@Override
 	public void onDestroy()
 	{
-		StudyMonitor.stopMonitor();
 		if (alertDialog != null)
 		{
 			alertDialog.dismiss();
 		}
 		HeadSetUtil.getInstance().close(this);
-
-		System.out.println("运行总时间: " + StudyMonitor.getRunTime());
-		try
-		{
-			WorkDao.initDb(getApplicationContext());
-			ActiveWork applicationActiveWork = StudyMonitor.getApplicationActiveWork();
-			int runId = WorkMgr.insertRunRecord(applicationActiveWork.getEntertime(), applicationActiveWork.getExitTime());
-			WorkMgr.insertWork(WORKTYPE.SRT, runId);
-			WorkMgr.insertWork(WORKTYPE.TTS_REC, runId);
-			WorkMgr.insertWork(WORKTYPE.SRT_SEARCH, runId);
-			WorkDao.closeDb();
-			backupDatabase(this);
-		}
-		catch (RuntimeException e)
-		{
-			e.printStackTrace();
-		}
-
 		super.onDestroy();
-	}
-
-	public String backupDatabase(Context context)
-	{
-		String subjectdb = "srtlearn.db";
-		File dbFile = context.getDatabasePath(subjectdb);
-		String newFilePath = BasicFileUtil.getMakeFilePath(MyAppParams.getInstance().getBackupDbPath(), BasicDateUtil.getCurrentDateTimeString() + "_" + subjectdb);
-		// File[] files = new File(MyAppParams.getInstance().getBackupDbPath())
-		// .listFiles();
-		// Arrays.sort(files);
-
-		if (BasicFileUtil.CopyFile(dbFile, new File(newFilePath)))
-		{
-			ToastUtil.showLongToast(context, "复制数据库成功");
-		}
-		else
-		{
-			ToastUtil.showShortToast(context, "复制" + subjectdb + "文件到<" + newFilePath + ">失败!");
-		}
-
-		return newFilePath;
 	}
 
 	OnHeadSetListener headSetListener = new OnHeadSetListener()

@@ -26,6 +26,7 @@ public class MonitorThread extends Thread
 
 	public void stopRun()
 	{
+		this.interrupt();
 		running = false;
 	}
 }

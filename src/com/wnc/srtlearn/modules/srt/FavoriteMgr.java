@@ -11,7 +11,6 @@ import com.wnc.basic.BasicFileUtil;
 import com.wnc.srtlearn.dao.FavDao;
 import com.wnc.srtlearn.pojo.FavoriteMultiSrt;
 import com.wnc.srtlearn.pojo.FavoriteSingleSrt;
-
 import common.uihelper.MyAppParams;
 
 public class FavoriteMgr
@@ -62,7 +61,7 @@ public class FavoriteMgr
 	private boolean writeFavoritetxt(List<SrtInfo> currentPlaySrtInfos)
 	{
 		String favoriteCurrContent = getFavoriteCurrContent(currentPlaySrtInfos);
-		return BasicFileUtil.writeFileString(MyAppParams.FAVORITE_TXT + ".v.txt", favoriteCurrContent, "UTF-8", true);
+		return BasicFileUtil.writeFileString(MyAppParams.FAVORITE_TXT, favoriteCurrContent, "UTF-8", true);
 	}
 
 	public String getFavoriteCurrContent(List<SrtInfo> currentPlaySrtInfos)

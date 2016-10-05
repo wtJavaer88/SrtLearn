@@ -7,6 +7,7 @@ import java.util.List;
 import net.widget.cqq.AddAndSubView;
 import srt.DataHolder;
 import srt.SrtInfo;
+import srt.SrtMediaUtil;
 import srt.SrtTextHelper;
 import srt.TimeHelper;
 import srt.ex.SrtException;
@@ -51,7 +52,6 @@ import com.wnc.srtlearn.modules.video.RelpayInfo;
 import com.wnc.srtlearn.modules.video.SingleMPlayer;
 import com.wnc.srtlearn.modules.video.VideoPlayThread;
 import com.wnc.string.PatternUtil;
-
 import common.app.BasicPhoneUtil;
 import common.app.ToastUtil;
 import common.uihelper.MyAppParams;
@@ -248,7 +248,7 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 							isShowingSrt = true;
 							isPaused = false;
 
-							String path = SrtTextHelper.getVideoFile(MyAppParams.VIDEO_FOLDER, videoSeries, videoEpisode);
+							String path = SrtMediaUtil.getVideoFile(MyAppParams.VIDEO_FOLDER, videoSeries, videoEpisode);
 							mediaPlayer = SingleMPlayer.getMp(path);
 							mediaPlayer.setDisplay(videoView.getHolder());
 							mediaPlayer.start();
@@ -371,7 +371,7 @@ public class VideoActivity extends Activity implements OnClickListener, Uncaught
 		isShowingSrt = true;
 		isPaused = false;
 
-		String path = SrtTextHelper.getVideoFile(MyAppParams.VIDEO_FOLDER, videoSeries, videoEpisode);
+		String path = SrtMediaUtil.getVideoFile(MyAppParams.VIDEO_FOLDER, videoSeries, videoEpisode);
 		mediaPlayer = SingleMPlayer.getMp(path);
 		mediaPlayer.setDisplay(videoView.getHolder());
 

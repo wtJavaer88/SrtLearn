@@ -70,7 +70,7 @@
             android:textStyle="bold" />
 
         <Button
-            android:id="@+id/btnPre"
+            android:id="@+id/btnViewContext"
             android:layout_width="80dp"
             android:layout_height="@dimen/dimen_60_dip"
             android:layout_gravity="center"
@@ -82,25 +82,7 @@
             android:shadowDx="0.0"
             android:shadowDy="2.0"
             android:shadowRadius="1.0"
-            android:text="上一条"
-            android:textColor="@color/white"
-            android:textSize="@dimen/dimen_15_dip"
-            android:textStyle="bold" />
-
-        <Button
-            android:id="@+id/btnNext"
-            android:layout_width="80dp"
-            android:layout_height="@dimen/dimen_60_dip"
-            android:layout_gravity="center"
-            android:layout_marginRight="@dimen/dimen_5_dip"
-            android:background="@drawable/main_add_expense_quickly_new"
-            android:gravity="center"
-            android:paddingBottom="@dimen/dimen_6_dip"
-            android:shadowColor="@color/black"
-            android:shadowDx="0.0"
-            android:shadowDy="2.0"
-            android:shadowRadius="1.0"
-            android:text="下一条"
+            android:text="上下文"
             android:textColor="@color/white"
             android:textSize="@dimen/dimen_15_dip"
             android:textStyle="bold" />

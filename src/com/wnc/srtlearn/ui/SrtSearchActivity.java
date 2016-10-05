@@ -5,14 +5,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import net.widget.act.abs.AutoCompletable;
 import net.widget.act.abs.MyActAdapter;
 import net.widget.act.token.SemicolonTokenizer;
 import srt.SearchSrtInfo;
+import srt.SrtMediaUtil;
 import srt.SrtTextHelper;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -20,14 +24,17 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.wnc.basic.BasicFileUtil;
 import com.wnc.basic.BasicNumberUtil;
 import com.wnc.basic.BasicStringUtil;
 import com.wnc.srtlearn.R;
@@ -35,6 +42,7 @@ import com.wnc.srtlearn.dao.SrtInfoDao;
 import com.wnc.srtlearn.dao.WorkDao;
 import com.wnc.srtlearn.modules.search.ActSrtWord;
 import com.wnc.srtlearn.modules.search.SrtWordAutoAdapter;
+import com.wnc.srtlearn.modules.srt.SrtVoiceHelper;
 import com.wnc.srtlearn.monitor.StudyMonitor;
 import com.wnc.srtlearn.monitor.work.ActiveWork;
 import com.wnc.srtlearn.monitor.work.WORKTYPE;
@@ -46,6 +54,7 @@ import common.utils.TextFormatUtil;
 public class SrtSearchActivity extends BaseVerActivity implements OnClickListener, UncaughtExceptionHandler
 {
 
+	private static final int MESSAGE_SHOW_SOFTINPUT = 100;
 	String dialog;
 	private List<AutoCompletable> items = new ArrayList<AutoCompletable>();
 	private MultiAutoCompleteTextView act;
@@ -101,6 +110,21 @@ public class SrtSearchActivity extends BaseVerActivity implements OnClickListene
 				// act.append(word.getWord() + " ");
 			}
 		});
+		Timer timer = new Timer();
+		timer.schedule(new TimerTask()
+		{
+			public void run()
+			{
+				InputMethodManager inputManager = (InputMethodManager) act.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+				inputManager.showSoftInput(act, 0);
+			}
+		}, 998);
+	}
+
+	private void showKeyboard()
+	{
+		InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		inputMethodManager.showSoftInput(act, 0);
 	}
 
 	int curArrIndex = -1;
@@ -114,15 +138,21 @@ public class SrtSearchActivity extends BaseVerActivity implements OnClickListene
 			SrtInfoDao.openDatabase(this);
 			final String keyword = this.act.getText().toString();
 			ActiveWork activeWork = StudyMonitor.peekWork(WORKTYPE.SRT_SEARCH);
+			if (BasicStringUtil.isNullString(keyword) || keyword.trim().length() == 0)
+			{
+				ToastUtil.showShortToast(getApplicationContext(), "请输入内容!");
+			}
+			else
+			{
+				List<SearchSrtInfo> searchResult = SrtInfoDao.searchByLan(true, keyword);
 
-			List<SearchSrtInfo> searchResult = SrtInfoDao.searchByLan(true, keyword);
+				int size = searchResult.size();
+				WorkDao.log(this, WORKTYPE.SRT_SEARCH, keyword + ":" + size);
+				StudyMonitor.addActiveWork(activeWork);
 
-			int size = searchResult.size();
-			WorkDao.log(this, WORKTYPE.SRT_SEARCH, keyword + ":" + size);
-			StudyMonitor.addActiveWork(activeWork);
-
-			if (size > 0)
-				setLv(searchResult);
+				if (size > 0)
+					setLv(searchResult);
+			}
 			break;
 		}
 	}
@@ -146,7 +176,7 @@ public class SrtSearchActivity extends BaseVerActivity implements OnClickListene
 
 	public void showDialog(HashMap map)
 	{
-		SearchSrtInfo ssrt = (SearchSrtInfo) map.get("obj");
+		final SearchSrtInfo ssrt = (SearchSrtInfo) map.get("obj");
 		int index = BasicNumberUtil.getNumber(String.valueOf(map.get("index")));
 
 		Dialog dialog = new Dialog(this, R.style.CustomDialogStyle);
@@ -158,19 +188,39 @@ public class SrtSearchActivity extends BaseVerActivity implements OnClickListene
 		int width = BasicPhoneUtil.getScreenWidth(this);
 		lp.width = (int) (0.8 * width);
 
-		String epStr = "(" + index + ") \n" + TextFormatUtil.removeFileExtend(ssrt.getSrtFile());
+		final String epStr = TextFormatUtil.removeFileExtend(ssrt.getSrtFile());
 		final TextView tvEp = (TextView) dialog.findViewById(R.id.tvEpidoseInfo);
-		tvEp.setText(epStr);
-		tvEp.setOnClickListener(new OnClickListener()
+		String season = PatternUtil.getFirstPatternGroup(epStr, "(.*?)/");
+		String eposide = PatternUtil.getFirstPatternGroup(epStr, "/(.*+)");
+		tvEp.setText(season + "\n" + eposide);
+
+		((ImageButton) dialog.findViewById(R.id.imgbtn_ToContext)).setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(View v)
 			{
-
+				ToastUtil.showShortToast(getApplicationContext(), "上下文");
+				startActivity(new Intent().setClass(getApplicationContext(), SrtActivity.class).putExtra("srtFilePath", ssrt.getSrtFile()).putExtra("seektime", ssrt.getFromTime().toString()));
 			}
 		});
-		String timelineStr = SrtTextHelper.concatTimeline(ssrt.getFromTime(), ssrt.getToTime());
-		((TextView) dialog.findViewById(R.id.tvTimeLine)).setText(timelineStr);
+
+		final String voicePath = SrtMediaUtil.getVoicePath(season, eposide, ssrt.getFromTime().toString().replace(":", ""));
+		ImageButton imgbtVoice = (ImageButton) dialog.findViewById(R.id.imgbtn_PlayVoice);
+		if (!BasicFileUtil.isExistFile(voicePath))
+		{
+			imgbtVoice.setVisibility(View.INVISIBLE);
+		}
+		imgbtVoice.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				SrtVoiceHelper.play(voicePath);
+			}
+		});
+		// String timelineStr = SrtTextHelper.concatTimeline(ssrt.getFromTime(),
+		// ssrt.getToTime());
+		((TextView) dialog.findViewById(R.id.tvTimeLine)).setText(ssrt.getFromTime().toString());
 		dialog.show();
 	}
 
