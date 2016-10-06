@@ -114,4 +114,34 @@ public class SrtInfoDao
 		}
 		return list;
 	}
+
+	public static String getNextSrt(String season, String episode)
+	{
+		openDatabase();
+		season = StringEscapeUtils.escapeSql(season);
+		episode = StringEscapeUtils.escapeSql(episode);
+		System.out.println(season + " getNextSrt  " + episode);
+		try
+		{
+			if (isConnect())
+			{
+				String sql = "select * from episode where id>(select min(id) from episode where name like '%" + episode + "%' and name like '%" + season + "%') and name like '%" + season + "%'";
+				Cursor c = database.rawQuery(sql, null);
+				if (c.getCount() > 0)
+				{
+					c.moveToFirst();
+					return c.getString(c.getColumnIndex("name"));
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			closeDatabase();
+		}
+		return null;
+	}
 }

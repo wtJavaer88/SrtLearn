@@ -1,15 +1,19 @@
 package srt;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 import srt.ex.SrtException;
 
 import com.wnc.basic.BasicFileUtil;
 import com.wnc.basic.BasicStringUtil;
+import com.wnc.srtlearn.dao.SrtInfoDao;
 import com.wnc.string.PatternUtil;
 import common.uihelper.MyAppParams;
+import common.utils.MyFileUtil;
 import common.utils.TextFormatUtil;
 
 public class SrtMediaUtil
@@ -18,7 +22,7 @@ public class SrtMediaUtil
 	{
 		String srtFile = DataHolder.getFileKey();
 		String season;
-		if (BasicFileUtil.isExistFile(srtFile))
+		if (isLocalSrt(srtFile))
 		{
 			season = new File(srtFile).getParentFile().getName();
 		}
@@ -29,11 +33,16 @@ public class SrtMediaUtil
 		return season;
 	}
 
+	private static boolean isLocalSrt(String srtFile)
+	{
+		return BasicFileUtil.isExistFile(srtFile);
+	}
+
 	public static String getCurEposide()
 	{
 		String srtFile = DataHolder.getFileKey();
 		String eposide;
-		if (BasicFileUtil.isExistFile(srtFile))
+		if (isLocalSrt(srtFile))
 		{
 			eposide = TextFormatUtil.getFileNameNoExtend(srtFile);
 		}
@@ -44,17 +53,65 @@ public class SrtMediaUtil
 		return eposide;
 	}
 
+	/**
+	 * 自动获取下一集
+	 * 
+	 * @return
+	 */
+	public static String getNextEp(String srtFile)
+	{
+		if (isLocalSrt(srtFile))
+		{
+			File folder = new File(BasicFileUtil.getFileParent(srtFile));
+			List<File> sortedList = MyFileUtil.getSortFiles(folder.listFiles());
+			System.out.println(sortedList);
+
+			List<File> validFiles = new ArrayList<File>();
+			for (File f : sortedList)
+			{
+				if (SrtTextHelper.isSrtfile(f))
+				{
+					validFiles.add(f);
+				}
+			}
+			for (int i = 0; i < validFiles.size(); i++)
+			{
+				String absolutePath = validFiles.get(i).getAbsolutePath();
+				if (i < validFiles.size() - 1 && absolutePath.equals(srtFile))
+				{
+					String nextFile = validFiles.get(i + 1).getAbsolutePath();
+					return nextFile;
+				}
+			}
+		}
+		else
+		{
+			String nextSrt = SrtInfoDao.getNextSrt(getCurSeason(), getCurEposide());
+			if (nextSrt != null)
+			{
+				int i = nextSrt.lastIndexOf(".");
+				int j = nextSrt.lastIndexOf("/");
+				if (i > -1 && i > j)
+				{
+					return nextSrt.substring(0, i);
+				}
+			}
+			return nextSrt;
+		}
+		return null;
+	}
+
 	public static Queue<String> getSrtVoicesInRange(String srtFile, String voiceTimeStr1, String voiceTimeStr2)
 	{
 		Queue<String> queue = new LinkedList<String>();
 		final String folder = getSrtVoiceFolder(srtFile);
 		String m1 = folder + File.separator + voiceTimeStr1.replace(":", "") + ".mp3";
 		String m2 = folder + File.separator + voiceTimeStr2.replace(":", "") + ".mp3";
-		if (BasicFileUtil.isExistFile(m1))
+		if (isLocalSrt(m1))
 		{
 			queue.offer(m1);
 		}
-		if (BasicFileUtil.isExistFile(m2))
+		if (isLocalSrt(m2))
 		{
 			queue.offer(m2);
 		}
@@ -70,7 +127,7 @@ public class SrtMediaUtil
 	 */
 	public static String getSrtVoiceFolder(String srtFilePath)
 	{
-		if (BasicFileUtil.isExistFile(srtFilePath))
+		if (isLocalSrt(srtFilePath))
 		{
 			return BasicFileUtil.getFileParent(srtFilePath) + File.separator + common.utils.TextFormatUtil.getFileNameNoExtend(srtFilePath);
 		}
@@ -129,7 +186,7 @@ public class SrtMediaUtil
 				}
 			}
 			filePath = filePath + File.separator + getCurEposide() + "_p1.pic";
-			if (!BasicFileUtil.isExistFile(filePath))
+			if (!isLocalSrt(filePath))
 			{
 				if (picFolder.listFiles().length > 0)
 				{
@@ -148,12 +205,12 @@ public class SrtMediaUtil
 	{
 		SrtInfo current = DataHolder.getCurrent();
 		String pic1 = filePath + File.separator + current.getChs().replace(" ", "") + ".pic";
-		if (BasicFileUtil.isExistFile(pic1))
+		if (isLocalSrt(pic1))
 		{
 			return pic1;
 		}
 		String pic2 = filePath + File.separator + current.getChs().replace(" ", "") + ".gif";
-		if (BasicFileUtil.isExistFile(pic2))
+		if (isLocalSrt(pic2))
 		{
 			return pic2;
 		}

@@ -1,8 +1,6 @@
 package com.wnc.srtlearn.ui;
 
-import java.io.File;
 import java.lang.Thread.UncaughtExceptionHandler;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -17,6 +15,7 @@ import srt.SrtPlayService;
 import srt.SrtTextHelper;
 import srt.TimeHelper;
 import srt.ex.ReachFileTailException;
+import srt.ex.SrtErrCode;
 import srt.ex.SrtException;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -38,7 +37,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.wnc.basic.BasicFileUtil;
 import com.wnc.basic.BasicStringUtil;
 import com.wnc.srtlearn.R;
 import com.wnc.srtlearn.dao.FavDao;
@@ -57,7 +55,6 @@ import common.uihelper.gesture.CtrlableVerGestureDetectorListener;
 import common.uihelper.gesture.EmptyFlingPoint;
 import common.uihelper.gesture.FlingPoint;
 import common.uihelper.gesture.MyCtrlableGestureDetector;
-import common.utils.MyFileUtil;
 import common.utils.TextFormatUtil;
 
 public class SrtActivity extends SBaseLearnActivity implements OnClickListener, OnLongClickListener, CtrlableHorGestureDetectorListener, CtrlableVerGestureDetectorListener, UncaughtExceptionHandler
@@ -716,7 +713,8 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 			if (SrtSetting.isAutoNextEP())
 			{
 				final long tip_time = 2000;
-				final String nextEp = getNextEp();
+				final String nextEp = SrtMediaUtil.getNextEp(srtPlayService.getCurFile());
+				System.out.println("下一个字幕:" + nextEp);
 				if (nextEp != null)
 				{
 					ToastUtil.showShortToast(this, "将为你自动播放下一集");
@@ -743,7 +741,7 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 				}
 				else
 				{
-					ToastUtil.showLongToast(this, "本文件夹已经没有更多字幕了!");
+					ToastUtil.showLongToast(this, SrtErrCode.SRT_NO_MORE_EPIDOSE);
 				}
 			}
 			else
@@ -756,38 +754,6 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 			stopSrtPlay();
 			ToastUtil.showShortToast(this, ex.getMessage());
 		}
-	}
-
-	/**
-	 * 自动获取下一集
-	 * 
-	 * @return
-	 */
-	private String getNextEp()
-	{
-		String srtFile = srtPlayService.getCurFile();
-		File folder = new File(BasicFileUtil.getFileParent(srtFile));
-		List<File> sortedList = MyFileUtil.getSortFiles(folder.listFiles());
-		System.out.println(sortedList);
-
-		List<File> validFiles = new ArrayList<File>();
-		for (File f : sortedList)
-		{
-			if (SrtTextHelper.isSrtfile(f))
-			{
-				validFiles.add(f);
-			}
-		}
-		for (int i = 0; i < validFiles.size(); i++)
-		{
-			String absolutePath = validFiles.get(i).getAbsolutePath();
-			if (i < validFiles.size() - 1 && absolutePath.equals(srtFile))
-			{
-				String nextFile = validFiles.get(i + 1).getAbsolutePath();
-				return nextFile;
-			}
-		}
-		return null;
 	}
 
 	@Override

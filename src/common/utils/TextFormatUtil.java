@@ -227,7 +227,8 @@ public class TextFormatUtil
 	public static String removeFileExtend(String filePath)
 	{
 		int dotPos = filePath.lastIndexOf(".");
-		if (dotPos != -1)
+		int j = filePath.lastIndexOf(File.separator);
+		if (dotPos != -1 && dotPos > j)
 		{
 			return filePath.substring(0, dotPos);
 		}
