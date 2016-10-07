@@ -122,7 +122,7 @@ public class SrtSearchActivity extends BaseVerActivity implements OnClickListene
 				InputMethodManager inputManager = (InputMethodManager) act.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 				inputManager.showSoftInput(act, 0);
 			}
-		}, 998);
+		}, 200);
 	}
 
 	int curArrIndex = -1;

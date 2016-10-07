@@ -47,27 +47,36 @@ public class DictionaryDao
 		{
 			return topics;
 		}
-		String topicStr = SrtInfoDao.getRelateTopicSrt(srtId);
+		SrtInfoDao.openDatabase();
+		Cursor topicCursor = SrtInfoDao.getRelateTopicSrt(srtId);
 		openDatabase();
 		try
 		{
-			if (topicStr.length() > 0)
+			if (topicCursor != null && topicCursor.getCount() > 0)
 			{
-				String sql = "select * from topic_resource res,dictionary dict,books" + " where res.topic=dict.topic_id and books.id=res.book_id and topic_id in (" + topicStr + ") order by book_id desc";
-				Cursor c = database.rawQuery(sql, null);
-				c.moveToFirst();
-				while (!c.isAfterLast())
+				topicCursor.moveToFirst();
+				while (!topicCursor.isAfterLast())
 				{
-					Topic topic = new Topic();
-					topic.setBookName(c.getString(c.getColumnIndex("name")));
-					topic.setTopic_id("" + c.getInt(c.getColumnIndex("topic_id")));
-					topic.setTopic_word(c.getString(c.getColumnIndex("topic_word")));
-					topic.setMean_cn(c.getString(c.getColumnIndex("mean_cn")));
-					topic.setTopic_base_word(c.getString(c.getColumnIndex("topic_word")));
-					topic.setState("BASIC");
-					topics.add(topic);
-					c.moveToNext();
+					String real_word = topicCursor.getString(topicCursor.getColumnIndex("real_word"));
+					int topic_id = topicCursor.getInt(topicCursor.getColumnIndex("topic_id"));
+					String sql = "select * from topic_resource res,dictionary dict,books" + " where res.topic=dict.topic_id and books.id=res.book_id and topic_id =" + topic_id + " order by book_id desc";
+					Cursor c = database.rawQuery(sql, null);
+					c.moveToFirst();
+					while (!c.isAfterLast())
+					{
+						Topic topic = new Topic();
+						topic.setBookName(c.getString(c.getColumnIndex("name")));
+						topic.setTopic_id("" + c.getInt(c.getColumnIndex("topic_id")));
+						topic.setTopic_word(real_word);
+						topic.setMean_cn(c.getString(c.getColumnIndex("mean_cn")));
+						topic.setTopic_base_word(c.getString(c.getColumnIndex("topic_word")));
+						topic.setState("BASIC");
+						topics.add(topic);
+						c.moveToNext();
+					}
+					topicCursor.moveToNext();
 				}
+
 			}
 		}
 		catch (Exception e)
@@ -77,6 +86,7 @@ public class DictionaryDao
 		}
 		finally
 		{
+			SrtInfoDao.closeDatabase();
 			closeDatabase();
 		}
 		return topics;

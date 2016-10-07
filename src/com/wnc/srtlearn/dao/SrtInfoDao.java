@@ -144,39 +144,21 @@ public class SrtInfoDao
 		return null;
 	}
 
-	public static String getRelateTopicSrt(int srtId)
+	public static Cursor getRelateTopicSrt(int srtId)
 	{
-		String ret = "";
-		openDatabase();
+		Cursor c = null;
 		try
 		{
 			if (isConnect())
 			{
 				String sql = "select * from srt_word where srt_id=" + srtId;
-				Cursor c = database.rawQuery(sql, null);
-				if (c.getCount() > 0)
-				{
-					c.moveToFirst();
-					while (!c.isAfterLast())
-					{
-						ret += c.getInt(c.getColumnIndex("topic_id")) + ",";
-						c.moveToNext();
-					}
-				}
+				c = database.rawQuery(sql, null);
 			}
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
-		finally
-		{
-			closeDatabase();
-		}
-		if (ret.length() > 1)
-		{
-			ret = ret.substring(0, ret.length() - 1);
-		}
-		return ret;
+		return c;
 	}
 }

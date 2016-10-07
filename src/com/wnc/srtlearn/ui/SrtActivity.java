@@ -566,11 +566,15 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 
 			final TextView tvTopic = (TextView) dialog.findViewById(R.id.tvTopicInfo);
 			Iterator<Topic> iterator = curTopics.iterator();
+			String tpContent = "";
 			while (iterator.hasNext())
 			{
 				Topic next = iterator.next();
-				tvTopic.append(next.getTopic_base_word() + "  " + next.getMean_cn() + "\n");
+				tpContent += next.getTopic_word() + "  " + next.getMean_cn().replace("\n", "\n    ") + "\n\n";
 			}
+			if (tpContent.length() > 2)
+				tpContent = tpContent.substring(0, tpContent.length() - 2);
+			tvTopic.setText(tpContent);
 			dialog.show();
 		}
 	}
