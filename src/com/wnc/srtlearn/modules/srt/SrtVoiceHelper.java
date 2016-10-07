@@ -35,13 +35,13 @@ public class SrtVoiceHelper
 		}
 	}
 
+	@SuppressWarnings("resource")
 	public synchronized static void play(String voicePath)
 	{
 
 		try
 		{
 			stop();
-			System.out.println(voicePath);
 			File file = new File(voicePath);
 			FileInputStream fis = new FileInputStream(file);
 			player = new MediaPlayer();

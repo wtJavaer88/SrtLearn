@@ -24,7 +24,7 @@ public class SrtSetting
 
 	public static boolean isVolKeyListen()
 	{
-		return Boolean.valueOf(SharedPreferenceUtil.getShareDataByKey(VOLKEYLISTEN, "false"));
+		return SharedPreferenceUtil.getShareDataByKey(VOLKEYLISTEN, false);
 	}
 
 	public static void setVolKeyListen(boolean flag)
@@ -69,7 +69,7 @@ public class SrtSetting
 	 */
 	public static boolean isAutoNextEP()
 	{
-		return Boolean.valueOf(SharedPreferenceUtil.getShareDataByKey(AUTONEXTEP, "true"));
+		return SharedPreferenceUtil.getShareDataByKey(AUTONEXTEP, true);
 	}
 
 	public static void setAutoNextEP(boolean flag)

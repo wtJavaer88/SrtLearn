@@ -20,6 +20,7 @@ public class MyAppParams
 	public final static String THUMB_PICFOLDER = Environment.getExternalStorageDirectory().getPath() + "/wnc/res/srtpic/";
 	public final static String FAVORITE_TXT = workPath + "favorite.txt";
 	public final static String SRT_DB = workPath + "srt.db";
+	public final static String DICTIONARY_DB = workPath + "dictionary.db";
 
 	public static Activity mainActivity;
 

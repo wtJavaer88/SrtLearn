@@ -8,7 +8,6 @@ import org.apache.commons.lang.StringEscapeUtils;
 import srt.SearchSrtInfo;
 import srt.SrtInfo;
 import srt.TimeHelper;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -18,7 +17,6 @@ import common.uihelper.MyAppParams;
 public class SrtInfoDao
 {
 	static SQLiteDatabase database;
-	public static Context context = MyAppParams.mainActivity;
 
 	public static void openDatabase()
 	{
@@ -98,6 +96,7 @@ public class SrtInfoDao
 				while (!c.isAfterLast())
 				{
 					SrtInfo srtInfo = new SrtInfo();
+					srtInfo.setDbId(c.getInt(c.getColumnIndex("id")));
 					srtInfo.setChs(c.getString(c.getColumnIndex("chs")));
 					srtInfo.setEng(c.getString(c.getColumnIndex("eng")));
 					srtInfo.setFromTime(TimeHelper.parseTimeInfo(c.getString(c.getColumnIndex("fromtime"))));
@@ -143,5 +142,41 @@ public class SrtInfoDao
 			closeDatabase();
 		}
 		return null;
+	}
+
+	public static String getRelateTopicSrt(int srtId)
+	{
+		String ret = "";
+		openDatabase();
+		try
+		{
+			if (isConnect())
+			{
+				String sql = "select * from srt_word where srt_id=" + srtId;
+				Cursor c = database.rawQuery(sql, null);
+				if (c.getCount() > 0)
+				{
+					c.moveToFirst();
+					while (!c.isAfterLast())
+					{
+						ret += c.getInt(c.getColumnIndex("topic_id")) + ",";
+						c.moveToNext();
+					}
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			closeDatabase();
+		}
+		if (ret.length() > 1)
+		{
+			ret = ret.substring(0, ret.length() - 1);
+		}
+		return ret;
 	}
 }

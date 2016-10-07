@@ -13,7 +13,7 @@ public class MonitorThread extends Thread
 		{
 			try
 			{
-				Thread.sleep(5000);
+				Thread.sleep(30000);
 				System.out.println("当前学习的字幕数:" + StudyMonitor.getWorkCount(WORKTYPE.SRT));
 				System.out.println("当前学习的朗读数:" + StudyMonitor.getWorkCount(WORKTYPE.TTS_REC));
 			}

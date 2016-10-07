@@ -48,7 +48,6 @@ public class MainActivity extends BaseHorActivity implements OnClickListener, Un
 		Thread.setDefaultUncaughtExceptionHandler(this);
 		setContentView(R.layout.activity_main);
 		initView();
-
 	}
 
 	private void initMonitor()

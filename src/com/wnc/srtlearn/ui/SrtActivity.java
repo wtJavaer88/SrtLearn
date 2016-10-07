@@ -1,6 +1,8 @@
 package com.wnc.srtlearn.ui;
 
 import java.lang.Thread.UncaughtExceptionHandler;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -20,6 +22,7 @@ import srt.ex.SrtException;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,13 +36,18 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.wnc.basic.BasicStringUtil;
 import com.wnc.srtlearn.R;
+import com.wnc.srtlearn.dao.DictionaryDao;
 import com.wnc.srtlearn.dao.FavDao;
+import com.wnc.srtlearn.modules.translate.Topic;
 import com.wnc.srtlearn.setting.SrtSetting;
 import com.wnc.srtlearn.ui.handler.AutoPlayHandler;
 import common.app.BasicPhoneUtil;
@@ -59,9 +67,11 @@ import common.utils.TextFormatUtil;
 
 public class SrtActivity extends SBaseLearnActivity implements OnClickListener, OnLongClickListener, CtrlableHorGestureDetectorListener, CtrlableVerGestureDetectorListener, UncaughtExceptionHandler
 {
+	protected static final int MESSAGE_TOPIC_IN_SRT = 100;
 	private final String SRT_PLAY_TEXT = "播放";
 	private final String SRT_STOP_TEXT = "停止";
 	public Handler autoPlayHandler;
+
 	final int PINYIN_RESULT = 100;
 	final int VIDEO_RESULT = 101;
 
@@ -127,8 +137,12 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 					e.printStackTrace();
 				}
 			}
+			else
+			{
+				// 默认进入,仅作测试用
+				enter("Transformers.Prime.S01/S01E14");
+			}
 		}
-		enter("Transformers.Prime.S01/S01E14");
 
 	}
 
@@ -146,6 +160,30 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 			e.printStackTrace();
 		}
 	}
+
+	public Handler backGroundHandler = new Handler()
+	{
+		@Override
+		public void handleMessage(android.os.Message msg)
+		{
+			if (msg.what == MESSAGE_TOPIC_IN_SRT)
+			{
+				System.out.println("字幕的单词:" + msg.obj);
+				curTopics = (Collection) msg.obj;
+				int size = curTopics.size();
+				if (size > 0)
+				{
+					findViewById(R.id.topicTipBg).setVisibility(View.VISIBLE);
+					((TextView) findViewById(R.id.topicTipNum)).setText("" + size);
+				}
+				else
+				{
+					findViewById(R.id.topicTipBg).setVisibility(View.INVISIBLE);
+					((TextView) findViewById(R.id.topicTipNum)).setText("");
+				}
+			}
+		}
+	};
 
 	/**
 	 * 虚拟按键变成圆点
@@ -420,18 +458,9 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 		findViewById(R.id.btnChoose).setOnClickListener(this);
 		findViewById(R.id.btnSetting).setOnClickListener(this);
 		findViewById(R.id.btnMore).setOnClickListener(this);
-		try
-		{
-			if (BasicStringUtil.isNotNullString(DataHolder.getFileKey()))
-			{
-				initFileTv(DataHolder.getFileKey());
-				setSrtContent(DataHolder.getCurrent());
-			}
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+
+		((RelativeLayout) findViewById(R.id.topic_rl)).setOnClickListener(this);
+
 	}
 
 	private void initFileTv(String srtFilePath)
@@ -513,8 +542,37 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 			// }
 			alertDialog = moreDialogBuilder.show();
 			break;
+		case R.id.topic_rl:
+			showTopicList();
+			break;
 		}
 		hideVirtualBts();
+	}
+
+	Collection<Topic> curTopics;
+
+	private void showTopicList()
+	{
+		if (curTopics != null && curTopics.size() > 0)
+		{
+			Dialog dialog = new Dialog(this, R.style.CustomDialogStyle);
+			dialog.setContentView(R.layout.topic_tip_wdailog);
+			dialog.setCanceledOnTouchOutside(true);
+			Window window = dialog.getWindow();
+
+			WindowManager.LayoutParams lp = window.getAttributes();
+			int width = BasicPhoneUtil.getScreenWidth(this);
+			lp.width = (int) (0.8 * width);
+
+			final TextView tvTopic = (TextView) dialog.findViewById(R.id.tvTopicInfo);
+			Iterator<Topic> iterator = curTopics.iterator();
+			while (iterator.hasNext())
+			{
+				Topic next = iterator.next();
+				tvTopic.append(next.getTopic_base_word() + "  " + next.getMean_cn() + "\n");
+			}
+			dialog.show();
+		}
 	}
 
 	private void setting()
@@ -794,7 +852,7 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 		}
 	}
 
-	private void setSrtContent(SrtInfo srt)
+	private void setSrtContent(final SrtInfo srt)
 	{
 		// 对于字幕里英文与中文颠倒的,用这种方法
 		if (TextFormatUtil.containsChinese(srt.getEng()) && !TextFormatUtil.containsChinese(srt.getChs()))
@@ -820,6 +878,21 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 			defaultTimePoint[2] = srt.getFromTime().getSecond();
 		}
 		((TextView) findViewById(R.id.progress_tv)).setText(srtPlayService.getPleyProgress());
+		if (srt.getDbId() > 0)
+		{
+			new Thread(new Runnable()
+			{
+
+				@Override
+				public void run()
+				{
+					Message msg = new Message();
+					msg.what = MESSAGE_TOPIC_IN_SRT;
+					msg.obj = DictionaryDao.getCETTopic(srt.getDbId());
+					backGroundHandler.sendMessage(msg);
+				}
+			}).start();
+		}
 	}
 
 	private void checkLineCount()
@@ -827,6 +900,8 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 		ToastUtil.cancel();
 		int elineCount = engTv.getLineCount();
 		int clineCount = chsTv.getLineCount();
+		findViewById(R.id.topic_rl).setVisibility(View.VISIBLE);
+		findViewById(R.id.multi_line).setVisibility(View.VISIBLE);
 		if (elineCount > 2 && clineCount > 2)
 		{
 			ToastUtil.showLongToast(this, "中文和英文都超过两行,请手动滚动");
@@ -838,6 +913,10 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 		else if (clineCount > 2)
 		{
 			ToastUtil.showLongToast(this, "中文超过两行,请手动滚动");
+		}
+		else
+		{
+			findViewById(R.id.multi_line).setVisibility(View.INVISIBLE);
 		}
 		// 下次开始,自动回到第一行
 		engTv.scrollTo(0, 0);

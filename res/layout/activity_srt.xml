@@ -134,6 +134,7 @@
             android:textColor="@color/white"
             android:textSize="@dimen/dimen_15_dip"
             android:textStyle="bold" />
+
         <Button
             android:id="@+id/btnMore"
             android:layout_width="60dp"
@@ -151,6 +152,38 @@
             android:textColor="@color/white"
             android:textSize="@dimen/dimen_15_dip"
             android:textStyle="bold" />
+
+        <RelativeLayout
+            android:id="@+id/topic_rl"
+            android:layout_marginLeft="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <ImageView
+                android:id="@+id/topicTipBg"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/icon_tip_circle" />
+
+            <TextView
+                android:id="@+id/topicTipNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/topicTipBg"
+				android:layout_alignRight="@+id/topicTipBg"
+				android:layout_marginRight="3dp"
+				android:textSize="14dp"
+				android:textColor="@+color/black"
+				android:textStyle="bold" 
+                android:text="" />
+            
+            <ImageView
+                android:id="@+id/multi_line"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_toRightOf="@+id/topicTipBg"
+                android:background="@drawable/icon_multi_line" />
+        </RelativeLayout>
     </LinearLayout>
 
     <LinearLayout
