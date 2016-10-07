@@ -47,6 +47,7 @@ import com.wnc.basic.BasicStringUtil;
 import com.wnc.srtlearn.R;
 import com.wnc.srtlearn.dao.DictionaryDao;
 import com.wnc.srtlearn.dao.FavDao;
+import com.wnc.srtlearn.dao.SrtInfoDao;
 import com.wnc.srtlearn.modules.translate.Topic;
 import com.wnc.srtlearn.setting.SrtSetting;
 import com.wnc.srtlearn.ui.handler.AutoPlayHandler;
@@ -153,7 +154,11 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener, 
 		try
 		{
 			movieTv.setText(TextFormatUtil.removeFileExtend(srtFilePath));
-			srtPlayService.seekSrtFile(MyAppParams.SRT_FOLDER + srtFilePath, intent.getStringExtra("seektime"));
+			String seektime = intent.getStringExtra("seektime");
+			if (SrtInfoDao.isExistEpidose(srtFilePath))
+				srtPlayService.seekSrtFile(TextFormatUtil.removeFileExtend(srtFilePath), seektime);
+			else
+				srtPlayService.seekSrtFile(MyAppParams.SRT_FOLDER + srtFilePath, seektime);
 		}
 		catch (SrtException e)
 		{

@@ -81,6 +81,27 @@ public class SrtInfoDao
 		return list;
 	}
 
+	public static boolean isExistEpidose(String srtfile)
+	{
+		openDatabase();
+		boolean b = false;
+		try
+		{
+			String sql = "select * from episode where name like '%" + srtfile + "%'";
+			Cursor c = database.rawQuery(sql, null);
+			b = c.moveToFirst();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			closeDatabase();
+		}
+		return b;
+	}
+
 	public static List<SrtInfo> getSrtInfos(String season, String episode)
 	{
 		season = StringEscapeUtils.escapeSql(season);
