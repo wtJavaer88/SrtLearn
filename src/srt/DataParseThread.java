@@ -2,7 +2,6 @@ package srt;
 
 import java.util.List;
 
-import srt.ex.SrtException;
 import srt.ex.SrtParseErrorException;
 import srt.picker.Picker;
 import srt.picker.PickerFactory;
@@ -21,11 +20,17 @@ import com.wnc.basic.BasicStringUtil;
  */
 public class DataParseThread extends Thread
 {
+	private int state = 0;// 0是初始状态, 不进行判断
 	String curFile;
 	String seekTime;
 	int curPage = 0;
 	final int COUNTS_PER_PAGE = 100;
 	Picker picker;
+
+	public int getRunState()
+	{
+		return state;
+	}
 
 	public DataParseThread(String curFile) throws SrtParseErrorException
 	{
@@ -58,34 +63,44 @@ public class DataParseThread extends Thread
 		// seekTime = "00:00:00,000";
 
 		List<SrtInfo> cachedSrtInfos;
-		if (BasicStringUtil.isNullString(seekTime))
-		{
-			cachedSrtInfos = picker.get10CacheSrtInfos(null);
-		}
-		else
-		{
-			cachedSrtInfos = picker.getCacheSrtInfosInRange(TimeHelper.getTimeBeforeOneMinute(seekTime), TimeHelper.getTimeAfterOneMinute(seekTime));
-
-			for (int i = 0; i < cachedSrtInfos.size(); i++)
-			{
-				if (cachedSrtInfos.get(i).getFromTime().toString().compareTo(seekTime) >= 0)
-				{
-					DataHolder.setCurrentSrtIndex(i);
-					break;
-				}
-			}
-		}
-		// System.out.println("cachedSrtInfos:" + cachedSrtInfos);
-		DataHolder.appendData(curFile, cachedSrtInfos);
 		try
 		{
-			DataHolder.product(picker.getSrtInfos());
+			if (BasicStringUtil.isNullString(seekTime))
+			{
+				cachedSrtInfos = picker.get10CacheSrtInfos(null);
+			}
+			else
+			{
+				cachedSrtInfos = picker.getCacheSrtInfosInRange(TimeHelper.getTimeBeforeOneMinute(seekTime), TimeHelper.getTimeAfterOneMinute(seekTime));
+				for (int i = 0; i < cachedSrtInfos.size(); i++)
+				{
+					if (cachedSrtInfos.get(i).getFromTime().toString().compareTo(seekTime) >= 0)
+					{
+						DataHolder.setCurrentSrtIndex(i);
+						break;
+					}
+				}
+			}
+			// System.out.println("cachedSrtInfos:" + cachedSrtInfos);
+			if (cachedSrtInfos != null && cachedSrtInfos.size() > 0)
+			{
+				DataHolder.appendData(curFile, cachedSrtInfos);
+				state = 1;// 已经有数据可供操作
+
+				DataHolder.product(picker.getSrtInfos());
+				state = 2;// 数据全部提取完成
+				initTimeLineArr(DataHolder.getAllSrtInfos());
+			}
+			else
+			{
+				state = -1;// 缓存获取失败
+			}
 		}
-		catch (SrtException e)
+		catch (Exception e)
 		{
 			e.printStackTrace();
+			state = -2;// 出现异常
 		}
-		initTimeLineArr(DataHolder.getAllSrtInfos());
 
 		System.out.println(BasicFileUtil.getFileName(curFile) + "字幕结果数:" + DataHolder.srtInfoMap.get(curFile).size());
 		System.out.println("总耗时:" + basicRunTimeUtil.getCurrentRunMilliSecond());

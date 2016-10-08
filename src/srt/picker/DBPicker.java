@@ -19,10 +19,8 @@ public class DBPicker implements Picker
 	{
 		this.season = season;
 		this.episode = episode;
-		SrtInfoDao.openDatabase();
 		srtInfos = SrtInfoDao.getSrtInfos(season, episode);
 		System.out.println(srtInfos.size());
-		SrtInfoDao.closeDatabase();
 	}
 
 	@Override

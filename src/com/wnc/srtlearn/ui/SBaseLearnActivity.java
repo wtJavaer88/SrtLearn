@@ -6,24 +6,31 @@ import android.os.Handler;
 
 public abstract class SBaseLearnActivity extends BaseHorActivity
 {
-    protected SrtPlayService srtPlayService;
+	public static final int MESSAGE_TOPIC_IN_SRT = 100;
+	public static final int MESSAGE_GET_CACHED_SRT = 101;
+	public static final int MESSAGE_GET_ALL_SRT = 102;
+	public static final int MESSAGE_GET_ERROR_SRT = 103;
 
-    public abstract void stopSrtPlay();
+	protected SrtPlayService srtPlayService;
 
-    public abstract void play(SrtInfo srtInfo);
+	public abstract void stopSrtPlay();
 
-    public abstract Handler getHanlder();
+	public abstract void play(SrtInfo srtInfo);
 
-    public abstract SrtPlayService getSrtPlayService();
+	public abstract Handler getHanlder();
 
-    public abstract void playNext();
+	public abstract Handler getBackGroundHanlder();
 
-    public abstract void playCurrent();
+	public abstract SrtPlayService getSrtPlayService();
 
-    /**
-     * 播放字幕文件
-     * 
-     * @param strFile
-     */
-    public abstract void enter(String strFile);
+	public abstract void playNext();
+
+	public abstract void playCurrent();
+
+	/**
+	 * 播放字幕文件
+	 * 
+	 * @param strFile
+	 */
+	public abstract void enter(String strFile);
 }

@@ -104,6 +104,7 @@ public class SrtInfoDao
 
 	public static List<SrtInfo> getSrtInfos(String season, String episode)
 	{
+		openDatabase();
 		season = StringEscapeUtils.escapeSql(season);
 		episode = StringEscapeUtils.escapeSql(episode);
 		List<SrtInfo> list = new ArrayList<SrtInfo>();
@@ -131,6 +132,10 @@ public class SrtInfoDao
 		catch (Exception e)
 		{
 			e.printStackTrace();
+		}
+		finally
+		{
+			closeDatabase();
 		}
 		return list;
 	}

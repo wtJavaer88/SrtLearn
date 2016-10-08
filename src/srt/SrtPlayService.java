@@ -98,19 +98,51 @@ public class SrtPlayService implements Favoritable
 		DataHolder.switchFile(srtFile);
 		if (!DataHolder.srtInfoMap.containsKey(srtFile))
 		{
-			new DataParseThread(getCurFile()).start();
-			while (DataHolder.getAllSrtInfos() == null || DataHolder.getAllSrtInfos().size() == 0)
+			final DataParseThread dataParseThread = new DataParseThread(srtFile);
+			dataParseThread.start();
+			new Thread(new Runnable()
 			{
-				try
+				boolean watching = true;
+				boolean hasCached = false;
+
+				@Override
+				public void run()
 				{
-					TimeUnit.MILLISECONDS.sleep(50);
+					while (watching)
+					{
+						int runState = dataParseThread.getRunState();
+						if (runState != 0)
+						{
+							switch (runState)
+							{
+							case 1:
+								if (!hasCached)
+								{
+									sBaseLearnActivity.getBackGroundHanlder().sendEmptyMessage(SBaseLearnActivity.MESSAGE_GET_CACHED_SRT);
+									hasCached = true;
+								}
+								break;
+							case 2:
+								sBaseLearnActivity.getBackGroundHanlder().sendEmptyMessage(SBaseLearnActivity.MESSAGE_GET_ALL_SRT);
+								watching = false;
+								break;
+							default:
+								sBaseLearnActivity.getBackGroundHanlder().sendEmptyMessage(SBaseLearnActivity.MESSAGE_GET_ERROR_SRT);
+								watching = false;
+								break;
+							}
+						}
+						try
+						{
+							TimeUnit.MILLISECONDS.sleep(50);
+						}
+						catch (InterruptedException e)
+						{
+							e.printStackTrace();
+						}
+					}
 				}
-				catch (InterruptedException e)
-				{
-					e.printStackTrace();
-				}
-			}
-			sBaseLearnActivity.play(getSrtInfo(SRT_VIEW_TYPE.VIEW_CURRENT));
+			}).start();
 		}
 		else
 		{

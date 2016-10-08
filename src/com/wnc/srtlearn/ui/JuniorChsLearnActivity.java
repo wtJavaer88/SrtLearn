@@ -1025,4 +1025,11 @@ public class JuniorChsLearnActivity extends SBaseLearnActivity implements OnClic
 		}
 	}
 
+	@Override
+	public Handler getBackGroundHanlder()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
