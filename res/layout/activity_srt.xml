@@ -169,13 +169,14 @@
                 android:id="@+id/topicTipNum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignRight="@+id/topicTipBg"
                 android:layout_alignTop="@+id/topicTipBg"
-				android:layout_alignRight="@+id/topicTipBg"
-				android:layout_marginRight="3dp"
-				android:textSize="14dp"
-				android:textColor="@+color/black"
-				android:textStyle="bold" 
-                android:text="" />
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:text="3"
+                android:textColor="@+color/white"
+                android:textSize="14dp"
+                android:textStyle="bold" />
             
             <ImageView
                 android:id="@+id/multi_line"
