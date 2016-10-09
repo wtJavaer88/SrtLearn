@@ -159,10 +159,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
+            <ImageButton
+            	android:id="@+id/btnStar"
+            	android:layout_width="30dp"
+                android:layout_height="30dp"
+           	 	android:background="#00000000"
+            	android:src="@drawable/star2" />
+            
             <ImageView
                 android:id="@+id/topicTipBg"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:layout_toRightOf="@+id/btnStar"
                 android:background="@drawable/icon_tip_circle" />
 
             <TextView
@@ -191,13 +199,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center" >
-
-        <ImageButton
-            android:id="@+id/btnStar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#00000000"
-            android:src="@drawable/star2" />
 
         <TextView
             android:id="@+id/timeline_tv"
