@@ -144,9 +144,9 @@ public class DataHolder
     {
         if (!srtInfoMap.containsKey(fileKey))
         {
-            System.out.println("checkExist");
-            printMap();
-            System.out.println("checkExist over");
+            // System.out.println("checkExist");
+            // printMap();
+            // System.out.println("checkExist over");
             throw new SrtNotFoundException();
         }
     }
@@ -202,16 +202,16 @@ public class DataHolder
         {
             srtInfoMap.get(srtFile).addAll(srtInfos);
         }
-        System.out.println("appendData");
-        printMap();
-        System.out.println("appendData over");
+        // System.out.println("appendData");
+        // printMap();
+        // System.out.println("appendData over");
     }
 
     public synchronized static void product(List<SrtInfo> allInfos)
             throws SrtException
     {
-        System.out.println("product...");
-        printMap();
+        // System.out.println("product...");
+        // printMap();
         SrtInfo current = null;
         if (srtInfoMap.get(fileKey).size() > 0)
         {

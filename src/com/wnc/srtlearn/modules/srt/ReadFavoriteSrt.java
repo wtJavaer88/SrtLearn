@@ -66,7 +66,7 @@ public class ReadFavoriteSrt
         for (FavoriteSrtInfoVo fsInfo : list)
         {
             fsInfo.setSublings(list.size());
-            System.out.println(fsInfo);
+            // System.out.println(fsInfo);
         }
         return list;
     }

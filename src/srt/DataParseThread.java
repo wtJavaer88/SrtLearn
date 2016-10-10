@@ -3,6 +3,7 @@ package srt;
 import java.util.List;
 
 import srt.ex.SrtParseErrorException;
+import srt.picker.DBPicker;
 import srt.picker.Picker;
 import srt.picker.PickerFactory;
 
@@ -69,13 +70,27 @@ public class DataParseThread extends Thread
         {
             if (BasicStringUtil.isNullString(seekTime))
             {
-                cachedSrtInfos = picker.get10CacheSrtInfos(null);
+                if (picker instanceof DBPicker)
+                {
+                    cachedSrtInfos = picker.getSrtInfos();
+                }
+                else
+                {
+                    cachedSrtInfos = picker.get10CacheSrtInfos(null);
+                }
             }
             else
             {
-                cachedSrtInfos = picker.getCacheSrtInfosInRange(
-                        TimeHelper.getTimeBeforeOneMinute(seekTime),
-                        TimeHelper.getTimeAfterOneMinute(seekTime));
+                if (picker instanceof DBPicker)
+                {
+                    cachedSrtInfos = picker.getSrtInfos();
+                }
+                else
+                {
+                    cachedSrtInfos = picker.getCacheSrtInfosInRange(
+                            TimeHelper.getTimeBeforeOneMinute(seekTime),
+                            TimeHelper.getTimeAfterOneMinute(seekTime));
+                }
                 for (int i = 0; i < cachedSrtInfos.size(); i++)
                 {
                     if (cachedSrtInfos.get(i).getFromTime().toString()
@@ -90,10 +105,17 @@ public class DataParseThread extends Thread
             if (cachedSrtInfos != null && cachedSrtInfos.size() > 0)
             {
                 DataHolder.appendData(curFile, cachedSrtInfos);
-                state = 1;// 已经有数据可供操作
+                if (picker instanceof DBPicker)
+                {
+                    state = 2;// 数据全部提取完成
+                }
+                else
+                {
+                    state = 1;// 已经有数据可供操作
+                    DataHolder.product(picker.getSrtInfos());
+                    state = 2;// 数据全部提取完成
+                }
 
-                DataHolder.product(picker.getSrtInfos());
-                state = 2;// 数据全部提取完成
                 initTimeLineArr(DataHolder.getAllSrtInfos());
             }
             else

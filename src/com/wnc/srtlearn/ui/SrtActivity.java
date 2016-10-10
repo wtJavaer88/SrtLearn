@@ -1086,7 +1086,6 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener,
 
         srtUIUpdate();
 
-        System.out.println("srt.getDbId()::" + srt.getDbId());
         if (srt.getDbId() > 0)
         {
             new Thread(new Runnable()
