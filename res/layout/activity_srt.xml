@@ -219,26 +219,60 @@
             android:textColor="@color/white" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/eng_tv"
+     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="3dp"
-        android:maxLines="2"
-        android:singleLine="false"
-        android:textColor="@color/purple"
-        android:textSize="40dp" />
+        android:orientation="horizontal" >
+	    <TextView
+	        android:id="@+id/eng_tv"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginLeft="10dp"
+	        android:layout_marginTop="3dp"
+	        android:maxLines="2"
+	        android:singleLine="false"
+	        android:layout_weight="1"
+	        android:textColor="@color/purple"
+	        android:textSize="40dp" />
+	    <ImageButton
+                android:id="@+id/imgbutton_eng_menu"
+                android:layout_marginTop="10dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="3dp"
+                android:layout_gravity="center"
+                android:background="@drawable/icon_eng_menu"
+                android:scaleType="fitXY" />
+	    
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/chs_tv"
+     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="3dp"
-        android:maxLines="2"
-        android:singleLine="false"
-        android:textColor="@color/purple"
-        android:textSize="40dp" />
+        android:orientation="horizontal" >
+	    <TextView
+	        android:id="@+id/chs_tv"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginLeft="10dp"
+	        android:layout_marginTop="3dp"
+	        android:maxLines="2"
+	        android:singleLine="false"
+	        android:layout_weight="1"
+	        android:textColor="@color/purple"
+	        android:textSize="40dp" />
+	    <ImageButton
+                android:id="@+id/imgbutton_hide_chs"
+                android:layout_marginTop="10dp"
+                android:layout_width="30dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="3dp"
+                android:layout_gravity="center"
+                android:background="@drawable/icon_eye_open"
+                android:scaleType="fitXY" />
+	    
+    </LinearLayout>
 
 </LinearLayout>

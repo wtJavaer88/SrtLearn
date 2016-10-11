@@ -93,7 +93,8 @@ public class VideoActivity extends Activity implements OnClickListener,
     private int currentPosition;
     ImageButton imgButton_fullscreen, imgButton_play, imgbutton_replay_setting,
             imgbutton_custom_replay, imgbutton_float_replay,
-            imgbutton_float_zimu, imgbutton_float_favorite;
+            imgbutton_float_zimu, imgbutton_float_favorite,
+            imgbutton_hide_vchs;
 
     private String videoSeries;
     private String videoEpisode;
@@ -117,9 +118,8 @@ public class VideoActivity extends Activity implements OnClickListener,
                 new MyCtrlableGestureDetector(this, 0.2, 0, this, null)
                         .setDclistener(this));
         init();
-
+        toLandscapeScreen();
         initData();
-
         // initHoldPlay();
     }
 
@@ -154,9 +154,7 @@ public class VideoActivity extends Activity implements OnClickListener,
         videoHeadLayout = (LinearLayout) findViewById(R.id.video_headll2);
         videoBottomLayout = (LinearLayout) findViewById(R.id.video_bottomll2);
         videoFloatLayout = (LinearLayout) findViewById(R.id.video_floatll2);
-        System.out.println("videoFloatLayout:" + videoFloatLayout);
         bt_videomenu = (Button) findViewById(R.id.videomenuBt);
-        System.out.println("111");
         imgButton_fullscreen = (ImageButton) findViewById(R.id.imgbtn_fullscreen);
         imgButton_play = (ImageButton) findViewById(R.id.imgbtn_play);
         imgbutton_replay_setting = (ImageButton) findViewById(R.id.imgbutton_replay_setting);
@@ -164,6 +162,7 @@ public class VideoActivity extends Activity implements OnClickListener,
         imgbutton_float_replay = (ImageButton) findViewById(R.id.imgbutton_float_replay);
         imgbutton_float_zimu = (ImageButton) findViewById(R.id.imgbutton_float_zimu);
         imgbutton_float_favorite = (ImageButton) findViewById(R.id.imgbutton_float_favorite);
+        imgbutton_hide_vchs = (ImageButton) findViewById(R.id.imgbutton_hide_vchs);
 
         veng_tv = (TextView) findViewById(R.id.veng_tv);
         vchs_tv = (TextView) findViewById(R.id.vchs_tv);
@@ -241,7 +240,6 @@ public class VideoActivity extends Activity implements OnClickListener,
             curIndex = intent.getIntExtra("curindex", 0);
             curSrt = srtInfos.get(curIndex);
             System.out.println("curSrt:  " + curSrt);
-            setUI();
             setCurTime(seektime);
         }
         currentPosition = seektime;
@@ -342,6 +340,7 @@ public class VideoActivity extends Activity implements OnClickListener,
         imgbutton_float_replay.setOnClickListener(this);
         imgbutton_float_zimu.setOnClickListener(this);
         imgbutton_float_favorite.setOnClickListener(this);
+        imgbutton_hide_vchs.setOnClickListener(this);
         menuListen();
     }
 
@@ -405,8 +404,11 @@ public class VideoActivity extends Activity implements OnClickListener,
      */
     private void initHoldPlay()
     {
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-
+        if (curSrt != null)
+        {
+            ((TextView) findViewById(R.id.srtinfoTv)).setText(curSrt.getEng()
+                    + "\n" + curSrt.getChs());
+        }
         hideVideoMenus();
         isShowingSrt = true;
         isPaused = false;
@@ -467,14 +469,13 @@ public class VideoActivity extends Activity implements OnClickListener,
             cusReplay();
             break;
         case R.id.imgbutton_float_replay:
-            hideVideoMenus();
+            hideTopBottMenus();
             cusReplay();
             break;
         case R.id.imgbutton_float_zimu:
             ToastUtil.showShortToast(this, "启用字幕设置");
             break;
         case R.id.imgbutton_float_favorite:
-            ToastUtil.showShortToast(this, "启用字幕设置");
             List<SrtInfo> currentPlaySrtInfos = getCurrentPlaySrtInfos();
             FavoriteMgr favoriteMgr = new FavoriteMgr(this, this);
             if (favoriteMgr.save(currentPlaySrtInfos))
@@ -486,8 +487,29 @@ public class VideoActivity extends Activity implements OnClickListener,
                 ToastUtil.showLongToast(this, "收藏失败!");
             }
             break;
+        case R.id.imgbutton_hide_vchs:
+            toggleChsTv();
+            break;
         default:
             break;
+        }
+    }
+
+    private void toggleChsTv()
+    {
+        if (vchs_tv.getVisibility() == View.VISIBLE)
+        {
+            showChs = false;
+            vchs_tv.setVisibility(View.INVISIBLE);
+            imgbutton_hide_vchs
+                    .setBackgroundResource(R.drawable.icon_eye_hide4v);
+        }
+        else
+        {
+            showChs = true;
+            vchs_tv.setVisibility(View.VISIBLE);
+            imgbutton_hide_vchs
+                    .setBackgroundResource(R.drawable.icon_eye_open4v);
         }
     }
 
@@ -519,17 +541,31 @@ public class VideoActivity extends Activity implements OnClickListener,
     {
         if (this.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
         {
-            this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            toPortraitScreen();
         }
         else if (this.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
         {
-            this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            toLandscapeScreen();
         }
         else if (this.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
         {
             Log.e("Video", "err");
         }
 
+    }
+
+    private void toPortraitScreen()
+    {
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        this.imgButton_fullscreen
+                .setBackgroundResource(R.drawable.icon_video_full_screen);
+    }
+
+    private void toLandscapeScreen()
+    {
+        this.imgButton_fullscreen
+                .setBackgroundResource(R.drawable.icon_video_back);
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     }
 
     @SuppressLint("NewApi")
@@ -556,6 +592,12 @@ public class VideoActivity extends Activity implements OnClickListener,
         hideHead();
         hideSeekbar();
         videoFloatLayout.setVisibility(View.INVISIBLE);
+    }
+
+    private void hideTopBottMenus()
+    {
+        hideHead();
+        hideSeekbar();
     }
 
     private void hideSeekbar()
@@ -734,16 +776,46 @@ public class VideoActivity extends Activity implements OnClickListener,
     {
         isShowingSrt = true;
         isPaused = false;
-        this.imgButton_play.setImageResource(R.drawable.bfq_pause);
-        mediaPlayer.seekTo(time);
-        mediaPlayer.setOnSeekCompleteListener(new OnSeekCompleteListener()
+        try
         {
-            @Override
-            public void onSeekComplete(MediaPlayer arg0)
+            this.imgButton_play.setImageResource(R.drawable.bfq_pause);
+            mediaPlayer.seekTo(time);
+            mediaPlayer.setOnSeekCompleteListener(new OnSeekCompleteListener()
             {
-                mediaPlayer.start();
-            }
-        });
+                @Override
+                public void onSeekComplete(MediaPlayer arg0)
+                {
+                    mediaPlayer.start();
+                }
+            });
+        }
+        catch (IllegalStateException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    private void videoSeekStop(int time)
+    {
+        try
+        {
+            this.imgButton_play.setImageResource(R.drawable.bfq_play);
+            mediaPlayer.seekTo(time);
+            mediaPlayer.setOnSeekCompleteListener(new OnSeekCompleteListener()
+            {
+                @Override
+                public void onSeekComplete(MediaPlayer arg0)
+                {
+                    mediaPlayer.pause();
+                }
+            });
+        }
+        catch (IllegalStateException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     public boolean isPaused = false;// 只在暂停时为true
@@ -863,10 +935,23 @@ public class VideoActivity extends Activity implements OnClickListener,
 
     private void setSrtContent(SrtInfo srt)
     {
-        veng_tv.setText(srt.getEng() == null ? "" : srt.getEng());
-        vchs_tv.setText(srt.getChs() == null ? "" : srt.getChs());
-        ((TextView) findViewById(R.id.srtinfoTv)).setText(srt.getEng() + "\n"
-                + srt.getChs());
+        if (isLandscape())
+        {
+            ((TextView) findViewById(R.id.srtinfoTv)).setText(srt.getEng()
+                    + "\n" + srt.getChs());
+            veng_tv.setText(srt.getEng() == null ? "" : srt.getEng());
+            vchs_tv.setText(srt.getChs() == null ? "" : srt.getChs());
+        }
+        else
+        {
+            veng_tv.setText(srt.getEng() == null ? "" : srt.getEng());
+            vchs_tv.setText(srt.getChs() == null ? "" : srt.getChs());
+        }
+    }
+
+    private boolean isLandscape()
+    {
+        return this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 
     /**
@@ -879,11 +964,20 @@ public class VideoActivity extends Activity implements OnClickListener,
         ((TextView) findViewById(R.id.srtinfoTv)).setVisibility(View.INVISIBLE);
     }
 
+    boolean showChs = true;
+
     public void showEngChs()
     {
         veng_tv.setVisibility(View.VISIBLE);
-        vchs_tv.setVisibility(View.VISIBLE);
-        ((TextView) findViewById(R.id.srtinfoTv)).setVisibility(View.VISIBLE);
+        if (showChs)
+        {
+            vchs_tv.setVisibility(View.VISIBLE);
+        }
+        if (isLandscape())
+        {
+            ((TextView) findViewById(R.id.srtinfoTv))
+                    .setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -910,9 +1004,12 @@ public class VideoActivity extends Activity implements OnClickListener,
     public void doLeft(FlingPoint p1, FlingPoint p2)
     {
         isShowingSrt = true;
-        if (curSrt != null && seekInSrt(seekBar.getProgress(), curSrt))
+        if (curSrt != null)
         {
-            curIndex--;
+            if (seekInSrt(seekBar.getProgress(), curSrt))
+            {
+                curIndex--;
+            }
         }
         if (curIndex < 0)
         {
@@ -921,9 +1018,16 @@ public class VideoActivity extends Activity implements OnClickListener,
         curSrt = srtInfos.get(curIndex);
         setUI();
         initSeekTimes();
-        if (mediaPlayer != null && mediaPlayer.isPlaying())
+        if (mediaPlayer != null)
         {
-            videoSeek(seektime);
+            if (mediaPlayer.isPlaying())
+            {
+                videoSeek(seektime);
+            }
+            else
+            {
+                videoSeekStop(seektime);
+            }
         }
     }
 
@@ -950,9 +1054,13 @@ public class VideoActivity extends Activity implements OnClickListener,
         curSrt = srtInfos.get(curIndex);
         setUI();
         initSeekTimes();
-        if (mediaPlayer != null && mediaPlayer.isPlaying())
+        if (mediaPlayer.isPlaying())
         {
             videoSeek(seektime);
+        }
+        else
+        {
+            videoSeekStop(seektime);
         }
     }
 
@@ -1022,7 +1130,7 @@ public class VideoActivity extends Activity implements OnClickListener,
     public void onConfigurationChanged(Configuration newConfig)
     {
         super.onConfigurationChanged(newConfig);
-        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+        if (isLandscape())
         {
             super.onConfigurationChanged(newConfig);
             findViewById(R.id.video_operLl).setVisibility(View.GONE);

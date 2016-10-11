@@ -92,7 +92,7 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener,
     private TextView chsTv;
     private TextView engTv;
     private TextView timelineTv;
-    private ImageButton imgBtnStar;
+    private ImageButton imgBtnStar, imgBtnChsHide, imgBtnEngMenu;
 
     private GestureDetector gestureDetector;
     AlertDialog alertDialog;
@@ -289,7 +289,7 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener,
         initMoreDialog();
     }
 
-    Builder alertDialogBuilder;
+    Builder engMenuDialogBuilder;
     Builder settingDialogBuilder;
     Builder moreDialogBuilder;
 
@@ -400,7 +400,7 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener,
     {
         final String[] menuItems = new String[]
         { "复制英文", "复制中英文", "收藏", "分享" };
-        alertDialogBuilder = new AlertDialog.Builder(this)
+        engMenuDialogBuilder = new AlertDialog.Builder(this)
                 .setTitle("对字幕进行操作")
                 .setItems(menuItems, new DialogInterface.OnClickListener()
                 {
@@ -554,6 +554,8 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener,
         timelineTv = (TextView) findViewById(R.id.timeline_tv);
 
         imgBtnStar = (ImageButton) findViewById(R.id.btnStar);
+        imgBtnChsHide = (ImageButton) findViewById(R.id.imgbutton_hide_chs);
+        imgBtnEngMenu = (ImageButton) findViewById(R.id.imgbutton_eng_menu);
 
         chsTv.setMovementMethod(new ScrollingMovementMethod());
         engTv.setMovementMethod(new ScrollingMovementMethod());
@@ -568,6 +570,8 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener,
         findViewById(R.id.btnChoose).setOnClickListener(this);
         findViewById(R.id.btnSetting).setOnClickListener(this);
         findViewById(R.id.btnMore).setOnClickListener(this);
+        imgBtnChsHide.setOnClickListener(this);
+        imgBtnEngMenu.setOnClickListener(this);
 
         ((RelativeLayout) findViewById(R.id.topic_rl)).setOnClickListener(this);
 
@@ -583,10 +587,12 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener,
         if (isChsShow())
         {
             chsTv.setVisibility(View.INVISIBLE);
+            imgBtnChsHide.setBackgroundResource(R.drawable.icon_eye_hide);
         }
         else
         {
             chsTv.setVisibility(View.VISIBLE);
+            imgBtnChsHide.setBackgroundResource(R.drawable.icon_eye_open);
         }
     }
 
@@ -654,6 +660,13 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener,
             break;
         case R.id.topic_rl:
             showTopicList();
+            break;
+        case R.id.imgbutton_hide_chs:
+            toggleChsTv();
+            break;
+        case R.id.imgbutton_eng_menu:
+            stopSrtPlay();
+            alertDialog = engMenuDialogBuilder.show();
             break;
         }
         hideVirtualBts();
@@ -1044,8 +1057,8 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener,
     private void checkFav(SrtInfo srt)
     {
 
-        boolean exist = FavDao.isExistSingle(this, srt, srtPlayService
-                .getCurFile().replace(MyAppParams.SRT_FOLDER, ""));
+        boolean exist = FavDao.isExistSingle(srt, srtPlayService.getCurFile()
+                .replace(MyAppParams.SRT_FOLDER, ""));
         if (exist)
         {
             imgBtnStar.setVisibility(View.VISIBLE);
@@ -1177,7 +1190,7 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener,
     public boolean onLongClick(View v)
     {
         stopSrtPlay();
-        alertDialog = alertDialogBuilder.show();
+        alertDialog = engMenuDialogBuilder.show();
         return true;
     }
 

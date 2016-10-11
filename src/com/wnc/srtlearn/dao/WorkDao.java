@@ -159,26 +159,6 @@ public class WorkDao
         return c.getString(c.getColumnIndex(columnName));
     }
 
-    public static List<String> getAllMembersForSearch()
-    {
-        List<String> searchMembers = new ArrayList<String>();
-        if (list != null)
-        {
-            searchMembers.clear();
-            searchMembers.add("全部成员");
-            for (String member : list)
-            {
-                searchMembers.add(member);
-            }
-        }
-        else
-        {
-            searchMembers.add("全部成员");
-        }
-
-        return searchMembers;
-    }
-
     static List<String> list = null;
 
     public static List<String> getAllMembers()

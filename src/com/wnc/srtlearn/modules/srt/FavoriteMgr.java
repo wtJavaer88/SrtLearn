@@ -15,58 +15,62 @@ import common.uihelper.MyAppParams;
 
 public class FavoriteMgr
 {
-	Favoritable favoritable;
-	Context context;
+    Favoritable favoritable;
 
-	public FavoriteMgr(Favoritable favoritable, Context context)
-	{
-		this.favoritable = favoritable;
-		this.context = context;
-	}
+    public FavoriteMgr(Favoritable favoritable, Context context)
+    {
+        this.favoritable = favoritable;
+    }
 
-	public boolean save(List<SrtInfo> currentPlaySrtInfos)
-	{
-		FavoriteMultiSrt mfav = new FavoriteMultiSrt();
-		mfav.setFavTime(BasicDateUtil.getCurrentDateTimeString());
-		mfav.setFromTimeStr(currentPlaySrtInfos.get(0).getFromTime().toString());
-		mfav.setToTimeStr(currentPlaySrtInfos.get(currentPlaySrtInfos.size() - 1).getToTime().toString());
-		mfav.setSrtFile(favoritable.getCurFile().replace(MyAppParams.SRT_FOLDER, ""));
-		mfav.setHasChild(currentPlaySrtInfos.size());
-		mfav.setTag(favoritable.getFavTag().replace("tag<", "").replace(">", ""));
+    public boolean save(List<SrtInfo> currentPlaySrtInfos)
+    {
+        FavoriteMultiSrt mfav = new FavoriteMultiSrt();
+        mfav.setFavTime(BasicDateUtil.getCurrentDateTimeString());
+        mfav.setFromTimeStr(currentPlaySrtInfos.get(0).getFromTime().toString());
+        mfav.setToTimeStr(currentPlaySrtInfos
+                .get(currentPlaySrtInfos.size() - 1).getToTime().toString());
+        mfav.setSrtFile(favoritable.getCurFile().replace(
+                MyAppParams.SRT_FOLDER, ""));
+        mfav.setHasChild(currentPlaySrtInfos.size());
+        mfav.setTag(favoritable.getFavTag().replace("tag<", "")
+                .replace(">", ""));
 
-		List<FavoriteSingleSrt> sfavs = new ArrayList<FavoriteSingleSrt>();
-		for (SrtInfo srtInfo : currentPlaySrtInfos)
-		{
-			FavoriteSingleSrt sfav = new FavoriteSingleSrt();
-			sfav.setFromTimeStr(srtInfo.getFromTime().toString());
-			sfav.setToTimeStr(srtInfo.getToTime().toString());
-			sfav.setsIndex(srtInfo.getSrtIndex());
-			sfav.setEng(srtInfo.getEng());
-			sfav.setChs(srtInfo.getChs());
-			sfavs.add(sfav);
-		}
-		if (FavDao.isExistMulti(context, mfav))
-		{
-			return true;
-		}
+        List<FavoriteSingleSrt> sfavs = new ArrayList<FavoriteSingleSrt>();
+        for (SrtInfo srtInfo : currentPlaySrtInfos)
+        {
+            FavoriteSingleSrt sfav = new FavoriteSingleSrt();
+            sfav.setFromTimeStr(srtInfo.getFromTime().toString());
+            sfav.setToTimeStr(srtInfo.getToTime().toString());
+            sfav.setsIndex(srtInfo.getSrtIndex());
+            sfav.setEng(srtInfo.getEng());
+            sfav.setChs(srtInfo.getChs());
+            sfavs.add(sfav);
+        }
+        if (FavDao.isExistMulti(mfav))
+        {
+            return true;
+        }
 
-		boolean insertFavMulti = FavDao.insertFavMulti(context, mfav, sfavs);
-		if (insertFavMulti)
-		{
-			writeFavoritetxt(currentPlaySrtInfos);
-		}
-		return insertFavMulti;
-	}
+        boolean insertFavMulti = FavDao.insertFavMulti(mfav, sfavs);
+        if (insertFavMulti)
+        {
+            writeFavoritetxt(currentPlaySrtInfos);
+        }
+        return insertFavMulti;
+    }
 
-	private boolean writeFavoritetxt(List<SrtInfo> currentPlaySrtInfos)
-	{
-		String favoriteCurrContent = getFavoriteCurrContent(currentPlaySrtInfos);
-		return BasicFileUtil.writeFileString(MyAppParams.FAVORITE_TXT, favoriteCurrContent, "UTF-8", true);
-	}
+    private boolean writeFavoritetxt(List<SrtInfo> currentPlaySrtInfos)
+    {
+        String favoriteCurrContent = getFavoriteCurrContent(currentPlaySrtInfos);
+        return BasicFileUtil.writeFileString(MyAppParams.FAVORITE_TXT,
+                favoriteCurrContent, "UTF-8", true);
+    }
 
-	public String getFavoriteCurrContent(List<SrtInfo> currentPlaySrtInfos)
-	{
-		String tag = favoritable.getFavTag();
-		return BasicDateUtil.getCurrentDateTimeString() + " \"" + favoritable.getCurFile().replace(MyAppParams.SRT_FOLDER, "") + "\" " + tag + " " + currentPlaySrtInfos + "\r\n";
-	}
+    public String getFavoriteCurrContent(List<SrtInfo> currentPlaySrtInfos)
+    {
+        String tag = favoritable.getFavTag();
+        return BasicDateUtil.getCurrentDateTimeString() + " \""
+                + favoritable.getCurFile().replace(MyAppParams.SRT_FOLDER, "")
+                + "\" " + tag + " " + currentPlaySrtInfos + "\r\n";
+    }
 }

@@ -4,6 +4,7 @@ public class FavoriteSingleSrt
 {
     private int id;
     private int pId;// 父Id
+    private int srt_id;// 字幕ID
     private int sIndex;// 在字幕中的序号
     private String fromTimeStr;
     private String toTimeStr;
@@ -86,5 +87,15 @@ public class FavoriteSingleSrt
     public String getToTimeStr()
     {
         return toTimeStr;
+    }
+
+    public int getSrt_id()
+    {
+        return srt_id;
+    }
+
+    public void setSrt_id(int srt_id)
+    {
+        this.srt_id = srt_id;
     }
 }

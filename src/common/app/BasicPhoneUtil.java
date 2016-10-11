@@ -17,6 +17,7 @@ import android.util.Log;
 
 public class BasicPhoneUtil
 {
+
     public static void showMediaVolume(Activity activity)
     {
         AudioManager mAudioManager = (AudioManager) activity

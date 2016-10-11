@@ -766,8 +766,8 @@ public class JuniorChsLearnActivity extends SBaseLearnActivity implements
     private void checkFav(SrtInfo srt)
     {
 
-        boolean exist = FavDao.isExistSingle(this, srt, srtPlayService
-                .getCurFile().replace(MyAppParams.SRT_FOLDER, ""));
+        boolean exist = FavDao.isExistSingle(srt, srtPlayService.getCurFile()
+                .replace(MyAppParams.SRT_FOLDER, ""));
         if (exist)
         {
             imgBtnStar.setVisibility(View.VISIBLE);

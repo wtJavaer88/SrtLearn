@@ -14,6 +14,7 @@ public class FavoriteSrtInfoVo extends SrtInfo
     private String srtFile;// 字幕文件: 剧名/集数
     private String tag;// 字幕标签,暂时为replay和normal,今天更新以前的默认为空字符串
     private int sublings;// 跟自己一同被收藏的字幕数
+    private int id;
 
     public String getFavoriteTime()
     {
@@ -38,9 +39,9 @@ public class FavoriteSrtInfoVo extends SrtInfo
     @Override
     public String toString()
     {
-        return "FavoriteSrtInfo [favoriteTime=" + favoriteTime + ", srtFile="
-                + srtFile + ", tag=" + tag + ", sublings=" + sublings
-                + ", fromTime=" + fromTime + ", toTime=" + toTime
+        return "FavoriteSrtInfo [id=" + id + ",favoriteTime=" + favoriteTime
+                + ", srtFile=" + srtFile + ", tag=" + tag + ", sublings="
+                + sublings + ", fromTime=" + fromTime + ", toTime=" + toTime
                 + ", srtIndex=" + srtIndex + ", chs=" + chs + ", eng=" + eng
                 + "]";
     }
@@ -63,5 +64,15 @@ public class FavoriteSrtInfoVo extends SrtInfo
     public void setSublings(int sublings)
     {
         this.sublings = sublings;
+    }
+
+    public int getId()
+    {
+        return id;
+    }
+
+    public void setId(int id)
+    {
+        this.id = id;
     }
 }

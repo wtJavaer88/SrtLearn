@@ -28,6 +28,8 @@ public class ReadFavoriteSrt
     private static FavoriteSrtInfoVo getSrtInfo(String info)
     {
         FavoriteSrtInfoVo fsInfo = new FavoriteSrtInfoVo();
+        fsInfo.setDbId(BasicNumberUtil.getNumber(PatternUtil
+                .getFirstPatternGroup(info, "dbId=(\\d+)")));
         fsInfo.setChs(PatternUtil.getFirstPatternGroup(info, "chs=(.*?), eng"));
         fsInfo.setEng(PatternUtil.getFirstPatternGroup(info, "eng=(.*?)]"));
         fsInfo.setSrtIndex(BasicNumberUtil.getNumber(PatternUtil
