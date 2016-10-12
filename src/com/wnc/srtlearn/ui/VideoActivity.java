@@ -175,20 +175,9 @@ public class VideoActivity extends Activity implements OnClickListener,
             @Override
             public void onStopTrackingTouch(SeekBar seekBar)
             {
-                System.out.println("onStopTrackingTouch");
+                isCusReplay = false;
                 int position = seekBar.getProgress();
-                /**
-                 * 先找一个大概的位置
-                 */
-                for (int i = 0; i < srtInfos.size(); i++)
-                {
-                    SrtInfo srt = srtInfos.get(i);
-                    if (TimeHelper.getTime(srt.getFromTime()) >= position)
-                    {
-                        curIndex = i;
-                        break;
-                    }
-                }
+                System.out.println("onStopTrackingTouch position: " + position);
                 // 再找准确的位置,并更新UI
                 if (updateUI(position))
                 {
@@ -196,7 +185,19 @@ public class VideoActivity extends Activity implements OnClickListener,
                 }
                 else
                 {
-
+                    /**
+                     * 找一个大概的位置
+                     */
+                    for (int i = 0; i < srtInfos.size(); i++)
+                    {
+                        SrtInfo srt = srtInfos.get(i);
+                        if (TimeHelper.getTime(srt.getFromTime()) >= position)
+                        {
+                            curIndex = i;
+                            curSrt = srtInfos.get(i);
+                            break;
+                        }
+                    }
                     seektime = position;
                     seekendtime = seekBar.getMax();
                 }
@@ -473,7 +474,10 @@ public class VideoActivity extends Activity implements OnClickListener,
             cusReplay();
             break;
         case R.id.imgbutton_float_zimu:
-            ToastUtil.showShortToast(this, "启用字幕设置");
+            int visibility = findViewById(R.id.srtinfoTv).getVisibility();
+            visibility = (visibility == View.VISIBLE) ? View.INVISIBLE
+                    : View.VISIBLE;
+            findViewById(R.id.srtinfoTv).setVisibility(visibility);
             break;
         case R.id.imgbutton_float_favorite:
             List<SrtInfo> currentPlaySrtInfos = getCurrentPlaySrtInfos();
@@ -916,15 +920,10 @@ public class VideoActivity extends Activity implements OnClickListener,
             if (TimeHelper.getTime(srt.getToTime()) > position
                     && TimeHelper.getTime(srt.getFromTime()) <= position)
             {
-                if (i != curIndex)
-                {
-                    curIndex = i;
-                    curSrt = srtInfos.get(curIndex);
-                    setUI();
-                    return true;
-                }
-                // 还是上一个
-                return false;
+                curIndex = i;
+                curSrt = srtInfos.get(curIndex);
+                setUI();
+                return true;
             }
         }
 

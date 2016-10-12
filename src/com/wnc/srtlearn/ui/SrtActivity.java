@@ -156,7 +156,7 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener,
             else
             {
                 // 默认进入,仅作测试用
-                enter("Transformers.Prime.S01/S01E14");
+                // enter("Transformers.Prime.S01/S01E14");
             }
         }
 
