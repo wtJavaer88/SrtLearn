@@ -1,5 +1,7 @@
 package com.wnc.srtlearn.monitor;
 
+import android.util.Log;
+
 import com.wnc.basic.BasicDateUtil;
 import com.wnc.basic.BasicFileUtil;
 import common.uihelper.MyAppParams;
@@ -11,6 +13,7 @@ public class MyLogger
 
 	public static void log(String msg)
 	{
+		Log.i("MyLogger", msg);
 		BasicFileUtil.writeFileString(getLogFilePath(), msg + "\r\n", null, true);
 	}
 

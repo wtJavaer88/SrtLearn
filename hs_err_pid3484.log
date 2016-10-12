@@ -1,0 +1,133 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  Internal Error (javaClasses.cpp:137), pid=3484, tid=4932
+#  fatal error: Invalid layout of preloaded class
+#
+# JRE version:  (7.0_80-b15) (build )
+# Java VM: Java HotSpot(TM) Client VM (24.80-b11 mixed mode windows-x86 )
+# Failed to write core dump. Minidumps are not enabled by default on client versions of Windows
+#
+# If you would like to submit a bug report, please visit:
+#   http://bugreport.java.com/bugreport/crash.jsp
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x002bc000):  JavaThread "Unknown thread" [_thread_in_vm, id=4932, stack(0x01100000,0x01150000)]
+
+Stack: [0x01100000,0x01150000],  sp=0x0114fa04,  free space=318k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+V  [jvm.dll+0x192384]
+V  [jvm.dll+0x18b9f6]
+V  [jvm.dll+0x35b90]
+V  [jvm.dll+0x35c16]
+V  [jvm.dll+0x4464d]
+V  [jvm.dll+0x4490e]
+V  [jvm.dll+0x93a4a]
+V  [jvm.dll+0x93dfb]
+V  [jvm.dll+0x141361]
+V  [jvm.dll+0x163e1c]
+V  [jvm.dll+0xcaaaf]
+C  [javaw.exe+0x13ce]
+C  [javaw.exe+0x1e40]
+C  [javaw.exe+0xa6d1]
+C  [javaw.exe+0xa75b]
+C  [kernel32.dll+0x133ca]
+C  [ntdll.dll+0x39ed2]
+C  [ntdll.dll+0x39ea5]
+
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+
+Other Threads:
+
+=>0x002bc000 (exited) JavaThread "Unknown thread" [_thread_in_vm, id=4932, stack(0x01100000,0x01150000)]
+
+VM state:not at safepoint (not fully initialized)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+GC Heap History (0 events):
+No events
+
+Deoptimization events (0 events):
+No events
+
+Internal exceptions (0 events):
+No events
+
+Events (10 events):
+Event: 0.014 loading class 0x00399598 done
+Event: 0.015 loading class 0x00399008 done
+Event: 0.015 loading class 0x00398fe8
+Event: 0.015 loading class 0x003a0378
+Event: 0.015 loading class 0x003a0378 done
+Event: 0.015 loading class 0x003a03a8
+Event: 0.015 loading class 0x003a03a8 done
+Event: 0.015 loading class 0x003a03d8
+Event: 0.015 loading class 0x003a03d8 done
+Event: 0.015 loading class 0x00398fe8 done
+
+
+Dynamic libraries:
+0x013c0000 - 0x013ef000 	F:\develop\Java\jdk1.7.0_80\bin\javaw.exe
+0x775a0000 - 0x77720000 	C:\Windows\SysWOW64\ntdll.dll
+0x77090000 - 0x771a0000 	C:\Windows\syswow64\kernel32.dll
+0x756a0000 - 0x756e6000 	C:\Windows\syswow64\KERNELBASE.dll
+0x76970000 - 0x76a10000 	C:\Windows\syswow64\ADVAPI32.dll
+0x76c50000 - 0x76cfc000 	C:\Windows\syswow64\msvcrt.dll
+0x75260000 - 0x75279000 	C:\Windows\SysWOW64\sechost.dll
+0x757f0000 - 0x758e0000 	C:\Windows\syswow64\RPCRT4.dll
+0x75100000 - 0x75160000 	C:\Windows\syswow64\SspiCli.dll
+0x750f0000 - 0x750fc000 	C:\Windows\syswow64\CRYPTBASE.dll
+0x75160000 - 0x75260000 	C:\Windows\syswow64\USER32.dll
+0x76a70000 - 0x76b00000 	C:\Windows\syswow64\GDI32.dll
+0x76a10000 - 0x76a1a000 	C:\Windows\syswow64\LPK.dll
+0x75600000 - 0x7569d000 	C:\Windows\syswow64\USP10.dll
+0x74190000 - 0x7432e000 	C:\Windows\WinSxS\x86_microsoft.windows.common-controls_6595b64144ccf1df_6.0.7601.17514_none_41e6975e2bd6f2b2\COMCTL32.dll
+0x76b00000 - 0x76b57000 	C:\Windows\syswow64\SHLWAPI.dll
+0x76e00000 - 0x76e60000 	C:\Windows\system32\IMM32.DLL
+0x76d30000 - 0x76dfc000 	C:\Windows\syswow64\MSCTF.dll
+0x69d90000 - 0x69e4f000 	F:\develop\Java\jdk1.7.0_80\jre\bin\msvcr100.dll
+0x67000000 - 0x6738b000 	F:\develop\Java\jdk1.7.0_80\jre\bin\client\jvm.dll
+0x73b60000 - 0x73b67000 	C:\Windows\system32\WSOCK32.dll
+0x76a20000 - 0x76a55000 	C:\Windows\syswow64\WS2_32.dll
+0x77570000 - 0x77576000 	C:\Windows\syswow64\NSI.dll
+0x74c00000 - 0x74c32000 	C:\Windows\system32\WINMM.dll
+0x76be0000 - 0x76be5000 	C:\Windows\syswow64\PSAPI.DLL
+0x6bcc0000 - 0x6bccc000 	F:\develop\Java\jdk1.7.0_80\jre\bin\verify.dll
+0x6bc00000 - 0x6bc21000 	F:\develop\Java\jdk1.7.0_80\jre\bin\java.dll
+0x6bbe0000 - 0x6bbf3000 	F:\develop\Java\jdk1.7.0_80\jre\bin\zip.dll
+0x72320000 - 0x7240b000 	C:\Windows\system32\dbghelp.dll
+
+VM Arguments:
+jvm_args: -Dfile.encoding=UTF-8 -Xbootclasspath:F:\develop\adt-bundle-windows-x86_64-20131030\sdk\platforms\android-19\android.jar 
+java_command: common.utils.WordSplit
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+JAVA_HOME=F:\develop\Java\jdk1.8.0_31
+CLASSPATH=.;F:\develop\Java\jdk1.8.0_31\lib;F:\develop\Java\jdk1.8.0_31\lib\tools.jar
+PATH=F:/develop/Java/jre7/bin/client;F:/develop/Java/jre7/bin;F:/develop/Java/jre7/lib/i386;F:\Program Files (x86)\ImageMagick-6.8.9-Q16;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\Broadcom\Broadcom 802.11 Network Adapter\Driver;F:\develop\Java\jdk1.8.0_31\bin;F:\develop\Java\jdk1.8.0_31\jre\bin;F:\develop\Git\cmd;0X1.AC6C40P+627NDROID_SDK_HOME/tools;0X1.D66200P+627NDROID_SDK_HOME0114FB7Clatform-tools;F:\develop\apache-maven-3.2.3\bin;C:\ProgramData\Oracle\Java\javapath;C:\Program Files (x86)\SSLVPN\bin;F:\develop\eclipse;
+USERNAME=wnc
+OS=Windows_NT
+PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 37 Stepping 5, GenuineIntel
+
+
+
+---------------  S Y S T E M  ---------------
+
+OS: Windows 7 , 64 bit Build 7601 Service Pack 1
+
+CPU:total 4 (2 cores per cpu, 2 threads per core) family 6 model 37 stepping 5, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, ht, tsc, tscinvbit
+
+Memory: 4k page, physical 5102492k(2545472k free), swap 10203140k(7103360k free)
+
+vm_info: Java HotSpot(TM) Client VM (24.80-b11) for windows-x86 JRE (1.7.0_80-b15), built on Apr 10 2015 13:33:35 by "java_re" with unknown MS VC++:1600
+
+time: Wed Oct 12 23:17:39 2016
+elapsed time: 0 seconds
+
