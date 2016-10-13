@@ -81,6 +81,14 @@
             android:layout_height="match_parent"
             android:background="#e3e3e3" />
 		
+        <TextView
+            android:id="@+id/srt_replay_set_dialg_reset"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="重置"
+            android:textColor="#6cd2c5" />
         
         <TextView
             android:id="@+id/srt_replay_set_dialg_no"

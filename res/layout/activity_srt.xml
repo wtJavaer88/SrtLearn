@@ -48,20 +48,45 @@
 
         <TextView
             android:id="@+id/file_tv"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="10dp"
             android:gravity="left"
             android:text="疑犯追踪第1季第1集"
             android:textColor="#b5e61e"
             android:textSize="16dp" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            />
+        <Button
+            android:id="@+id/btnMore"
+            android:layout_width="60dp"
+            android:layout_height="@dimen/dimen_60_dip"
+            android:layout_gravity="center"
+            android:layout_marginRight="@dimen/dimen_5_dip"
+            android:background="@drawable/main_add_expense_quickly_new"
+            android:gravity="center"
+            android:paddingBottom="@dimen/dimen_6_dip"
+            android:shadowColor="@color/black"
+            android:shadowDx="0.0"
+            android:shadowDy="2.0"
+            android:shadowRadius="1.0"
+            android:text="更多"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dimen_15_dip"
+            android:textStyle="bold"  />
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal" 
+        android:layout_marginTop="@dimen/dimen_10_dip"
+        android:layout_marginRight="@dimen/dimen_40_dip"
+        >
 
         <Button
             android:id="@+id/btnFirst"
@@ -79,7 +104,8 @@
             android:text="第一条"
             android:textColor="@color/white"
             android:textSize="@dimen/dimen_15_dip"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/btnLast"
@@ -97,7 +123,8 @@
             android:text="最后一条"
             android:textColor="@color/white"
             android:textSize="@dimen/dimen_15_dip"
-            android:textStyle="bold" />
+            android:textStyle="bold" 
+android:visibility="gone" />
 
         <Button
             android:id="@+id/btnSkip"
@@ -115,7 +142,8 @@
             android:text="跳转"
             android:textColor="@color/white"
             android:textSize="@dimen/dimen_15_dip"
-            android:textStyle="bold" />
+            android:textStyle="bold" 
+android:visibility="gone" />
 
         <Button
             android:id="@+id/btnPlay"
@@ -133,30 +161,50 @@
             android:text="播放"
             android:textColor="@color/white"
             android:textSize="@dimen/dimen_15_dip"
-            android:textStyle="bold" />
+            android:textStyle="bold" 
+			android:visibility="gone" />
 
-        <Button
-            android:id="@+id/btnMore"
-            android:layout_width="60dp"
-            android:layout_height="@dimen/dimen_60_dip"
+        
+		<ImageButton
+                android:id="@+id/imgbutton_srt_playpause"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="5dp"
+                android:layout_gravity="center"
+                android:background="@drawable/icon_simple_play"
+                android:scaleType="fitXY" />
+        <SeekBar
+                android:id="@+id/seekBar_srt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:focusable="true"
+                android:maxHeight="4.0dip"
+                android:minHeight="4.0dip"
+                android:paddingLeft="16.0dip"
+                android:paddingRight="16.0dip"
+                android:layout_gravity="center"
+                android:progressDrawable="@drawable/po_seekbar"
+                android:thumb="@drawable/seekbar_thumb" />
+        <TextView
+            android:id="@+id/timeline_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginRight="@dimen/dimen_5_dip"
-            android:background="@drawable/main_add_expense_quickly_new"
-            android:gravity="center"
-            android:paddingBottom="@dimen/dimen_6_dip"
-            android:shadowColor="@color/black"
-            android:shadowDx="0.0"
-            android:shadowDy="2.0"
-            android:shadowRadius="1.0"
-            android:text="更多"
-            android:textColor="@color/white"
-            android:textSize="@dimen/dimen_15_dip"
-            android:textStyle="bold" />
-
+            android:text="00:00"
+            android:textColor="@color/white" />
+        <TextView
+	            android:id="@+id/progress_tv"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="center"
+	            android:text="0000/1111"
+	            android:textColor="@color/black" />
+         
         <RelativeLayout
             android:id="@+id/topic_rl"
             android:layout_marginLeft="5dp"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
 
             <ImageButton
@@ -193,30 +241,6 @@
                 android:layout_toRightOf="@+id/topicTipBg"
                 android:background="@drawable/icon_multi_line" />
         </RelativeLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center" >
-
-        <TextView
-            android:id="@+id/timeline_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="3dp"
-            android:text="00:00:00,000 --->  00:00:00,000"
-            android:textColor="@color/white" />
-
-        <TextView
-            android:id="@+id/progress_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="3dp"
-            android:textColor="@color/white" />
     </LinearLayout>
 
      <LinearLayout

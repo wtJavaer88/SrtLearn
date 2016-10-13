@@ -77,7 +77,7 @@ public class SrtPlayService implements Favoritable
         {
             return "";
         }
-        return "(" + (getCurIndex() + 1) + "/" + list.size() + ")";
+        return " " + (getCurIndex() + 1) + "/" + list.size() + " ";
     }
 
     public int getCurIndex()
