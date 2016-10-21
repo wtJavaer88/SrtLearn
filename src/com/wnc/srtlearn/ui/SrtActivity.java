@@ -326,7 +326,7 @@ public class SrtActivity extends SBaseLearnActivity implements OnClickListener,
     }
 
     /**
-     * 隐藏虚拟按键
+     * 隐藏虚拟按键和任务栏
      */
     @SuppressLint("NewApi")
     private void hideVirtualBts()
